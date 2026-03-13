@@ -114,9 +114,9 @@ router.post(
       { status: "Accepted" },
       { new: true },
     ).populate("job");
-    sendApplicationStatusEmail(application, application.job).catch((err) =>
-      console.error("Email sending failed:", err.message)
-    );
+    sendApplicationStatusEmail(application, application.job)
+      .then(() => console.log("Email sent successfully to:", application.email))
+      .catch((err) => console.error("Email sending failed:", err));
     req.flash("success", "Application accepted and candidate notified via email");
     res.redirect(req.get("Referrer") || "/jobs");
   }),
