@@ -1,14 +1,6 @@
-const nodemailer = require("nodemailer");
-
-const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.BREVO_LOGIN,
-    pass: process.env.BREVO_SMTP_KEY,
-  },
-});
+const Brevo = require("@getbrevo/brevo");
+const brevoClient = new Brevo.TransactionalEmailsApi();
+brevoClient.authentications["apiKey"].apiKey = process.env.BREVO_API_KEY;
 
 const baseTemplate = (headerBg, badgeText, badgeColor, bodyContent) => `
 <!DOCTYPE html>
@@ -132,10 +124,10 @@ module.exports.sendApplicationStatusEmail = async (application, job) => {
     ? baseTemplate("#2e7d32", "APPLICATION ACCEPTED", "#2e7d32", acceptedBody)
     : baseTemplate("#1a1a2e", "APPLICATION UPDATE", "#c62828", rejectedBody);
 
-  await transporter.sendMail({
-    from: '"HireHub" <a4e172001@smtp-brevo.com>',
-    to: application.email,
-    subject,
-    html,
-  });
+  const sendSmtpEmail = new Brevo.SendSmtpEmail();
+  sendSmtpEmail.sender = { name: "HireHub", email: "a4e172001@smtp-brevo.com" };
+  sendSmtpEmail.to = [{ email: application.email, name: application.fullName }];
+  sendSmtpEmail.subject = subject;
+  sendSmtpEmail.htmlContent = html;
+  await brevoClient.sendTransacEmail(sendSmtpEmail);
 };
