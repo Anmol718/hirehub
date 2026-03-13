@@ -50,11 +50,11 @@ module.exports.applyJob = async (req, res) => {
     phone: req.body.phone,
     coverLetterText: req.body.coverLetterText || null,
     coverLetterFile: coverLetterFile
-      ? { url: coverLetterFile.path, filename: coverLetterFile.originalname }
+      ? { url: coverLetterFile.path, filename: coverLetterFile.filename }
       : undefined,
     resume: {
       url: resumeFile.path,
-      filename: resumeFile.originalname,
+      filename: resumeFile.filename,
     },
     linkedIn: req.body.linkedIn || null,
     portfolio: req.body.portfolio || null,
