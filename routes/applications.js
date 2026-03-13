@@ -114,11 +114,9 @@ router.post(
       { status: "Accepted" },
       { new: true },
     ).populate("job");
-    try {
-      await sendApplicationStatusEmail(application, application.job);
-    } catch (err) {
-      console.error("Email sending failed:", err.message);
-    }
+    sendApplicationStatusEmail(application, application.job).catch((err) =>
+      console.error("Email sending failed:", err.message)
+    );
     req.flash("success", "Application accepted and candidate notified via email");
     res.redirect(req.get("Referrer") || "/jobs");
   }),
@@ -135,11 +133,9 @@ router.post(
       { status: "Rejected" },
       { new: true },
     ).populate("job");
-    try {
-      await sendApplicationStatusEmail(application, application.job);
-    } catch (err) {
-      console.error("Email sending failed:", err.message);
-    }
+    sendApplicationStatusEmail(application, application.job).catch((err) =>
+      console.error("Email sending failed:", err.message)
+    );
     req.flash("success", "Application rejected and candidate notified via email");
     res.redirect(req.get("Referrer") || "/jobs");
   }),
