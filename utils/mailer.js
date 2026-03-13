@@ -1,16 +1,5 @@
-const nodemailer = require("nodemailer");
-const dns = require("dns");
-dns.setDefaultResultOrder("ipv4first");
-
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const { Resend } = require("resend");
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const baseTemplate = (headerBg, badgeText, badgeColor, bodyContent) => `
 <!DOCTYPE html>
@@ -134,8 +123,8 @@ module.exports.sendApplicationStatusEmail = async (application, job) => {
     ? baseTemplate("#2e7d32", "APPLICATION ACCEPTED", "#2e7d32", acceptedBody)
     : baseTemplate("#1a1a2e", "APPLICATION UPDATE", "#c62828", rejectedBody);
 
-  await transporter.sendMail({
-    from: `"HireHub" <${process.env.EMAIL_USER}>`,
+  await resend.emails.send({
+    from: "HireHub <onboarding@resend.dev>",
     to: application.email,
     subject,
     html,
