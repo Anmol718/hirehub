@@ -1,0 +1,154 @@
+<% layout("layouts/boilerplate") %>
+
+<style>
+  .auth-page {
+    min-height: calc(100vh - 140px);
+    display: flex;
+    align-items: center;
+    background: #f8f9fb;
+    padding: 40px 16px;
+  }
+  .auth-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    overflow: hidden;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .auth-header {
+    background: linear-gradient(135deg, #1a1a2e, #2d2d5e);
+    padding: 32px 36px 28px;
+    text-align: center;
+  }
+  .auth-header .brand { font-size: 22px; font-weight: 900; color: #fff; letter-spacing: -0.5px; }
+  .auth-header .brand span { color: #6c8ebf; }
+  .auth-header h2 { font-size: 18px; font-weight: 700; color: #fff; margin: 12px 0 4px; }
+  .auth-header p  { font-size: 13px; color: rgba(255,255,255,0.55); margin: 0; }
+  .auth-body { padding: 32px 36px; }
+  .form-label { font-size: 13px; font-weight: 600; color: #444; margin-bottom: 5px; }
+  .input-wrap { position: relative; }
+  .input-wrap i.icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #bbb; font-size: 15px; }
+  .input-wrap .form-control { padding-left: 36px; }
+  .form-control {
+    border: 1px solid #e5e7eb; border-radius: 9px;
+    padding: 11px 12px; font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .form-control:focus { border-color: #1a1a2e; box-shadow: 0 0 0 3px rgba(26,26,46,0.08); outline: none; }
+
+  /* Role selector */
+  .role-selector { display: flex; gap: 12px; margin-top: 2px; }
+  .role-option { flex: 1; }
+  .role-option input[type="radio"] { display: none; }
+  .role-option label {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    border: 2px solid #e5e7eb; border-radius: 10px;
+    padding: 14px 10px; cursor: pointer;
+    transition: all 0.2s; text-align: center; width: 100%;
+    font-size: 13px; font-weight: 600; color: #666;
+  }
+  .role-option label i { font-size: 22px; color: #bbb; transition: color 0.2s; }
+  .role-option input[type="radio"]:checked + label {
+    border-color: #1a1a2e; background: #f5f7ff; color: #1a1a2e;
+  }
+  .role-option input[type="radio"]:checked + label i { color: #1a1a2e; }
+  .role-option label:hover { border-color: #c0c8e0; }
+
+  .btn-auth {
+    width: 100%; background: #1a1a2e; color: #fff;
+    border: none; border-radius: 9px; padding: 12px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: background 0.2s; margin-top: 4px;
+  }
+  .btn-auth:hover { background: #2d2d5e; }
+  .auth-footer-text { text-align: center; font-size: 13px; color: #888; margin-top: 20px; }
+  .auth-footer-text a { color: #1a1a2e; font-weight: 600; text-decoration: none; }
+  .auth-footer-text a:hover { text-decoration: underline; }
+</style>
+
+<div class="auth-page">
+  <div class="auth-card">
+
+    <div class="auth-header">
+      <div class="brand">Hire<span>Hub</span></div>
+      <h2>Create your account</h2>
+      <p>Join thousands finding jobs on HireHub</p>
+    </div>
+
+    <div class="auth-body">
+      <form action="/signup" method="POST" class="needs-validation" novalidate>
+
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <div class="input-wrap">
+            <i class="bi bi-person icon"></i>
+            <input id="username" name="username" type="text" class="form-control" placeholder="Choose a username" required />
+          </div>
+          <div class="invalid-feedback">Username is required.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <div class="input-wrap">
+            <i class="bi bi-envelope icon"></i>
+            <input id="email" name="email" type="email" class="form-control" placeholder="you@example.com" required />
+          </div>
+          <div class="invalid-feedback">Valid email is required.</div>
+        </div>
+
+        <div class="mb-4">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-wrap">
+            <i class="bi bi-lock icon"></i>
+            <input id="password" name="password" type="password" class="form-control" placeholder="Create a password" required />
+          </div>
+          <div class="invalid-feedback">Password is required.</div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">I am a...</label>
+          <div class="role-selector">
+            <div class="role-option">
+              <input type="radio" id="candidate" name="role" value="candidate" checked />
+              <label for="candidate">
+                <i class="bi bi-person-badge"></i>
+                Candidate
+              </label>
+            </div>
+            <div class="role-option">
+              <input type="radio" id="employer" name="role" value="employer" />
+              <label for="employer">
+                <i class="bi bi-building"></i>
+                Employer
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-auth">
+          <i class="bi bi-person-plus me-2"></i>Create Account
+        </button>
+
+      </form>
+
+      <p class="auth-footer-text">
+        Already have an account? <a href="/login">Login</a>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  (function () {
+    'use strict'
+    document.querySelectorAll('.needs-validation').forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) { event.preventDefault(); event.stopPropagation(); }
+        form.classList.add('was-validated')
+      }, false)
+    })
+  })()
+</script>

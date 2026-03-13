@@ -1,0 +1,200 @@
+<% layout("layouts/boilerplate") %>
+
+<style>
+  .page-hero {
+    background: linear-gradient(135deg, #1a1a2e, #2d2d5e);
+    color: #fff;
+    padding: 36px 0 28px;
+    margin-bottom: 28px;
+  }
+  .page-hero h1 { font-size: 26px; font-weight: 800; margin: 0 0 4px; }
+  .page-hero p  { color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; }
+
+  .stats-row { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; }
+  .stat-pill {
+    background: #fff;
+    border-radius: 10px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    font-size: 14px;
+  }
+  .stat-pill .num { font-size: 20px; font-weight: 800; }
+  .stat-pill .lbl { color: #888; font-size: 12px; }
+
+  .search-filter {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px 18px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .search-filter input, .search-filter select {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    outline: none;
+  }
+  .search-filter input { flex: 1; min-width: 180px; }
+  .search-filter button { background: #1a1a2e; color: #fff; border: none; border-radius: 8px; padding: 8px 18px; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+  .app-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-left: 4px solid transparent;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .app-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+  .app-card.accepted { border-left-color: #2e7d32; }
+  .app-card.rejected { border-left-color: #c62828; }
+  .app-card.pending  { border-left-color: #e65100; }
+
+  .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .status-Accepted { background: #e6f4ea; color: #2e7d32; }
+  .status-Rejected { background: #fdecea; color: #c62828; }
+  .status-Pending  { background: #fff3e0; color: #e65100; }
+
+  .app-title { font-size: 17px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px; }
+  .app-meta  { font-size: 13px; color: #888; margin: 0 0 14px; }
+  .app-links a { font-size: 13px; font-weight: 500; text-decoration: none; padding: 5px 12px; border-radius: 8px; border: 1px solid #e0e0e0; color: #555; display: inline-flex; align-items: center; gap: 5px; }
+  .app-links a:hover { background: #f5f5f5; }
+  .resume-link { color: #3b6fd4 !important; border-color: #c7d7f4 !important; }
+
+  .empty-state { text-align: center; padding: 80px 20px; color: #aaa; }
+  .empty-state i { font-size: 56px; display: block; margin-bottom: 16px; color: #ddd; }
+</style>
+
+<!-- Hero -->
+<div class="page-hero">
+  <div class="container">
+    <h1>My Applications</h1>
+    <p>Track the status of all your job applications</p>
+  </div>
+</div>
+
+<div class="container pb-5">
+
+  <!-- Stats -->
+  <%
+    const total    = totalApplications;
+    const pending  = applications.filter ? applications.filter(a => a.status === 'Pending').length : 0;
+    const accepted = applications.filter ? applications.filter(a => a.status === 'Accepted').length : 0;
+    const rejected = applications.filter ? applications.filter(a => a.status === 'Rejected').length : 0;
+  %>
+  <div class="stats-row">
+    <div class="stat-pill">
+      <div>
+        <div class="num"><%= total %></div>
+        <div class="lbl">Total Applied</div>
+      </div>
+    </div>
+    <div class="stat-pill">
+      <div style="color:#e65100;">
+        <div class="num"><%= pending %></div>
+        <div class="lbl">Pending</div>
+      </div>
+    </div>
+    <div class="stat-pill">
+      <div style="color:#2e7d32;">
+        <div class="num"><%= accepted %></div>
+        <div class="lbl">Accepted</div>
+      </div>
+    </div>
+    <div class="stat-pill">
+      <div style="color:#c62828;">
+        <div class="num"><%= rejected %></div>
+        <div class="lbl">Rejected</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search & Filter -->
+  <form class="search-filter" method="GET" action="/applications/my-applications">
+    <i class="bi bi-search text-muted"></i>
+    <input type="text" name="search" value="<%= search || '' %>" placeholder="Search by job title..." />
+    <select name="status" onchange="this.form.submit()">
+      <option value="All" <%= !status || status === 'All' ? 'selected' : '' %>>All Status</option>
+      <option value="Pending"  <%= status === 'Pending'  ? 'selected' : '' %>>Pending</option>
+      <option value="Accepted" <%= status === 'Accepted' ? 'selected' : '' %>>Accepted</option>
+      <option value="Rejected" <%= status === 'Rejected' ? 'selected' : '' %>>Rejected</option>
+    </select>
+    <button type="submit"><i class="bi bi-search me-1"></i>Search</button>
+  </form>
+
+  <!-- Cards -->
+  <% if (applications.length === 0) { %>
+    <div class="empty-state">
+      <i class="bi bi-file-earmark-text"></i>
+      <p style="font-size:16px;font-weight:600;color:#555;">
+        <%= search || (status && status !== 'All') ? 'No applications match your filters.' : "You haven't applied to any jobs yet." %>
+      </p>
+      <a href="/jobs" style="display:inline-block;margin-top:8px;background:#1a1a2e;color:#fff;padding:10px 24px;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;">Browse Jobs</a>
+    </div>
+  <% } else { %>
+    <div class="row g-3">
+      <% applications.forEach(app => { %>
+        <div class="col-md-6">
+          <div class="app-card <%= app.status.toLowerCase() %>">
+
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+              <div>
+                <p class="app-title"><%= app.job.title %></p>
+                <p class="app-meta">
+                  <i class="bi bi-building me-1"></i><%= app.job.company %>
+                  <span class="mx-2">·</span>
+                  <i class="bi bi-calendar me-1"></i><%= app.createdAt ? new Date(app.createdAt).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'}) : 'N/A' %>
+                </p>
+              </div>
+              <span class="status-badge status-<%= app.status %>">
+                <% if(app.status === 'Accepted') { %><i class="bi bi-check-circle-fill"></i>
+                <% } else if(app.status === 'Rejected') { %><i class="bi bi-x-circle-fill"></i>
+                <% } else { %><i class="bi bi-clock-fill"></i><% } %>
+                <%= app.status %>
+              </span>
+            </div>
+
+            <% if (app.job.location) { %>
+              <p style="font-size:13px;color:#888;margin-bottom:14px;"><i class="bi bi-geo-alt me-1"></i><%= app.job.location %></p>
+            <% } %>
+
+            <div class="app-links" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;">
+              <% if (app.resume && app.resume.url) { %>
+                <a href="<%= app.resume.url %>" target="_blank" class="resume-link"><i class="bi bi-file-earmark-pdf"></i> Resume</a>
+              <% } %>
+              <% if (app.linkedIn) { %>
+                <a href="<%= app.linkedIn %>" target="_blank"><i class="bi bi-linkedin"></i> LinkedIn</a>
+              <% } %>
+              <% if (app.portfolio) { %>
+                <a href="<%= app.portfolio %>" target="_blank"><i class="bi bi-github"></i> Portfolio</a>
+              <% } %>
+              <a href="/jobs/<%= app.job._id %>"><i class="bi bi-arrow-right"></i> View Job</a>
+            </div>
+
+            <% if (app.status === 'Pending') { %>
+              <form action="/applications/<%= app._id %>/withdraw?_method=DELETE" method="POST" style="margin-top:12px;">
+                <button type="submit"
+                  onclick="return confirm('Withdraw this application? This cannot be undone.')"
+                  style="width:100%;padding:8px;border-radius:8px;border:1px solid #fca5a5;background:#fff;color:#c62828;font-size:13px;font-weight:600;cursor:pointer;">
+                  <i class="bi bi-x-circle me-1"></i>Withdraw Application
+                </button>
+              </form>
+            <% } %>
+
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>

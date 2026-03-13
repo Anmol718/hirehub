@@ -1,0 +1,118 @@
+<style>
+  .main-navbar {
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 0 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+  }
+  .main-navbar .container-fluid { padding: 12px 24px; }
+  .nav-brand {
+    font-size: 20px; font-weight: 900; color: #1a1a2e;
+    text-decoration: none; letter-spacing: -0.5px;
+  }
+  .nav-brand span { color: #6c8ebf; }
+  .navbar-nav .nav-link {
+    font-size: 14px; font-weight: 500; color: #555;
+    padding: 6px 12px; border-radius: 8px;
+    transition: all 0.2s;
+  }
+  .navbar-nav .nav-link:hover { color: #1a1a2e; background: #f5f5f5; }
+  .navbar-nav .nav-link.active-link { color: #1a1a2e; font-weight: 600; }
+  .btn-login {
+    font-size: 14px; font-weight: 600; color: #555;
+    border: 1px solid #e0e0e0; border-radius: 8px;
+    padding: 7px 16px; text-decoration: none;
+    transition: all 0.2s; background: #fff;
+  }
+  .btn-login:hover { border-color: #1a1a2e; color: #1a1a2e; }
+  .btn-signup {
+    font-size: 14px; font-weight: 600; color: #fff;
+    background: #1a1a2e; border-radius: 8px;
+    padding: 7px 16px; text-decoration: none;
+    transition: background 0.2s;
+  }
+  .btn-signup:hover { background: #2d2d5e; color: #fff; }
+  .btn-logout {
+    font-size: 14px; font-weight: 600; color: #c62828;
+    border: 1px solid #fca5a5; border-radius: 8px;
+    padding: 7px 16px; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-logout:hover { background: #c62828; color: #fff; }
+  .btn-post-job {
+    font-size: 14px; font-weight: 700; color: #fff;
+    background: linear-gradient(135deg, #1a1a2e, #2d2d5e);
+    border-radius: 8px; padding: 7px 18px;
+    text-decoration: none; display: inline-flex;
+    align-items: center; gap: 6px;
+    transition: opacity 0.2s;
+  }
+  .btn-post-job:hover { opacity: 0.88; color: #fff; }
+  .user-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #f5f5f5; border-radius: 20px;
+    padding: 5px 12px 5px 6px; font-size: 13px;
+    font-weight: 600; color: #1a1a2e;
+  }
+  .user-avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: #1a1a2e; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+  }
+  .nav-divider { width: 1px; height: 20px; background: #e5e7eb; margin: 0 4px; }
+</style>
+
+<nav class="main-navbar navbar navbar-expand-md">
+  <div class="container-fluid">
+
+    <!-- Brand -->
+    <a class="nav-brand" href="/home">Hire<span>Hub</span></a>
+
+    <!-- Hamburger -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Left Links -->
+      <ul class="navbar-nav me-auto mb-2 mb-md-0 ms-3">
+        <li class="nav-item">
+          <a class="nav-link" href="/home"><i class="bi bi-house me-1"></i>Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/jobs"><i class="bi bi-briefcase me-1"></i>Jobs</a>
+        </li>
+        <% if (currUser) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/applications/my-applications"><i class="bi bi-file-earmark-text me-1"></i>My Applications</a>
+          </li>
+        <% } %>
+      </ul>
+
+      <!-- Right Side -->
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+
+        <% if (currUser) { %>
+          <div class="user-chip">
+            <div class="user-avatar"><%= currUser.username[0].toUpperCase() %></div>
+            <%= currUser.username %>
+          </div>
+          <div class="nav-divider d-none d-md-block"></div>
+          <a href="/logout" class="btn-logout"><i class="bi bi-box-arrow-right me-1"></i>Logout</a>
+        <% } else { %>
+          <a href="/login" class="btn-login">Login</a>
+          <a href="/signup" class="btn-signup">Sign Up</a>
+        <% } %>
+
+        <a href="/employers/dashboard" class="btn-post-job">
+          <i class="bi bi-plus-lg"></i> Post a Job
+        </a>
+
+      </div>
+    </div>
+  </div>
+</nav>

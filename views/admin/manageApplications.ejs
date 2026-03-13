@@ -1,0 +1,120 @@
+<% layout("layouts/adminBoilerplate") %>
+
+<style>
+  .page-card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: hidden; }
+  .page-card-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .page-card-header h6 { margin: 0; font-weight: 700; font-size: 15px; color: #1a1a2e; }
+  .page-card-header span { font-size: 13px; color: #888; }
+  .admin-table { width: 100%; border-collapse: collapse; }
+  .admin-table thead tr { background: #f8f9fb; }
+  .admin-table th { padding: 12px 16px; font-size: 12px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
+  .admin-table td { padding: 14px 16px; font-size: 14px; color: #333; border-bottom: 1px solid #f8f8f8; vertical-align: middle; }
+  .admin-table tbody tr:hover { background: #fafbfc; }
+  .admin-table tbody tr:last-child td { border-bottom: none; }
+  .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
+  .status-Pending  { background: #fff3e0; color: #e65100; }
+  .status-Accepted { background: #e6f4ea; color: #2e7d32; }
+  .status-Rejected { background: #fdecea; color: #c62828; }
+  .empty-state { text-align: center; padding: 60px 20px; color: #aaa; }
+  .empty-state i { font-size: 48px; display: block; margin-bottom: 12px; }
+  .btn-delete { background: none; border: 1px solid #fca5a5; color: #dc2626; border-radius: 6px; padding: 5px 12px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+  .btn-delete:hover { background: #dc2626; color: #fff; }
+  .resume-link { font-size: 13px; color: #3b6fd4; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+  .resume-link:hover { text-decoration: underline; }
+  .filter-bar { padding: 14px 24px; border-bottom: 1px solid #f0f0f0; display: flex; gap: 8px; flex-wrap: wrap; }
+  .filter-btn { padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; border: 1px solid #e0e0e0; background: #fff; color: #555; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+  .filter-btn:hover, .filter-btn.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+</style>
+
+<%
+  const filterStatus = typeof query !== 'undefined' && query.status ? query.status : 'All';
+  const pendingApps  = allApplications.filter(a => a.status === 'Pending');
+  const acceptedApps = allApplications.filter(a => a.status === 'Accepted');
+  const rejectedApps = allApplications.filter(a => a.status === 'Rejected');
+  const displayed = applications;
+%>
+
+<div class="page-card">
+  <div class="page-card-header">
+    <h6><i class="bi bi-file-earmark-text me-2" style="color:#7b2da0;"></i>All Applications</h6>
+    <div style="display:flex;gap:16px;font-size:13px;">
+      <span style="color:#e65100;"><i class="bi bi-clock me-1"></i><%= pendingApps.length %> Pending</span>
+      <span style="color:#2e7d32;"><i class="bi bi-check-circle me-1"></i><%= acceptedApps.length %> Accepted</span>
+      <span style="color:#c62828;"><i class="bi bi-x-circle me-1"></i><%= rejectedApps.length %> Rejected</span>
+    </div>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <a href="/admin/applications" class="filter-btn <%= filterStatus === 'All' ? 'active' : '' %>">All (<%= allApplications.length %>)</a>
+    <a href="/admin/applications?status=Pending" class="filter-btn <%= filterStatus === 'Pending' ? 'active' : '' %>">Pending (<%= pendingApps.length %>)</a>
+    <a href="/admin/applications?status=Accepted" class="filter-btn <%= filterStatus === 'Accepted' ? 'active' : '' %>">Accepted (<%= acceptedApps.length %>)</a>
+    <a href="/admin/applications?status=Rejected" class="filter-btn <%= filterStatus === 'Rejected' ? 'active' : '' %>">Rejected (<%= rejectedApps.length %>)</a>
+  </div>
+
+  <% if (displayed.length === 0) { %>
+    <div class="empty-state">
+      <i class="bi bi-file-earmark-text"></i>
+      <p>No applications found.</p>
+    </div>
+  <% } else { %>
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Applicant</th>
+            <th>Job</th>
+            <th>Phone</th>
+            <th>Status</th>
+            <th>Applied At</th>
+            <th>Resume</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (let app of displayed) { %>
+            <tr>
+              <td>
+                <div style="font-weight:600;"><%= app.fullName %></div>
+                <div style="font-size:12px;color:#888;"><%= app.email %></div>
+              </td>
+              <td>
+                <div style="font-weight:500;"><%= app.job ? app.job.title : '<span style="color:#aaa;">Job Deleted</span>' %></div>
+                <% if (app.job && app.job.company) { %>
+                  <div style="font-size:12px;color:#888;"><%= app.job.company %></div>
+                <% } %>
+              </td>
+              <td style="color:#666;font-size:13px;"><%= app.phone || '—' %></td>
+              <td>
+                <span class="status-badge status-<%= app.status %>"><%= app.status %></span>
+              </td>
+              <td style="color:#888;font-size:13px;">
+                <%= app.appliedAt ? new Date(app.appliedAt).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '—' %>
+              </td>
+              <td>
+                <% if (app.resume && app.resume.url) { %>
+                  <a href="<%= app.resume.url %>" target="_blank" class="resume-link">
+                    <i class="bi bi-file-earmark-pdf"></i> View
+                  </a>
+                <% } else { %>
+                  <span style="color:#aaa;font-size:13px;">N/A</span>
+                <% } %>
+              </td>
+              <td>
+                <form action="/admin/applications/<%= app._id %>?_method=DELETE" method="POST">
+                  <button class="btn-delete" onclick="return confirm('Delete this application?')">
+                    <i class="bi bi-trash"></i> Delete
+                  </button>
+                </form>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>

@@ -1,0 +1,94 @@
+<% layout("layouts/adminBoilerplate") %>
+
+<style>
+  .page-card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: hidden; }
+  .page-card-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .page-card-header h6 { margin: 0; font-weight: 700; font-size: 15px; color: #1a1a2e; }
+  .page-card-header span { font-size: 13px; color: #888; }
+  .admin-table { width: 100%; border-collapse: collapse; }
+  .admin-table thead tr { background: #f8f9fb; }
+  .admin-table th { padding: 12px 16px; font-size: 12px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #f0f0f0; }
+  .admin-table td { padding: 14px 16px; font-size: 14px; color: #333; border-bottom: 1px solid #f8f8f8; vertical-align: middle; }
+  .admin-table tbody tr:hover { background: #fafbfc; }
+  .admin-table tbody tr:last-child td { border-bottom: none; }
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; color: #fff; flex-shrink: 0;
+  }
+  .role-badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .role-admin     { background: #1a1a2e; color: #fff; }
+  .role-employer  { background: #e8f0fe; color: #3b6fd4; }
+  .role-candidate { background: #e6f4ea; color: #2e7d32; }
+  .empty-state { text-align: center; padding: 60px 20px; color: #aaa; }
+  .empty-state i { font-size: 48px; display: block; margin-bottom: 12px; }
+  .btn-delete { background: none; border: 1px solid #fca5a5; color: #dc2626; border-radius: 6px; padding: 5px 12px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+  .btn-delete:hover { background: #dc2626; color: #fff; }
+
+  <%
+    const avatarColors = ['#3b6fd4','#2e7d32','#7b2da0','#e65100','#0891b2','#be185d'];
+  %>
+</style>
+
+<div class="page-card">
+  <div class="page-card-header">
+    <h6><i class="bi bi-people me-2 text-success"></i>All Users</h6>
+    <span><%= users.length %> user<%= users.length !== 1 ? 's' : '' %> total</span>
+  </div>
+
+  <% if (users.length === 0) { %>
+    <div class="empty-state">
+      <i class="bi bi-people"></i>
+      <p>No users found.</p>
+    </div>
+  <% } else { %>
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% const colors = ['#3b6fd4','#2e7d32','#7b2da0','#e65100','#0891b2','#be185d']; %>
+          <% for (let i = 0; i < users.length; i++) { %>
+            <% const user = users[i]; %>
+            <% const color = colors[i % colors.length]; %>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div class="avatar" style="background:<%= color %>;">
+                    <%= user.username ? user.username[0].toUpperCase() : '?' %>
+                  </div>
+                  <span style="font-weight:600;"><%= user.username %></span>
+                </div>
+              </td>
+              <td style="color:#666;"><%= user.email %></td>
+              <td>
+                <span class="role-badge role-<%= user.role %>"><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></span>
+              </td>
+              <td>
+                <% if (user.role !== 'admin') { %>
+                  <form action="/admin/users/<%= user._id %>?_method=DELETE" method="POST">
+                    <button class="btn-delete" onclick="return confirm('Delete user <%= user.username %>?')">
+                      <i class="bi bi-trash"></i> Delete
+                    </button>
+                  </form>
+                <% } else { %>
+                  <span style="font-size:13px;color:#aaa;"><i class="bi bi-shield-lock me-1"></i>Protected</span>
+                <% } %>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>

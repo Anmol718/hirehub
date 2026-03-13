@@ -1,0 +1,156 @@
+<% layout("layouts/boilerplate") %>
+
+<style>
+  .form-wrapper { max-width: 740px; margin: 40px auto; padding: 0 16px 60px; }
+  .form-header { text-align: center; margin-bottom: 32px; }
+  .form-header h1 { font-size: 26px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; }
+  .form-header p  { color: #888; font-size: 14px; margin: 0; }
+  .form-section {
+    background: #fff; border-radius: 14px;
+    padding: 24px 28px; box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    margin-bottom: 20px;
+  }
+  .form-section h6 {
+    font-size: 13px; font-weight: 700; color: #1a1a2e;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0;
+  }
+  .form-label { font-size: 13px; font-weight: 600; color: #444; margin-bottom: 5px; }
+  .form-control, .form-select {
+    border: 1px solid #e5e7eb; border-radius: 8px;
+    padding: 10px 12px; font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .form-control:focus, .form-select:focus {
+    border-color: #1a1a2e; box-shadow: 0 0 0 3px rgba(26,26,46,0.08);
+  }
+  .input-icon { position: relative; }
+  .input-icon i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 14px; }
+  .input-icon .form-control { padding-left: 34px; }
+  .btn-submit {
+    width: 100%; background: #1a1a2e; color: #fff; border: none;
+    border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700;
+    cursor: pointer; transition: background 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-submit:hover { background: #2d2d5e; }
+</style>
+
+<div class="form-wrapper">
+  <div class="form-header">
+    <h1><i class="bi bi-pencil-square me-2" style="color:#1a1a2e;"></i>Edit Job Post</h1>
+    <p>Update the details for <strong><%= job.title %></strong></p>
+  </div>
+
+  <form method="POST" action="/jobs/<%= job._id %>?_method=PUT" novalidate class="needs-validation">
+
+    <!-- Basic Info -->
+    <div class="form-section">
+      <h6><i class="bi bi-info-circle me-2"></i>Basic Information</h6>
+      <div class="mb-3">
+        <label for="title" class="form-label">Job Title <span class="text-danger">*</span></label>
+        <div class="input-icon">
+          <i class="bi bi-briefcase"></i>
+          <input id="title" name="job[title]" type="text" class="form-control" value="<%= job.title %>" required>
+        </div>
+        <div class="invalid-feedback">Please enter a job title.</div>
+      </div>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="company" class="form-label">Company Name <span class="text-danger">*</span></label>
+          <div class="input-icon">
+            <i class="bi bi-building"></i>
+            <input id="company" name="job[company]" type="text" class="form-control" value="<%= job.company %>" required>
+          </div>
+          <div class="invalid-feedback">Please enter a company name.</div>
+        </div>
+        <div class="col-md-6">
+          <label for="location" class="form-label">Location <span class="text-danger">*</span></label>
+          <div class="input-icon">
+            <i class="bi bi-geo-alt"></i>
+            <input id="location" name="job[location]" type="text" class="form-control" value="<%= job.location %>" required>
+          </div>
+          <div class="invalid-feedback">Please enter a location.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Job Details -->
+    <div class="form-section">
+      <h6><i class="bi bi-sliders me-2"></i>Job Details</h6>
+      <div class="row g-3 mb-3">
+        <div class="col-md-4">
+          <label for="jobType" class="form-label">Job Type <span class="text-danger">*</span></label>
+          <select id="jobType" name="job[jobType]" class="form-select" required>
+            <option value="Full-Time"  <%= job.jobType === 'Full-Time'  ? 'selected' : '' %>>Full-Time</option>
+            <option value="Part-Time"  <%= job.jobType === 'Part-Time'  ? 'selected' : '' %>>Part-Time</option>
+            <option value="Contract"   <%= job.jobType === 'Contract'   ? 'selected' : '' %>>Contract</option>
+            <option value="Internship" <%= job.jobType === 'Internship' ? 'selected' : '' %>>Internship</option>
+          </select>
+          <div class="invalid-feedback">Required.</div>
+        </div>
+        <div class="col-md-4">
+          <label for="workMode" class="form-label">Work Mode <span class="text-danger">*</span></label>
+          <select id="workMode" name="job[workMode]" class="form-select" required>
+            <option value="Onsite" <%= job.workMode === 'Onsite' ? 'selected' : '' %>>Onsite</option>
+            <option value="Remote" <%= job.workMode === 'Remote' ? 'selected' : '' %>>Remote</option>
+            <option value="Hybrid" <%= job.workMode === 'Hybrid' ? 'selected' : '' %>>Hybrid</option>
+          </select>
+          <div class="invalid-feedback">Required.</div>
+        </div>
+        <div class="col-md-4">
+          <label for="experienceLevel" class="form-label">Experience <span class="text-danger">*</span></label>
+          <select id="experienceLevel" name="job[experienceLevel]" class="form-select" required>
+            <option value="Entry"  <%= job.experienceLevel === 'Entry'  ? 'selected' : '' %>>Entry</option>
+            <option value="Mid"    <%= job.experienceLevel === 'Mid'    ? 'selected' : '' %>>Mid</option>
+            <option value="Senior" <%= job.experienceLevel === 'Senior' ? 'selected' : '' %>>Senior</option>
+          </select>
+          <div class="invalid-feedback">Required.</div>
+        </div>
+      </div>
+      <div class="mb-0">
+        <label for="salary" class="form-label">Salary (CAD per year)</label>
+        <div class="input-icon">
+          <i class="bi bi-cash"></i>
+          <input id="salary" name="job[salary]" type="number" class="form-control" value="<%= job.salary %>" min="0">
+        </div>
+      </div>
+    </div>
+
+    <!-- Description & Skills -->
+    <div class="form-section">
+      <h6><i class="bi bi-file-text me-2"></i>Description & Skills</h6>
+      <div class="mb-3">
+        <label for="description" class="form-label">Job Description <span class="text-danger">*</span></label>
+        <textarea id="description" name="job[description]" rows="6" class="form-control" required><%= job.description %></textarea>
+        <div class="invalid-feedback">Please provide a job description.</div>
+      </div>
+      <div class="mb-0">
+        <label for="skills" class="form-label">Required Skills <span class="text-danger">*</span></label>
+        <div class="input-icon">
+          <i class="bi bi-tools"></i>
+          <input id="skills" name="job[skills]" type="text" class="form-control" value="<%= job.skills ? job.skills.join(', ') : '' %>" required>
+        </div>
+        <div class="invalid-feedback">Please enter required skills.</div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-submit">
+      <i class="bi bi-check-lg"></i> Save Changes
+    </button>
+
+  </form>
+</div>
+
+<script>
+  (function () {
+    'use strict'
+    const forms = document.querySelectorAll('.needs-validation')
+    Array.from(forms).forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) { event.preventDefault(); event.stopPropagation(); }
+        form.classList.add('was-validated')
+      }, false)
+    })
+  })()
+</script>

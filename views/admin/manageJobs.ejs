@@ -1,0 +1,98 @@
+<% layout("layouts/adminBoilerplate") %>
+
+<style>
+  .page-card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: hidden; }
+  .page-card-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .page-card-header h6 { margin: 0; font-weight: 700; font-size: 15px; color: #1a1a2e; }
+  .page-card-header span { font-size: 13px; color: #888; }
+  .admin-table { width: 100%; border-collapse: collapse; }
+  .admin-table thead tr { background: #f8f9fb; }
+  .admin-table th { padding: 12px 16px; font-size: 12px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
+  .admin-table td { padding: 14px 16px; font-size: 14px; color: #333; border-bottom: 1px solid #f8f8f8; vertical-align: middle; }
+  .admin-table tbody tr:hover { background: #fafbfc; }
+  .admin-table tbody tr:last-child td { border-bottom: none; }
+  .job-title { font-weight: 600; color: #1a1a2e; }
+  .job-company { font-size: 12px; color: #888; margin-top: 2px; }
+  .badge-type { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .badge-fulltime  { background: #e8f0fe; color: #3b6fd4; }
+  .badge-parttime  { background: #fff3e0; color: #e65100; }
+  .badge-contract  { background: #f3e8fd; color: #7b2da0; }
+  .badge-internship{ background: #e6f4ea; color: #2e7d32; }
+  .badge-mode { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; background: #f0f2f5; color: #555; }
+  .empty-state { text-align: center; padding: 60px 20px; color: #aaa; }
+  .empty-state i { font-size: 48px; display: block; margin-bottom: 12px; }
+  .btn-delete { background: none; border: 1px solid #fca5a5; color: #dc2626; border-radius: 6px; padding: 5px 12px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+  .btn-delete:hover { background: #dc2626; color: #fff; }
+</style>
+
+<div class="page-card">
+  <div class="page-card-header">
+    <h6><i class="bi bi-briefcase me-2 text-primary"></i>All Jobs</h6>
+    <span><%= jobs.length %> job<%= jobs.length !== 1 ? 's' : '' %> total</span>
+  </div>
+
+  <% if (jobs.length === 0) { %>
+    <div class="empty-state">
+      <i class="bi bi-briefcase"></i>
+      <p>No jobs found.</p>
+    </div>
+  <% } else { %>
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Job</th>
+            <th>Location</th>
+            <th>Type</th>
+            <th>Mode</th>
+            <th>Posted By</th>
+            <th>Posted At</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (let job of jobs) { %>
+            <tr>
+              <td>
+                <div class="job-title"><%= job.title %></div>
+                <div class="job-company"><i class="bi bi-building me-1"></i><%= job.company %></div>
+              </td>
+              <td><i class="bi bi-geo-alt text-muted me-1"></i><%= job.location %></td>
+              <td>
+                <% if (job.jobType) { %>
+                  <span class="badge-type badge-<%= job.jobType.toLowerCase().replace('-','') %>"><%= job.jobType %></span>
+                <% } else { %>
+                  <span class="text-muted">—</span>
+                <% } %>
+              </td>
+              <td>
+                <% if (job.workMode) { %>
+                  <span class="badge-mode"><%= job.workMode %></span>
+                <% } else { %>
+                  <span class="text-muted">—</span>
+                <% } %>
+              </td>
+              <td>
+                <div style="font-weight:500;"><%= job.owner ? job.owner.username : 'Deleted User' %></div>
+              </td>
+              <td style="color:#888;font-size:13px;">
+                <%= job.postedAt ? new Date(job.postedAt).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '—' %>
+              </td>
+              <td>
+                <form action="/admin/jobs/<%= job._id %>?_method=DELETE" method="POST">
+                  <button class="btn-delete" onclick="return confirm('Delete this job?')">
+                    <i class="bi bi-trash"></i> Delete
+                  </button>
+                </form>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>

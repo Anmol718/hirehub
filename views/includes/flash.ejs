@@ -1,0 +1,138 @@
+<style>
+  .flash-container {
+    position: fixed;
+    top: 76px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 360px;
+    width: 100%;
+  }
+  .flash-toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+    animation: slideIn 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .flash-toast::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+  }
+  .flash-toast.flash-success {
+    background: #fff;
+    border: 1px solid #e6f4ea;
+  }
+  .flash-toast.flash-success::before { background: #2e7d32; }
+  .flash-toast.flash-error {
+    background: #fff;
+    border: 1px solid #fdecea;
+  }
+  .flash-toast.flash-error::before { background: #c62828; }
+
+  .flash-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+  .flash-success .flash-icon { background: #e6f4ea; color: #2e7d32; }
+  .flash-error   .flash-icon { background: #fdecea; color: #c62828; }
+
+  .flash-body { flex: 1; }
+  .flash-title { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+  .flash-success .flash-title { color: #2e7d32; }
+  .flash-error   .flash-title { color: #c62828; }
+  .flash-msg { font-size: 13px; color: #555; line-height: 1.4; margin: 0; }
+
+  .flash-close {
+    background: none; border: none; cursor: pointer;
+    color: #bbb; font-size: 16px; padding: 0;
+    line-height: 1; flex-shrink: 0;
+    transition: color 0.2s;
+  }
+  .flash-close:hover { color: #555; }
+
+  .flash-progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 3px;
+    animation: shrink 4s linear forwards;
+  }
+  .flash-success .flash-progress { background: #2e7d32; }
+  .flash-error   .flash-progress { background: #c62828; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideOut {
+    from { opacity: 1; transform: translateX(0); }
+    to   { opacity: 0; transform: translateX(40px); }
+  }
+  @keyframes shrink {
+    from { width: 100%; }
+    to   { width: 0%; }
+  }
+</style>
+
+<div class="flash-container" id="flashContainer">
+
+  <% if (success && success.length > 0) { %>
+    <% success.forEach(msg => { %>
+      <div class="flash-toast flash-success">
+        <div class="flash-icon"><i class="bi bi-check-lg"></i></div>
+        <div class="flash-body">
+          <div class="flash-title">Success</div>
+          <p class="flash-msg"><%= msg %></p>
+        </div>
+        <button class="flash-close" onclick="dismissFlash(this)">
+          <i class="bi bi-x"></i>
+        </button>
+        <div class="flash-progress"></div>
+      </div>
+    <% }) %>
+  <% } %>
+
+  <% if (error && error.length > 0) { %>
+    <% error.forEach(msg => { %>
+      <div class="flash-toast flash-error">
+        <div class="flash-icon"><i class="bi bi-exclamation-lg"></i></div>
+        <div class="flash-body">
+          <div class="flash-title">Error</div>
+          <p class="flash-msg"><%= msg %></p>
+        </div>
+        <button class="flash-close" onclick="dismissFlash(this)">
+          <i class="bi bi-x"></i>
+        </button>
+        <div class="flash-progress"></div>
+      </div>
+    <% }) %>
+  <% } %>
+
+</div>
+
+<script>
+  function dismissFlash(btn) {
+    const toast = btn.closest('.flash-toast');
+    toast.style.animation = 'slideOut 0.3s ease forwards';
+    setTimeout(() => toast.remove(), 300);
+  }
+
+  // Auto-dismiss after 4 seconds
+  document.querySelectorAll('.flash-toast').forEach(toast => {
+    setTimeout(() => {
+      if (toast.isConnected) {
+        toast.style.animation = 'slideOut 0.3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+      }
+    }, 4000);
+  });
+</script>

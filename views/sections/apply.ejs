@@ -1,0 +1,444 @@
+<% layout("layouts/boilerplate") %>
+
+<style>
+  .apply-wrapper {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 0 16px 60px;
+  }
+  .apply-header {
+    margin-bottom: 28px;
+  }
+  .apply-header h1 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 6px;
+  }
+  .apply-header p {
+    color: #888;
+    font-size: 14px;
+    margin: 0;
+  }
+  .job-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #e8f0fe;
+    color: #3b6fd4;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+  .form-section {
+    background: #fff;
+    border-radius: 14px;
+    padding: 24px 28px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+    margin-bottom: 20px;
+  }
+  .form-section h6 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a1a2e;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .form-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 5px;
+  }
+  .optional-tag {
+    font-size: 11px;
+    font-weight: 500;
+    color: #aaa;
+    margin-left: 6px;
+  }
+  .form-control {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+  }
+  .form-control:focus {
+    border-color: #1a1a2e;
+    box-shadow: 0 0 0 3px rgba(26, 26, 46, 0.08);
+  }
+  .input-icon {
+    position: relative;
+  }
+  .input-icon i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+    font-size: 14px;
+  }
+  .input-icon .form-control {
+    padding-left: 34px;
+  }
+  .file-upload-area {
+    border: 2px dashed #e0e0e0;
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    background: #fafbfc;
+  }
+  .file-upload-area:hover {
+    border-color: #1a1a2e;
+  }
+  .file-upload-area i {
+    font-size: 28px;
+    color: #aaa;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .file-upload-area p {
+    font-size: 13px;
+    color: #888;
+    margin: 0;
+  }
+  .file-upload-area input[type="file"] {
+    display: none;
+  }
+  .file-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #3b6fd4;
+    cursor: pointer;
+  }
+  .btn-submit {
+    width: 100%;
+    background: #1a1a2e;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-submit:hover {
+    background: #2d2d5e;
+  }
+  #file-name-display {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #555;
+  }
+</style>
+
+<div class="apply-wrapper">
+  <div class="apply-header">
+    <div class="job-pill">
+      <i class="bi bi-briefcase-fill"></i><%= job.title %>
+    </div>
+    <h1>Submit Your Application</h1>
+    <p>
+      Complete the form below. Fields marked
+      <span class="text-danger">*</span> are required.
+    </p>
+  </div>
+
+  <form
+    action="/applications/<%= job._id %>/apply"
+    method="POST"
+    enctype="multipart/form-data"
+    class="needs-validation"
+    novalidate
+  >
+    <!-- Personal Info -->
+    <div class="form-section">
+      <h6><i class="bi bi-person me-2"></i>Personal Information</h6>
+      <div class="mb-3">
+        <label for="fullName" class="form-label"
+          >Full Name <span class="text-danger">*</span></label
+        >
+        <div class="input-icon">
+          <i class="bi bi-person"></i>
+          <input
+            type="text"
+            id="fullName"
+            name="fullName"
+            class="form-control"
+            value="<%= user.username %>"
+            required
+          />
+        </div>
+        <div class="invalid-feedback">Full name is required.</div>
+      </div>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="email" class="form-label"
+            >Email <span class="text-danger">*</span></label
+          >
+          <div class="input-icon">
+            <i class="bi bi-envelope"></i>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-control"
+              value="<%= user.email %>"
+              required
+            />
+          </div>
+          <div class="invalid-feedback">Valid email is required.</div>
+        </div>
+        <div class="col-md-6">
+          <label for="phone" class="form-label"
+            >Phone <span class="optional-tag">Optional</span></label
+          >
+          <div class="input-icon">
+            <i class="bi bi-telephone"></i>
+            <input
+              type="text"
+              id="phone"
+              name="phone"
+              class="form-control"
+              value="<%= user.phone || '' %>"
+              placeholder="10-digit number"
+              pattern="^\d{10}$"
+            />
+          </div>
+          <div class="invalid-feedback">Enter a valid 10-digit number.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resume & Cover Letter -->
+    <div class="form-section">
+      <h6><i class="bi bi-file-earmark me-2"></i>Documents</h6>
+
+      <div class="mb-3">
+        <label class="form-label"
+          >Resume (PDF) <span class="text-danger">*</span></label
+        >
+        <div
+          class="file-upload-area"
+          onclick="document.getElementById('resume').click()"
+        >
+          <i class="bi bi-cloud-arrow-up"></i>
+          <label class="file-label">Click to upload your resume</label>
+          <p>PDF format only · Max 5MB</p>
+          <input
+            type="file"
+            id="resume"
+            name="resume"
+            accept=".pdf"
+            required
+            onchange="showFileName(this)"
+          />
+        </div>
+        <div id="file-name-display"></div>
+        <div class="invalid-feedback">Resume is required.</div>
+      </div>
+
+      <div class="mb-0">
+        <label class="form-label"
+          >Cover Letter <span class="optional-tag">Optional</span></label
+        >
+
+        <!-- Toggle Tabs -->
+        <div
+          style="
+            display: flex;
+            gap: 0;
+            margin-bottom: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 9px;
+            overflow: hidden;
+            width: fit-content;
+          "
+        >
+          <button
+            type="button"
+            id="tab-text"
+            onclick="switchCoverLetter('text')"
+            style="
+              padding: 7px 18px;
+              font-size: 13px;
+              font-weight: 600;
+              border: none;
+              background: #1a1a2e;
+              color: #fff;
+              cursor: pointer;
+              transition: all 0.2s;
+            "
+          >
+            <i class="bi bi-pencil me-1"></i>Write
+          </button>
+          <button
+            type="button"
+            id="tab-pdf"
+            onclick="switchCoverLetter('pdf')"
+            style="
+              padding: 7px 18px;
+              font-size: 13px;
+              font-weight: 600;
+              border: none;
+              background: #fff;
+              color: #888;
+              cursor: pointer;
+              transition: all 0.2s;
+            "
+          >
+            <i class="bi bi-file-earmark-pdf me-1"></i>Upload PDF
+          </button>
+        </div>
+
+        <!-- Text area -->
+        <div id="cover-text-section">
+          <textarea
+            id="coverLetterText"
+            name="coverLetterText"
+            class="form-control"
+            rows="4"
+            placeholder="Briefly introduce yourself and explain why you're a great fit..."
+          ></textarea>
+        </div>
+
+        <!-- PDF Upload -->
+        <div id="cover-pdf-section" style="display: none">
+          <div
+            class="file-upload-area"
+            onclick="document.getElementById('coverLetterFile').click()"
+          >
+            <i class="bi bi-file-earmark-pdf"></i>
+            <label class="file-label">Click to upload your cover letter</label>
+            <p>PDF format only · Max 5MB</p>
+            <input
+              type="file"
+              id="coverLetterFile"
+              name="coverLetterFile"
+              accept=".pdf"
+              onchange="showCoverFileName(this)"
+            />
+          </div>
+          <div id="cover-file-name-display"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Links -->
+    <div class="form-section">
+      <h6>
+        <i class="bi bi-link-45deg me-2"></i>Online Profiles
+        <span class="optional-tag">Optional</span>
+      </h6>
+      <div class="mb-3">
+        <label for="linkedIn" class="form-label">LinkedIn Profile</label>
+        <div class="input-icon">
+          <i class="bi bi-linkedin"></i>
+          <input
+            type="url"
+            id="linkedIn"
+            name="linkedIn"
+            class="form-control"
+            placeholder="https://linkedin.com/in/yourprofile"
+          />
+        </div>
+      </div>
+      <div class="mb-0">
+        <label for="portfolio" class="form-label">Portfolio / GitHub</label>
+        <div class="input-icon">
+          <i class="bi bi-github"></i>
+          <input
+            type="url"
+            id="portfolio"
+            name="portfolio"
+            class="form-control"
+            placeholder="https://github.com/username"
+          />
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-submit">
+      <i class="bi bi-send-fill"></i> Submit Application
+    </button>
+  </form>
+</div>
+
+<script>
+  function showFileName(input) {
+    const display = document.getElementById("file-name-display");
+    if (input.files && input.files[0]) {
+      display.innerHTML =
+        '<i class="bi bi-check-circle-fill text-success me-1"></i>' +
+        input.files[0].name;
+    }
+  }
+
+  function showCoverFileName(input) {
+    const display = document.getElementById("cover-file-name-display");
+    if (input.files && input.files[0]) {
+      display.innerHTML =
+        '<i class="bi bi-check-circle-fill text-success me-1"></i>' +
+        input.files[0].name;
+    }
+  }
+
+  function switchCoverLetter(type) {
+    const textSection = document.getElementById("cover-text-section");
+    const pdfSection = document.getElementById("cover-pdf-section");
+    const tabText = document.getElementById("tab-text");
+    const tabPdf = document.getElementById("tab-pdf");
+
+    if (type === "text") {
+      textSection.style.display = "block";
+      pdfSection.style.display = "none";
+      tabText.style.background = "#1a1a2e";
+      tabText.style.color = "#fff";
+      tabPdf.style.background = "#fff";
+      tabPdf.style.color = "#888";
+      // clear pdf input so it doesn't get submitted
+      document.getElementById("coverLetterFile").value = "";
+      document.getElementById("cover-file-name-display").innerHTML = "";
+    } else {
+      textSection.style.display = "none";
+      pdfSection.style.display = "block";
+      tabText.style.background = "#fff";
+      tabText.style.color = "#888";
+      tabPdf.style.background = "#1a1a2e";
+      tabPdf.style.color = "#fff";
+      // clear textarea so it doesn't get submitted
+      document.getElementById("coverLetterText").value = "";
+    }
+  }
+  (function () {
+    "use strict";
+    const forms = document.querySelectorAll(".needs-validation");
+    Array.from(forms).forEach(function (form) {
+      form.addEventListener(
+        "submit",
+        function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add("was-validated");
+        },
+        false,
+      );
+    });
+  })();
+</script>

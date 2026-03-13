@@ -1,0 +1,232 @@
+<% layout("layouts/boilerplate") %>
+
+<style>
+  .page-hero {
+    background: linear-gradient(135deg, #1a1a2e, #2d2d5e);
+    color: #fff;
+    padding: 32px 0 24px;
+    margin-bottom: 28px;
+  }
+  .page-hero h1 { font-size: 22px; font-weight: 800; margin: 0 0 4px; }
+  .page-hero p  { color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; }
+
+  .search-filter {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px 18px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .search-filter input, .search-filter select {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    outline: none;
+  }
+  .search-filter input { flex: 1; min-width: 180px; }
+  .search-filter button { background: #1a1a2e; color: #fff; border: none; border-radius: 8px; padding: 8px 18px; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+  .stats-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+  .stat-pill {
+    background: #fff; border-radius: 10px; padding: 10px 18px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    font-size: 14px; display: flex; align-items: center; gap: 8px;
+  }
+  .stat-pill .num { font-size: 18px; font-weight: 800; }
+
+  .applicant-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-top: 3px solid transparent;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .applicant-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+  .applicant-card.accepted { border-top-color: #2e7d32; }
+  .applicant-card.rejected { border-top-color: #c62828; }
+  .applicant-card.pending  { border-top-color: #e65100; }
+
+  .avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: #1a1a2e; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; font-weight: 700; flex-shrink: 0;
+  }
+  .app-name  { font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0 0 2px; }
+  .app-email { font-size: 13px; color: #888; margin: 0; }
+
+  .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .status-Accepted { background: #e6f4ea; color: #2e7d32; }
+  .status-Rejected { background: #fdecea; color: #c62828; }
+  .status-Pending  { background: #fff3e0; color: #e65100; }
+
+  .info-row { display: flex; flex-wrap: wrap; gap: 14px; margin: 14px 0; }
+  .info-item { font-size: 13px; color: #666; display: flex; align-items: center; gap: 5px; }
+
+  .cover-letter {
+    background: #f8f9fb;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+    max-height: 100px;
+    overflow-y: auto;
+    margin-bottom: 14px;
+  }
+
+  .card-links { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .card-links a { font-size: 13px; font-weight: 500; text-decoration: none; padding: 5px 12px; border-radius: 8px; border: 1px solid #e0e0e0; color: #555; display: inline-flex; align-items: center; gap: 5px; }
+  .card-links a:hover { background: #f5f5f5; }
+  .resume-link { color: #3b6fd4 !important; border-color: #c7d7f4 !important; }
+
+  .action-row { display: flex; gap: 10px; margin-top: auto; padding-top: 16px; border-top: 1px solid #f0f0f0; }
+  .btn-accept { flex: 1; background: #2e7d32; color: #fff; border: none; border-radius: 8px; padding: 9px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px; }
+  .btn-accept:hover { background: #1b5e20; }
+  .btn-reject { flex: 1; background: #fff; color: #c62828; border: 1px solid #fca5a5; border-radius: 8px; padding: 9px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px; }
+  .btn-reject:hover { background: #c62828; color: #fff; }
+  .decided-badge { flex: 1; text-align: center; padding: 9px; font-size: 13px; color: #aaa; border: 1px dashed #e0e0e0; border-radius: 8px; }
+
+  .empty-state { text-align: center; padding: 80px 20px; color: #aaa; }
+  .empty-state i { font-size: 56px; display: block; margin-bottom: 16px; color: #ddd; }
+</style>
+
+<!-- Hero -->
+<div class="page-hero">
+  <div class="container">
+    <h1><i class="bi bi-people me-2"></i>Applicants for: <%= job.title %></h1>
+    <p><%= job.company %> &nbsp;·&nbsp; <%= applicants.length %> applicant<%= applicants.length !== 1 ? 's' : '' %> shown</p>
+  </div>
+</div>
+
+<div class="container pb-5">
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-pill">
+      <div style="color:#e65100;"><div class="num"><%= applicants.filter(a=>a.status==='Pending').length %></div></div>
+      <span style="color:#888;font-size:12px;">Pending</span>
+    </div>
+    <div class="stat-pill">
+      <div style="color:#2e7d32;"><div class="num"><%= applicants.filter(a=>a.status==='Accepted').length %></div></div>
+      <span style="color:#888;font-size:12px;">Accepted</span>
+    </div>
+    <div class="stat-pill">
+      <div style="color:#c62828;"><div class="num"><%= applicants.filter(a=>a.status==='Rejected').length %></div></div>
+      <span style="color:#888;font-size:12px;">Rejected</span>
+    </div>
+  </div>
+
+  <!-- Search & Filter -->
+  <form class="search-filter" method="GET">
+    <i class="bi bi-search text-muted"></i>
+    <input type="text" name="search" value="<%= search || '' %>" placeholder="Search by name or email..." />
+    <select name="status" onchange="this.form.submit()">
+      <option value="All"      <%= !status || status === 'All'      ? 'selected' : '' %>>All Status</option>
+      <option value="Pending"  <%= status === 'Pending'  ? 'selected' : '' %>>Pending</option>
+      <option value="Accepted" <%= status === 'Accepted' ? 'selected' : '' %>>Accepted</option>
+      <option value="Rejected" <%= status === 'Rejected' ? 'selected' : '' %>>Rejected</option>
+    </select>
+    <button type="submit">Search</button>
+  </form>
+
+  <!-- Cards -->
+  <% if (applicants.length === 0) { %>
+    <div class="empty-state">
+      <i class="bi bi-people"></i>
+      <p style="font-size:16px;font-weight:600;color:#555;">No applicants found for this filter.</p>
+    </div>
+  <% } else { %>
+    <div class="row g-3">
+      <% applicants.forEach(app => { %>
+        <div class="col-md-6 col-lg-4">
+          <div class="applicant-card <%= app.status.toLowerCase() %>">
+
+            <!-- Header -->
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+              <div class="avatar"><%= app.fullName ? app.fullName[0].toUpperCase() : '?' %></div>
+              <div style="flex:1;min-width:0;">
+                <p class="app-name"><%= app.fullName || app.applicant.username %></p>
+                <p class="app-email"><%= app.applicant.email %></p>
+              </div>
+              <span class="status-badge status-<%= app.status %>"><%= app.status %></span>
+            </div>
+
+            <!-- Meta -->
+            <div class="info-row">
+              <% if (app.phone) { %>
+                <span class="info-item"><i class="bi bi-telephone"></i> <%= app.phone %></span>
+              <% } %>
+              <% if (app.appliedAt) { %>
+                <span class="info-item"><i class="bi bi-calendar"></i> <%= new Date(app.appliedAt).toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'}) %></span>
+              <% } %>
+            </div>
+
+            <!-- Cover Letter -->
+            <% if (app.coverLetterText) { %>
+              <div class="cover-letter"><%= app.coverLetterText %></div>
+            <% } %>
+            <% if (app.coverLetterFile && app.coverLetterFile.url) { %>
+              <div style="margin-bottom:10px;">
+                <a href="<%= app.coverLetterFile.url %>" target="_blank"
+                  style="font-size:13px;font-weight:600;color:#c62828;text-decoration:none;display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border:1px solid #fca5a5;border-radius:8px;">
+                  <i class="bi bi-file-earmark-pdf-fill"></i> Cover Letter PDF
+                </a>
+              </div>
+            <% } %>
+
+            <!-- Links -->
+            <div class="card-links">
+              <% if (app.resume && app.resume.url) { %>
+                <a href="/applications/resume/<%= app._id %>" target="_blank" class="resume-link"><i class="bi bi-file-earmark-pdf"></i> Resume</a>
+              <% } %>
+              <% if (app.linkedIn) { %>
+                <a href="<%= app.linkedIn %>" target="_blank"><i class="bi bi-linkedin"></i> LinkedIn</a>
+              <% } %>
+              <% if (app.portfolio) { %>
+                <a href="<%= app.portfolio %>" target="_blank"><i class="bi bi-github"></i> Portfolio</a>
+              <% } %>
+            </div>
+
+            <!-- Actions -->
+            <div class="action-row">
+              <% if (app.status === 'Pending') { %>
+                <form action="/applications/<%= app._id %>/accept" method="POST" style="flex:1;">
+                  <button class="btn-accept" style="width:100%;" onclick="return confirm('Accept this applicant?')">
+                    <i class="bi bi-check-lg"></i> Accept
+                  </button>
+                </form>
+                <form action="/applications/<%= app._id %>/reject" method="POST" style="flex:1;">
+                  <button class="btn-reject" style="width:100%;" onclick="return confirm('Reject this applicant?')">
+                    <i class="bi bi-x-lg"></i> Reject
+                  </button>
+                </form>
+              <% } else { %>
+                <div class="decided-badge"><i class="bi bi-check2-circle me-1"></i>Decision made: <strong><%= app.status %></strong></div>
+              <% } %>
+            </div>
+
+            <!-- Remove -->
+            <form action="/applications/<%= app._id %>/remove?_method=DELETE" method="POST" style="margin-top:10px;">
+              <button type="submit"
+                onclick="return confirm('Remove this application permanently?')"
+                style="width:100%;padding:7px;border-radius:8px;border:1px solid #e0e0e0;background:#fff;color:#888;font-size:12px;font-weight:600;cursor:pointer;">
+                <i class="bi bi-trash me-1"></i>Remove
+              </button>
+            </form>
+
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>

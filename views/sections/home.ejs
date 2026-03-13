@@ -1,0 +1,370 @@
+<% layout("layouts/boilerplate") %>
+
+<style>
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 60%, #3b4d8a 100%);
+    color: #fff;
+    padding: 80px 0 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(108,142,191,0.15) 0%, transparent 60%);
+  }
+  .hero-content { position: relative; z-index: 1; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px; padding: 5px 14px;
+    font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85);
+    margin-bottom: 20px;
+  }
+  .hero-eyebrow span { width: 6px; height: 6px; background: #4ade80; border-radius: 50%; display: inline-block; }
+  .hero h1 { font-size: 52px; font-weight: 900; line-height: 1.1; margin-bottom: 16px; letter-spacing: -1px; }
+  .hero h1 .accent { color: #6c8ebf; }
+  .hero p { font-size: 18px; color: rgba(255,255,255,0.7); margin-bottom: 36px; max-width: 540px; }
+  .hero-search {
+    background: #fff;
+    border-radius: 14px;
+    padding: 8px 8px 8px 16px;
+    display: flex; gap: 8px; align-items: center;
+    max-width: 620px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+  .hero-search input {
+    border: none; outline: none; font-size: 15px;
+    flex: 1; color: #333; background: transparent;
+  }
+  .hero-search button {
+    background: #1a1a2e; color: #fff; border: none;
+    border-radius: 10px; padding: 12px 24px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    white-space: nowrap; transition: background 0.2s;
+  }
+  .hero-search button:hover { background: #2d2d5e; }
+  .hero-tags { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .hero-tag {
+    background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.75);
+    border: 1px solid rgba(255,255,255,0.15); border-radius: 20px;
+    padding: 4px 12px; font-size: 12px; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .hero-tag:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+  /* Stats */
+  .stats-section {
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 28px 0;
+  }
+  .stat-item { text-align: center; }
+  .stat-item .num { font-size: 32px; font-weight: 900; color: #1a1a2e; line-height: 1; }
+  .stat-item .lbl { font-size: 13px; color: #888; margin-top: 4px; }
+  .stat-divider { width: 1px; background: #f0f0f0; align-self: stretch; }
+
+  /* Featured Jobs */
+  .section { padding: 60px 0; }
+  .section-label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #6c8ebf; margin-bottom: 8px; }
+  .section-title { font-size: 28px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; }
+  .section-sub   { font-size: 15px; color: #888; margin-bottom: 36px; }
+
+  .job-card {
+    background: #fff; border-radius: 14px;
+    padding: 22px; border: 1px solid #f0f0f0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    height: 100%; display: flex; flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  }
+  .job-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(0,0,0,0.1); border-color: #e0e8ff; }
+  .company-logo {
+    width: 46px; height: 46px; border-radius: 12px;
+    background: #1a1a2e; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800; flex-shrink: 0;
+  }
+  .job-title   { font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0 0 2px; }
+  .job-company { font-size: 13px; color: #888; margin: 0; }
+  .tag { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
+  .tag-blue   { background: #e8f0fe; color: #3b6fd4; }
+  .tag-green  { background: #e6f4ea; color: #2e7d32; }
+  .tag-orange { background: #fff3e0; color: #e65100; }
+  .job-desc { font-size: 13px; color: #777; line-height: 1.6; flex: 1; margin: 12px 0 16px; }
+  .job-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+  .salary { font-size: 14px; font-weight: 700; color: #2e7d32; }
+  .view-btn {
+    background: #1a1a2e; color: #fff; border-radius: 8px;
+    padding: 7px 16px; font-size: 13px; font-weight: 600;
+    text-decoration: none; transition: background 0.2s;
+  }
+  .view-btn:hover { background: #2d2d5e; color: #fff; }
+
+  /* Features */
+  .features-section { background: #f8f9fb; padding: 60px 0; }
+  .feature-card {
+    background: #fff; border-radius: 14px; padding: 28px 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06); text-align: center; height: 100%;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .feature-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.09); }
+  .feature-icon {
+    width: 60px; height: 60px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; margin: 0 auto 18px;
+  }
+  .feature-card h5 { font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+  .feature-card p  { font-size: 14px; color: #888; line-height: 1.6; margin: 0; }
+
+  /* Employer CTA */
+  .employer-cta {
+    background: #fff; border-radius: 16px; padding: 40px 36px;
+    display: flex; align-items: center; gap: 32px; flex-wrap: wrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07); border: 1px solid #f0f0f0;
+  }
+  .employer-cta-icon {
+    width: 64px; height: 64px; border-radius: 18px;
+    background: #1a1a2e; display: flex; align-items: center;
+    justify-content: center; font-size: 28px; color: #fff; flex-shrink: 0;
+  }
+  .employer-cta h3 { font-size: 20px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; }
+  .employer-cta p  { font-size: 14px; color: #888; margin: 0; }
+  .btn-employer {
+    background: #1a1a2e; color: #fff; border-radius: 10px;
+    padding: 12px 28px; font-size: 14px; font-weight: 700;
+    text-decoration: none; white-space: nowrap; margin-left: auto;
+    transition: background 0.2s;
+  }
+  .btn-employer:hover { background: #2d2d5e; color: #fff; }
+
+  /* Final CTA */
+  .final-cta {
+    background: linear-gradient(135deg, #1a1a2e, #2d2d5e);
+    color: #fff; padding: 72px 0; text-align: center;
+  }
+  .final-cta h2 { font-size: 36px; font-weight: 900; margin-bottom: 12px; }
+  .final-cta p  { color: rgba(255,255,255,0.65); font-size: 16px; margin-bottom: 32px; }
+  .btn-cta {
+    background: #fff; color: #1a1a2e; border-radius: 10px;
+    padding: 14px 32px; font-size: 15px; font-weight: 700;
+    text-decoration: none; display: inline-block; transition: all 0.2s;
+    margin: 0 8px 8px;
+  }
+  .btn-cta:hover { background: #f0f2f5; color: #1a1a2e; }
+  .btn-cta-outline {
+    background: transparent; color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 10px; padding: 14px 32px;
+    font-size: 15px; font-weight: 600;
+    text-decoration: none; display: inline-block;
+    transition: all 0.2s; margin: 0 8px 8px;
+  }
+  .btn-cta-outline:hover { background: rgba(255,255,255,0.1); color: #fff; }
+</style>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-content">
+    <div class="row align-items-center">
+      <div class="col-lg-7">
+        <div class="hero-eyebrow"><span></span> Campus to Career Platform</div>
+        <h1>Find Your Dream<br/><span class="accent">Job Today</span></h1>
+        <p>Your gateway from campus to career — apply in minutes, and track every application — all in one place.</p>
+
+        <form class="hero-search" action="/jobs" method="GET">
+          <i class="bi bi-search text-muted"></i>
+          <input type="text" name="search" placeholder="Job title, skill, or keyword..." />
+          <button type="submit"><i class="bi bi-arrow-right me-1"></i>Search Jobs</button>
+        </form>
+
+        <div class="hero-tags">
+          <span style="font-size:12px;color:rgba(255,255,255,0.5);margin-right:4px;">Popular:</span>
+          <a href="/jobs?jobType=Internship" class="hero-tag">Internships</a>
+          <a href="/jobs?jobType=Full-Time" class="hero-tag">Full-Time</a>
+          <a href="/jobs?jobType=Remote" class="hero-tag">Remote</a>
+          <a href="/jobs?jobType=Contract" class="hero-tag">Contract</a>
+        </div>
+      </div>
+
+      <div class="col-lg-5 d-none d-lg-flex justify-content-end">
+        <div style="position:relative;">
+          <!-- Floating cards decoration -->
+          <div style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:18px 22px;margin-bottom:14px;backdrop-filter:blur(8px);">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:40px;height:40px;background:#2e7d32;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;">H</div>
+              <div>
+                <div style="font-weight:700;font-size:14px;">Frontend Developer</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.6);">HireHub Inc. · Remote</div>
+              </div>
+              <div style="margin-left:auto;background:#e6f4ea;color:#2e7d32;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:600;">New</div>
+            </div>
+          </div>
+          <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:18px 22px;backdrop-filter:blur(8px);">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:40px;height:40px;background:#3b6fd4;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;">T</div>
+              <div>
+                <div style="font-weight:700;font-size:14px;">Data Analyst</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.6);">TechCorp · Toronto, ON</div>
+              </div>
+              <div style="margin-left:auto;background:#e8f0fe;color:#3b6fd4;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:600;">Full-Time</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="container">
+    <div class="row g-0 justify-content-center align-items-center">
+      <div class="col-6 col-md-3 stat-item">
+        <div class="num"><%= featuredJobs.length %>+</div>
+        <div class="lbl">Jobs Posted</div>
+      </div>
+      <div class="col-6 col-md-3 stat-item">
+        <div class="num">500+</div>
+        <div class="lbl">Candidates Hired</div>
+      </div>
+      <div class="col-6 col-md-3 stat-item">
+        <div class="num">100+</div>
+        <div class="lbl">Companies</div>
+      </div>
+      <div class="col-6 col-md-3 stat-item">
+        <div class="num">98%</div>
+        <div class="lbl">Satisfaction Rate</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED JOBS -->
+<% if (featuredJobs && featuredJobs.length > 0) { %>
+<section class="section" style="background:#f8f9fb;">
+  <div class="container">
+    <div class="section-label">Opportunities</div>
+    <div class="section-title">Featured Jobs</div>
+    <div class="section-sub">Hand-picked listings to kickstart your career</div>
+
+    <div class="row g-3">
+      <% featuredJobs.forEach(job => { %>
+        <div class="col-md-6 col-lg-4">
+          <div class="job-card">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+              <div class="company-logo"><%= job.company[0].toUpperCase() %></div>
+              <div>
+                <p class="job-title"><%= job.title %></p>
+                <p class="job-company"><%= job.company %></p>
+              </div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
+              <% if (job.jobType)  { %><span class="tag tag-blue"><%= job.jobType %></span><% } %>
+              <% if (job.workMode) { %><span class="tag tag-green"><%= job.workMode %></span><% } %>
+              <% if (job.location) { %><span style="font-size:12px;color:#888;display:flex;align-items:center;gap:3px;"><i class="bi bi-geo-alt"></i><%= job.location %></span><% } %>
+            </div>
+            <p class="job-desc"><%= job.description.length > 90 ? job.description.substring(0, 87) + '...' : job.description %></p>
+            <div class="job-footer">
+              <% if (job.salary) { %>
+                <span class="salary">$<%= job.salary.toLocaleString() %> CAD</span>
+              <% } else { %><span></span><% } %>
+              <a href="/jobs/<%= job._id %>" class="view-btn">View Job</a>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <div style="text-align:center;margin-top:32px;">
+      <a href="/jobs" style="display:inline-flex;align-items:center;gap:6px;background:#1a1a2e;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;transition:background 0.2s;" onmouseover="this.style.background='#2d2d5e'" onmouseout="this.style.background='#1a1a2e'">
+        View All Jobs <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<!-- FEATURES -->
+<section class="features-section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="section-label">Why Us</div>
+      <div class="section-title">Why Choose HireHub?</div>
+      <div class="section-sub">Everything you need to land your next opportunity</div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#e8f0fe;color:#3b6fd4;"><i class="bi bi-mortarboard-fill"></i></div>
+          <h5>Campus-Focused</h5>
+          <p>Built for students and fresh graduates transitioning from education to employment.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#e6f4ea;color:#2e7d32;"><i class="bi bi-lightning-charge-fill"></i></div>
+          <h5>Simple & Fast</h5>
+          <p>Apply to jobs in minutes with a clean, streamlined process. No clutter, no confusion.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#fff3e0;color:#e65100;"><i class="bi bi-envelope-check-fill"></i></div>
+          <h5>Instant Notifications</h5>
+          <p>Get automated email updates the moment an employer accepts or rejects your application.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#f3e8fd;color:#7b2da0;"><i class="bi bi-people-fill"></i></div>
+          <h5>Direct Employer Connect</h5>
+          <p>Connect directly with real employers — no middlemen, no unnecessary steps.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#e0f2f1;color:#00695c;"><i class="bi bi-bar-chart-fill"></i></div>
+          <h5>Track Applications</h5>
+          <p>Monitor all your applications in one dashboard — see pending, accepted, and rejected at a glance.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#fce4ec;color:#c2185b;"><i class="bi bi-shield-check-fill"></i></div>
+          <h5>Trusted & Secure</h5>
+          <p>Your data and resume are stored securely. Only authorized employers can view your application.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EMPLOYER CTA -->
+<section class="section" style="background:#fff;">
+  <div class="container">
+    <div class="employer-cta">
+      <div class="employer-cta-icon"><i class="bi bi-building"></i></div>
+      <div>
+        <h3>Hiring? Post a Job in Minutes</h3>
+        <p>Reach hundreds of qualified candidates. Post your listing, review applications, and hire — all in one place.</p>
+      </div>
+      <a href="/employers/dashboard" class="btn-employer"><i class="bi bi-plus-lg me-1"></i>Post a Job</a>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="container">
+    <h2>Your Career Starts Here</h2>
+    <p>Join thousands of students and professionals already finding opportunities on HireHub.</p>
+    <div>
+      <a href="/jobs" class="btn-cta"><i class="bi bi-briefcase me-2"></i>Browse Jobs</a>
+      <% if (!currUser) { %>
+        <a href="/signup" class="btn-cta-outline"><i class="bi bi-person-plus me-2"></i>Sign Up Free</a>
+      <% } %>
+    </div>
+  </div>
+</section>

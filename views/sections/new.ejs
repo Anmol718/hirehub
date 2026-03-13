@@ -1,0 +1,162 @@
+<% layout("layouts/boilerplate") %>
+
+<style>
+  .form-wrapper { max-width: 740px; margin: 40px auto; padding: 0 16px 60px; }
+  .form-header { text-align: center; margin-bottom: 32px; }
+  .form-header h1 { font-size: 26px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; }
+  .form-header p  { color: #888; font-size: 14px; margin: 0; }
+  .form-section {
+    background: #fff;
+    border-radius: 14px;
+    padding: 24px 28px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    margin-bottom: 20px;
+  }
+  .form-section h6 {
+    font-size: 13px; font-weight: 700; color: #1a1a2e;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    margin-bottom: 18px; padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .form-label { font-size: 13px; font-weight: 600; color: #444; margin-bottom: 5px; }
+  .form-control, .form-select {
+    border: 1px solid #e5e7eb; border-radius: 8px;
+    padding: 10px 12px; font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .form-control:focus, .form-select:focus {
+    border-color: #1a1a2e; box-shadow: 0 0 0 3px rgba(26,26,46,0.08);
+  }
+  .input-icon { position: relative; }
+  .input-icon i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 14px; }
+  .input-icon .form-control { padding-left: 34px; }
+  .btn-submit {
+    width: 100%; background: #1a1a2e; color: #fff; border: none;
+    border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700;
+    cursor: pointer; transition: background 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-submit:hover { background: #2d2d5e; }
+</style>
+
+<div class="form-wrapper">
+  <div class="form-header">
+    <h1><i class="bi bi-briefcase-fill me-2" style="color:#1a1a2e;"></i>Post a New Job</h1>
+    <p>Fill in the details below to publish your job listing</p>
+  </div>
+
+  <form method="POST" action="/jobs" novalidate class="needs-validation">
+
+    <!-- Basic Info -->
+    <div class="form-section">
+      <h6><i class="bi bi-info-circle me-2"></i>Basic Information</h6>
+      <div class="mb-3">
+        <label for="title" class="form-label">Job Title <span class="text-danger">*</span></label>
+        <div class="input-icon">
+          <i class="bi bi-briefcase"></i>
+          <input id="title" name="job[title]" type="text" class="form-control" placeholder="e.g. Frontend Developer" required>
+        </div>
+        <div class="invalid-feedback">Please enter a job title.</div>
+      </div>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="company" class="form-label">Company Name <span class="text-danger">*</span></label>
+          <div class="input-icon">
+            <i class="bi bi-building"></i>
+            <input id="company" name="job[company]" type="text" class="form-control" placeholder="e.g. HireHub Inc." required>
+          </div>
+          <div class="invalid-feedback">Please enter a company name.</div>
+        </div>
+        <div class="col-md-6">
+          <label for="location" class="form-label">Location <span class="text-danger">*</span></label>
+          <div class="input-icon">
+            <i class="bi bi-geo-alt"></i>
+            <input id="location" name="job[location]" type="text" class="form-control" placeholder="City, Country" required>
+          </div>
+          <div class="invalid-feedback">Please enter a location.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Job Details -->
+    <div class="form-section">
+      <h6><i class="bi bi-sliders me-2"></i>Job Details</h6>
+      <div class="row g-3 mb-3">
+        <div class="col-md-4">
+          <label for="jobType" class="form-label">Job Type <span class="text-danger">*</span></label>
+          <select id="jobType" name="job[jobType]" class="form-select" required>
+            <option value="" disabled selected>Select type</option>
+            <option value="Full-Time">Full-Time</option>
+            <option value="Part-Time">Part-Time</option>
+            <option value="Contract">Contract</option>
+            <option value="Internship">Internship</option>
+          </select>
+          <div class="invalid-feedback">Required.</div>
+        </div>
+        <div class="col-md-4">
+          <label for="workMode" class="form-label">Work Mode <span class="text-danger">*</span></label>
+          <select id="workMode" name="job[workMode]" class="form-select" required>
+            <option value="" disabled selected>Select mode</option>
+            <option value="Onsite">Onsite</option>
+            <option value="Remote">Remote</option>
+            <option value="Hybrid">Hybrid</option>
+          </select>
+          <div class="invalid-feedback">Required.</div>
+        </div>
+        <div class="col-md-4">
+          <label for="experienceLevel" class="form-label">Experience <span class="text-danger">*</span></label>
+          <select id="experienceLevel" name="job[experienceLevel]" class="form-select" required>
+            <option value="" disabled selected>Select level</option>
+            <option value="Entry">Entry</option>
+            <option value="Mid">Mid</option>
+            <option value="Senior">Senior</option>
+          </select>
+          <div class="invalid-feedback">Required.</div>
+        </div>
+      </div>
+      <div class="mb-0">
+        <label for="salary" class="form-label">Salary (CAD per year)</label>
+        <div class="input-icon">
+          <i class="bi bi-cash"></i>
+          <input id="salary" name="job[salary]" type="number" class="form-control" placeholder="e.g. 600000" min="0">
+        </div>
+      </div>
+    </div>
+
+    <!-- Description & Skills -->
+    <div class="form-section">
+      <h6><i class="bi bi-file-text me-2"></i>Description & Skills</h6>
+      <div class="mb-3">
+        <label for="description" class="form-label">Job Description <span class="text-danger">*</span></label>
+        <textarea id="description" name="job[description]" rows="6" class="form-control" placeholder="Describe the role, responsibilities, and requirements..." required></textarea>
+        <div class="invalid-feedback">Please provide a job description.</div>
+      </div>
+      <div class="mb-0">
+        <label for="skills" class="form-label">Required Skills <span class="text-danger">*</span></label>
+        <div class="input-icon">
+          <i class="bi bi-tools"></i>
+          <input id="skills" name="job[skills]" type="text" class="form-control" placeholder="e.g. JavaScript, React, Node.js (comma separated)" required>
+        </div>
+        <div class="invalid-feedback">Please enter required skills.</div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-submit">
+      <i class="bi bi-send-fill"></i> Publish Job
+    </button>
+
+  </form>
+</div>
+
+<script>
+  (function () {
+    'use strict'
+    const forms = document.querySelectorAll('.needs-validation')
+    Array.from(forms).forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) { event.preventDefault(); event.stopPropagation(); }
+        form.classList.add('was-validated')
+      }, false)
+    })
+  })()
+</script>

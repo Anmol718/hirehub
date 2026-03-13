@@ -1,0 +1,140 @@
+<% layout("layouts/adminBoilerplate") %>
+
+<style>
+  .stat-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .stat-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+  .stat-icon {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .stat-icon.blue   { background: #e8f0fe; color: #3b6fd4; }
+  .stat-icon.green  { background: #e6f4ea; color: #2e7d32; }
+  .stat-icon.purple { background: #f3e8fd; color: #7b2da0; }
+  .stat-icon.orange { background: #fff3e0; color: #e65100; }
+  .stat-info h3 { margin: 0; font-size: 28px; font-weight: 700; color: #1a1a2e; }
+  .stat-info p  { margin: 0; font-size: 13px; color: #888; font-weight: 500; }
+  .stat-link {
+    margin-top: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .stat-link:hover { text-decoration: underline; }
+
+  .pending-banner {
+    background: linear-gradient(135deg, #1a1a2e, #2d2d5e);
+    border-radius: 12px;
+    padding: 24px 28px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 14px rgba(26,26,46,0.25);
+  }
+  .pending-banner h4 { margin: 0 0 4px; font-size: 20px; font-weight: 700; }
+  .pending-banner p  { margin: 0; color: rgba(255,255,255,0.65); font-size: 14px; }
+  .pending-count {
+    font-size: 52px;
+    font-weight: 800;
+    color: #f59e0b;
+    line-height: 1;
+  }
+
+  .quick-action {
+    background: #fff;
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: #1a1a2e;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    transition: all 0.2s;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  .quick-action:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); color: #1a1a2e; }
+  .quick-action i { font-size: 20px; }
+</style>
+
+<!-- Pending Applications Banner -->
+<div class="pending-banner mb-4">
+  <div>
+    <h4>Pending Applications</h4>
+    <p>Applications waiting for employer review</p>
+    <a href="/admin/applications" class="btn btn-warning btn-sm mt-3 fw-semibold">
+      <i class="bi bi-arrow-right-circle me-1"></i> Review Now
+    </a>
+  </div>
+  <div class="pending-count"><%= pendingCount %></div>
+</div>
+
+<!-- Stat Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="bi bi-briefcase-fill"></i></div>
+      <div class="stat-info">
+        <h3><%= jobCount %></h3>
+        <p>Total Jobs</p>
+        <a href="/admin/jobs" class="stat-link text-primary">Manage Jobs <i class="bi bi-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="bi bi-people-fill"></i></div>
+      <div class="stat-info">
+        <h3><%= userCount %></h3>
+        <p>Total Users</p>
+        <a href="/admin/users" class="stat-link text-success">Manage Users <i class="bi bi-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card">
+      <div class="stat-icon purple"><i class="bi bi-file-earmark-text-fill"></i></div>
+      <div class="stat-info">
+        <h3><%= applicationCount %></h3>
+        <p>Total Applications</p>
+        <a href="/admin/applications" class="stat-link text-purple" style="color:#7b2da0;">View All <i class="bi bi-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<h6 class="text-muted fw-semibold mb-3" style="font-size:12px;letter-spacing:1px;text-transform:uppercase;">Quick Actions</h6>
+<div class="row g-3">
+  <div class="col-md-4">
+    <a href="/admin/jobs" class="quick-action">
+      <i class="bi bi-briefcase text-primary"></i> Manage Job Listings
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="/admin/users" class="quick-action">
+      <i class="bi bi-person-gear text-success"></i> Manage Users
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="/admin/applications" class="quick-action">
+      <i class="bi bi-clipboard-check" style="color:#7b2da0;"></i> Review Applications
+    </a>
+  </div>
+</div>

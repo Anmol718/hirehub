@@ -1,0 +1,150 @@
+<% layout("layouts/boilerplate") %>
+
+<style>
+  .page-hero {
+    background: linear-gradient(135deg, #1a1a2e, #2d2d5e);
+    color: #fff; padding: 36px 0 28px;
+  }
+  .page-hero h1 { font-size: 24px; font-weight: 800; margin: 0 0 4px; }
+  .page-hero p  { color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; }
+
+  .job-card {
+    background: #fff; border-radius: 14px; padding: 22px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07); height: 100%;
+    display: flex; flex-direction: column;
+    border: 1px solid #f0f0f0;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .job-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+  .company-logo {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: #1a1a2e; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800; flex-shrink: 0;
+  }
+  .job-title   { font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0 0 2px; }
+  .job-company { font-size: 13px; color: #888; margin: 0; }
+  .tag { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
+  .tag-blue   { background: #e8f0fe; color: #3b6fd4; }
+  .tag-green  { background: #e6f4ea; color: #2e7d32; }
+  .tag-orange { background: #fff3e0; color: #e65100; }
+  .job-meta { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 8px; }
+  .job-meta span { font-size: 12px; color: #888; display: flex; align-items: center; gap: 4px; }
+  .job-desc { font-size: 13px; color: #777; line-height: 1.6; margin: 8px 0 16px; flex: 1; }
+  .salary { font-size: 13px; font-weight: 700; color: #2e7d32; margin-bottom: 16px; }
+
+  .card-actions { display: flex; gap: 8px; margin-top: auto; }
+  .btn-edit {
+    flex: 1; text-align: center; font-size: 13px; font-weight: 600;
+    padding: 8px; border-radius: 8px; text-decoration: none;
+    border: 1px solid #e0e0e0; color: #555; background: #fff;
+    transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px;
+  }
+  .btn-edit:hover { border-color: #1a1a2e; color: #1a1a2e; }
+  .btn-applicants {
+    flex: 1; text-align: center; font-size: 13px; font-weight: 600;
+    padding: 8px; border-radius: 8px; text-decoration: none;
+    background: #1a1a2e; color: #fff;
+    transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px;
+  }
+  .btn-applicants:hover { background: #2d2d5e; color: #fff; }
+  .btn-delete-form { flex: 0 0 auto; }
+  .btn-delete {
+    width: 36px; height: 36px; border-radius: 8px;
+    border: 1px solid #fca5a5; background: #fff; color: #dc2626;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-delete:hover { background: #dc2626; color: #fff; }
+
+  .empty-state { text-align: center; padding: 80px 20px; }
+  .empty-state i { font-size: 56px; color: #ddd; display: block; margin-bottom: 16px; }
+  .empty-state h5 { font-size: 18px; font-weight: 700; color: #555; margin-bottom: 6px; }
+  .empty-state p  { font-size: 14px; color: #aaa; margin-bottom: 24px; }
+  .btn-post {
+    background: #1a1a2e; color: #fff; border-radius: 9px;
+    padding: 12px 28px; font-size: 14px; font-weight: 700;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 7px;
+    transition: background 0.2s;
+  }
+  .btn-post:hover { background: #2d2d5e; color: #fff; }
+</style>
+
+<!-- Hero -->
+<div class="page-hero">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <div>
+        <h1><i class="bi bi-briefcase me-2"></i>My Job Listings</h1>
+        <p><%= jobs.length %> job<%= jobs.length !== 1 ? 's' : '' %> posted by you</p>
+      </div>
+      <a href="/jobs/new" style="background:#fff;color:#1a1a2e;border-radius:9px;padding:10px 22px;font-size:14px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+        <i class="bi bi-plus-lg"></i> Post New Job
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="container py-4">
+  <% if (jobs.length === 0) { %>
+    <div class="empty-state">
+      <i class="bi bi-briefcase"></i>
+      <h5>No jobs posted yet</h5>
+      <p>Post your first job and start receiving applications from candidates.</p>
+      <a href="/jobs/new" class="btn-post"><i class="bi bi-plus-lg"></i> Post a Job</a>
+    </div>
+  <% } else { %>
+    <div class="row g-3">
+      <% for (let job of jobs) { %>
+        <div class="col-md-6 col-lg-4">
+          <div class="job-card">
+
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+              <div class="company-logo"><%= job.company[0].toUpperCase() %></div>
+              <div>
+                <p class="job-title"><%= job.title %></p>
+                <p class="job-company"><%= job.company %></p>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">
+              <% if (job.jobType)        { %><span class="tag tag-blue"><%= job.jobType %></span><% } %>
+              <% if (job.workMode)       { %><span class="tag tag-green"><%= job.workMode %></span><% } %>
+              <% if (job.experienceLevel){ %><span class="tag tag-orange"><%= job.experienceLevel %></span><% } %>
+            </div>
+
+            <div class="job-meta">
+              <span><i class="bi bi-geo-alt"></i> <%= job.location %></span>
+              <% if (job.postedAt) { %>
+                <span><i class="bi bi-clock"></i> <%= new Date(job.postedAt).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'}) %></span>
+              <% } %>
+            </div>
+
+            <% if (job.salary) { %>
+              <div class="salary"><i class="bi bi-cash me-1"></i>$<%= job.salary.toLocaleString() %> CAD</div>
+            <% } %>
+
+            <p class="job-desc">
+              <%= job.description.length > 90 ? job.description.substring(0, 87) + '...' : job.description %>
+            </p>
+
+            <div class="card-actions">
+              <a href="/jobs/<%= job._id %>/edit" class="btn-edit">
+                <i class="bi bi-pencil"></i> Edit
+              </a>
+              <a href="/applications/<%= job._id %>/applicants" class="btn-applicants">
+                <i class="bi bi-people"></i> Applicants
+              </a>
+              <form method="POST" action="/jobs/<%= job._id %>?_method=DELETE" class="btn-delete-form">
+                <button class="btn-delete" onclick="return confirm('Delete this job listing?')" title="Delete">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      <% } %>
+    </div>
+  <% } %>
+</div>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Email Preview</title>
+  <style>
+    body { background: #ddd; font-family: Arial, sans-serif; padding: 20px; }
+    h2 { text-align: center; color: #333; margin-bottom: 10px; }
+    .toggle { text-align: center; margin-bottom: 30px; }
+    .toggle button {
+      padding: 10px 24px; margin: 0 8px; border: none; border-radius: 6px;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    #btn-accepted { background: #2e7d32; color: white; }
+    #btn-rejected { background: #c62828; color: white; }
+    iframe { display: block; margin: auto; width: 680px; height: 620px; border: none; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+  </style>
+</head>
+<body>
+  <h2>Email Preview</h2>
+  <div class="toggle">
+    <button id="btn-accepted" onclick="show('accepted')">Accepted Email</button>
+    <button id="btn-rejected" onclick="show('rejected')">Rejected Email</button>
+  </div>
+  <iframe id="preview"></iframe>
+
+  <script>
+    const accepted = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/></head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;padding:40px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+        <tr><td style="background-color:#2e7d32;padding:32px 40px;text-align:center;">
+          <h1 style="margin:0;color:#ffffff;font-size:26px;font-weight:700;letter-spacing:1px;">HireHub</h1>
+          <p style="margin:6px 0 0;color:rgba(255,255,255,0.85);font-size:13px;">Your Career, Our Priority</p>
+        </td></tr>
+        <tr><td align="center" style="padding:28px 40px 0;">
+          <span style="display:inline-block;background-color:#2e7d32;color:#ffffff;font-size:13px;font-weight:600;letter-spacing:0.5px;padding:6px 18px;border-radius:20px;">APPLICATION ACCEPTED</span>
+        </td></tr>
+        <tr><td style="padding:24px 40px 36px;">
+          <h2 style="margin:0 0 16px;color:#1a1a1a;font-size:22px;">Congratulations, John Doe! 🎉</h2>
+          <p style="color:#444444;font-size:15px;line-height:1.7;margin:0 0 16px;">We are thrilled to inform you that your application for the position of <strong style="color:#1a1a1a;">Frontend Developer</strong> has been <strong style="color:#2e7d32;">accepted</strong>.</p>
+          <p style="color:#444444;font-size:15px;line-height:1.7;margin:0 0 24px;">The employer will be reaching out to you shortly with further details about the next steps in the hiring process.</p>
+          <table cellpadding="0" cellspacing="0" style="background-color:#f0f7f0;border-left:4px solid #2e7d32;border-radius:4px;width:100%;margin-bottom:28px;">
+            <tr><td style="padding:16px 20px;">
+              <p style="margin:0;color:#555;font-size:14px;"><strong>Position:</strong> Frontend Developer</p>
+              <p style="margin:8px 0 0;color:#555;font-size:14px;"><strong>Applicant:</strong> John Doe</p>
+              <p style="margin:8px 0 0;color:#555;font-size:14px;"><strong>Status:</strong> <span style="color:#2e7d32;font-weight:600;">Accepted</span></p>
+            </td></tr>
+          </table>
+          <p style="color:#666666;font-size:14px;line-height:1.6;margin:0;">Best regards,<br/><strong style="color:#1a1a1a;">The HireHub Team</strong></p>
+        </td></tr>
+        <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eeeeee;margin:0;"/></td></tr>
+        <tr><td style="padding:24px 40px;text-align:center;">
+          <p style="margin:0;color:#aaaaaa;font-size:12px;">This is an automated message from HireHub. Please do not reply to this email.</p>
+          <p style="margin:8px 0 0;color:#aaaaaa;font-size:12px;">© 2026 HireHub. All rights reserved.</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>`;
+
+    const rejected = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/></head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;padding:40px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+        <tr><td style="background-color:#1a1a2e;padding:32px 40px;text-align:center;">
+          <h1 style="margin:0;color:#ffffff;font-size:26px;font-weight:700;letter-spacing:1px;">HireHub</h1>
+          <p style="margin:6px 0 0;color:rgba(255,255,255,0.85);font-size:13px;">Your Career, Our Priority</p>
+        </td></tr>
+        <tr><td align="center" style="padding:28px 40px 0;">
+          <span style="display:inline-block;background-color:#c62828;color:#ffffff;font-size:13px;font-weight:600;letter-spacing:0.5px;padding:6px 18px;border-radius:20px;">APPLICATION UPDATE</span>
+        </td></tr>
+        <tr><td style="padding:24px 40px 36px;">
+          <h2 style="margin:0 0 16px;color:#1a1a1a;font-size:22px;">Application Update</h2>
+          <p style="color:#444444;font-size:15px;line-height:1.7;margin:0 0 16px;">Dear <strong>John Doe</strong>,</p>
+          <p style="color:#444444;font-size:15px;line-height:1.7;margin:0 0 16px;">Thank you for taking the time to apply for the position of <strong style="color:#1a1a1a;">Frontend Developer</strong> and for your interest in this opportunity.</p>
+          <p style="color:#444444;font-size:15px;line-height:1.7;margin:0 0 24px;">After careful consideration, we regret to inform you that we will not be moving forward with your application at this time. We encourage you not to be discouraged — there are many more opportunities waiting for you on HireHub.</p>
+          <table cellpadding="0" cellspacing="0" style="background-color:#fdf4f4;border-left:4px solid #c62828;border-radius:4px;width:100%;margin-bottom:28px;">
+            <tr><td style="padding:16px 20px;">
+              <p style="margin:0;color:#555;font-size:14px;"><strong>Position:</strong> Frontend Developer</p>
+              <p style="margin:8px 0 0;color:#555;font-size:14px;"><strong>Applicant:</strong> John Doe</p>
+              <p style="margin:8px 0 0;color:#555;font-size:14px;"><strong>Status:</strong> <span style="color:#c62828;font-weight:600;">Not Selected</span></p>
+            </td></tr>
+          </table>
+          <p style="color:#666666;font-size:14px;line-height:1.6;margin:0;">We wish you all the best in your job search.<br/><br/>Best regards,<br/><strong style="color:#1a1a1a;">The HireHub Team</strong></p>
+        </td></tr>
+        <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eeeeee;margin:0;"/></td></tr>
+        <tr><td style="padding:24px 40px;text-align:center;">
+          <p style="margin:0;color:#aaaaaa;font-size:12px;">This is an automated message from HireHub. Please do not reply to this email.</p>
+          <p style="margin:8px 0 0;color:#aaaaaa;font-size:12px;">© 2026 HireHub. All rights reserved.</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>`;
+
+    function show(type) {
+      const iframe = document.getElementById('preview');
+      iframe.srcdoc = type === 'accepted' ? accepted : rejected;
+    }
+
+    show('accepted');
+  </script>
+</body>
+</html>
