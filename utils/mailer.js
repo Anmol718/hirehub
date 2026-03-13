@@ -125,7 +125,7 @@ module.exports.sendApplicationStatusEmail = async (application, job) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "api-key": process.env.BREVO_API_KEY.trim(),
+      "api-key": process.env.BREVO_API_KEY.replace(/\s+/g, ""),
     },
     body: JSON.stringify({
       sender: { name: "HireHub", email: "a4e172001@smtp-brevo.com" },
