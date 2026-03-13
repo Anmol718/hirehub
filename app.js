@@ -47,6 +47,7 @@ app.set("views", path.join(__dirname, "views")); // views folder
 app.engine("ejs", ejsMate); // enable layout support
 
 // Middleware
+app.set("trust proxy", 1);
 app.use(express.urlencoded({ extended: true })); // parse form data
 app.use(methodOverride("_method")); // override methods using query param
 app.use(express.static(path.join(__dirname, "/public"))); // serve static files from /public
