@@ -101,6 +101,9 @@ app.use((req, res, next) => {
 //   res.send(registeredUser);
 // });
 
+// Redirect root to home
+app.get("/", (req, res) => res.redirect("/home"));
+
 // Home route - display featured jobs on landing page
 app.get("/home", async (req, res) => {
   const featuredJobs = await Job.find({}).limit(3); // get 3 jobs
