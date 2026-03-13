@@ -1,5 +1,3 @@
-const { BrevoClient } = require("@getbrevo/brevo");
-const brevoClient = new BrevoClient({ apiKey: process.env.BREVO_API_KEY });
 
 const baseTemplate = (headerBg, badgeText, badgeColor, bodyContent) => `
 <!DOCTYPE html>
@@ -123,10 +121,21 @@ module.exports.sendApplicationStatusEmail = async (application, job) => {
     ? baseTemplate("#2e7d32", "APPLICATION ACCEPTED", "#2e7d32", acceptedBody)
     : baseTemplate("#1a1a2e", "APPLICATION UPDATE", "#c62828", rejectedBody);
 
-  await brevoClient.transactionalEmails.sendTransacEmail({
-    sender: { name: "HireHub", email: "a4e172001@smtp-brevo.com" },
-    to: [{ email: application.email, name: application.fullName }],
-    subject,
-    htmlContent: html,
+  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "api-key": process.env.BREVO_API_KEY.trim(),
+    },
+    body: JSON.stringify({
+      sender: { name: "HireHub", email: "a4e172001@smtp-brevo.com" },
+      to: [{ email: application.email, name: application.fullName }],
+      subject,
+      htmlContent: html,
+    }),
   });
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error(`Brevo API error: ${err}`);
+  }
 };
