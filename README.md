@@ -169,11 +169,7 @@ node app.js
 
 5. **Visit the app**
 
-```
-http://localhost:8080
-```
-
-Or visit the live demo: [https://hirehub-w6sp.onrender.com/home](https://hirehub-w6sp.onrender.com/home)
+[https://hirehub-w6sp.onrender.com/home](https://hirehub-w6sp.onrender.com/home)
 
 ---
 
