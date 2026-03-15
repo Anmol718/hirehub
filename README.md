@@ -173,6 +173,8 @@ node app.js
 http://localhost:8080
 ```
 
+Or visit the live demo: [https://hirehub-w6sp.onrender.com/home](https://hirehub-w6sp.onrender.com/home)
+
 ---
 
 ## 🔐 User Roles
