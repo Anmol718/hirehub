@@ -10,13 +10,24 @@ A full-stack web application that connects university students with employers �
 
 🔗 **Live Demo:** [https://hirehub-w6sp.onrender.com/home](https://hirehub-w6sp.onrender.com/home)
 
-> ⚠️ Hosted on Render's free tier — may take 30–60 seconds to wake up on first visit.
+> Hosted on Render's free tier
 
 ---
 
 ## 📸 Screenshots
 
 > _(Add screenshots of your homepage, job listings, and admin panel here)_
+<img width="1440" height="900" alt="Screenshot 2026-04-06 at 4 05 02 PM" src="https://github.com/user-attachments/assets/39bd3b0b-96ee-4045-a959-6e7caeb9fe29" />
+<img width="1440" height="900" alt="Screenshot 2026-04-06 at 4 05 18 PM" src="https://github.com/user-attachments/assets/77b7d5cc-095c-40e9-![Uploading Screenshot 2026-04-06 at 4.05.31 PM.png…]()
+a7ef-b2877640e08f" />
+<img width="1440" height="900" alt="Screenshot 2026-04-06 at 4 05 49 PM" src="https://github.com/user-attachments/assets/d4de9e6d-0a67-44e2-8738-c7c8cd299d35" />
+<img width="1440" height="900" alt="Screenshot 2026-04-06 at 4 06 38 PM" src="https://github.com/user-attachments/assets/64a84df1-3b96-4dbc-8b9b-a61e5cef5617" />
+<img width="1440" height="900" alt="Screenshot 2026-04-06 at 4 07 04 PM" src="https://github.com/user-attachments/assets/baf18d13-c6b4-40f5-bbfa-f8aef02a5b79" />
+<img width="1440" height="900" alt="Screenshot 2026-04-06 at 4 07 17 PM" src="https://github.com/user-attachments/assets/74fcb7f9-57d9-40ff-9faf-11ffeea60578" />
+<img width="1440" height="900" alt="Screenshot 2026-04-06 at 4 08 34 PM" src="https://github.com/user-attachments/assets/c3ad313a-a633-46d6-b65f-1642e394f6c3" />
+<img width="1440" height="900" alt="Screenshot 2026-04-06 at 4 08 54 PM" src="https://github.com/user-attachments/assets/1431e5df-676d-4e2f-a84a-b239af94b2e9" />
+
+
 
 ---
 
