@@ -9,7 +9,7 @@ module.exports.jobSchema = Joi.object({
       .valid("Full-Time", "Part-Time", "Internship", "Contract")
       .required(),
     workMode: Joi.string()
-      .valid("Remote", "In-Office", "Hybrid", "Onsite")
+      .valid("Remote", "Hybrid", "Onsite")
       .required(),
     experienceLevel: Joi.string().valid("Entry", "Mid", "Senior").required(),
     salary: Joi.number().min(0).optional(),
@@ -29,6 +29,7 @@ module.exports.signupSchema = Joi.object({
     .label("Email"),
   password: Joi.string().min(5).required().label("Password"),
   role: Joi.string().valid("candidate", "employer").required().label("Role"),
+  "g-recaptcha-response": Joi.string().required(),
 });
 
 // =========================
@@ -37,6 +38,7 @@ module.exports.signupSchema = Joi.object({
 module.exports.loginSchema = Joi.object({
   username: Joi.string().required().label("Username"),
   password: Joi.string().required().label("Password"),
+  "g-recaptcha-response": Joi.string().required(),
 });
 
 // Application validation schema

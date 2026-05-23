@@ -26,9 +26,7 @@ module.exports.dashboard = async (req, res) => {
 // Show only jobs created by logged-in employer
 module.exports.showJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ owner: req.user._id }).sort({
-      createdAt: -1,
-    });
+    const jobs = await Job.find({ owner: req.user._id }).sort({ postedAt: -1 });
     res.render("employers/employers.ejs", { jobs });
   } catch (e) {
     req.flash("error", "Cannot fetch jobs at the moment.");

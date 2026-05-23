@@ -77,15 +77,21 @@ module.exports.manageApplications = async (req, res) => {
   const { status } = req.query;
   const filter = status && status !== "All" ? { status } : {};
 
-  const applications = await Application.find(filter)
-    .populate("applicant")
-    .populate("job");
-
-  const allApplications = await Application.find({});
+  const [applications, totalCount, pendingCount, acceptedCount, rejectedCount] =
+    await Promise.all([
+      Application.find(filter).populate("applicant").populate("job"),
+      Application.countDocuments({}),
+      Application.countDocuments({ status: "Pending" }),
+      Application.countDocuments({ status: "Accepted" }),
+      Application.countDocuments({ status: "Rejected" }),
+    ]);
 
   res.render("admin/manageApplications.ejs", {
     applications,
-    allApplications,
+    totalCount,
+    pendingCount,
+    acceptedCount,
+    rejectedCount,
     query: req.query,
     title: "Manage Applications",
   });

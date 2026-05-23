@@ -106,9 +106,6 @@
 
 <%
   const filterStatus = typeof query !== 'undefined' && query.status ? query.status : 'All';
-  const pendingApps  = allApplications.filter(a => a.status === 'Pending');
-  const acceptedApps = allApplications.filter(a => a.status === 'Accepted');
-  const rejectedApps = allApplications.filter(a => a.status === 'Rejected');
   const displayed = applications;
 %>
 
@@ -118,25 +115,25 @@
   <div class="page-card-header">
     <h6><i class="bi bi-file-earmark-text-fill"></i>All Applications</h6>
     <div class="header-stats">
-      <span class="header-stat-pending"><i class="bi bi-clock-fill"></i><%= pendingApps.length %> Pending</span>
-      <span class="header-stat-accepted"><i class="bi bi-check-circle-fill"></i><%= acceptedApps.length %> Accepted</span>
-      <span class="header-stat-rejected"><i class="bi bi-x-circle-fill"></i><%= rejectedApps.length %> Rejected</span>
+      <span class="header-stat-pending"><i class="bi bi-clock-fill"></i><%= pendingCount %> Pending</span>
+      <span class="header-stat-accepted"><i class="bi bi-check-circle-fill"></i><%= acceptedCount %> Accepted</span>
+      <span class="header-stat-rejected"><i class="bi bi-x-circle-fill"></i><%= rejectedCount %> Rejected</span>
     </div>
   </div>
 
   <!-- Filter Bar -->
   <div class="filter-bar">
     <a href="/admin/applications" class="filter-chip <%= filterStatus === 'All' ? 'active' : '' %>">
-      <i class="bi bi-grid-3x3-gap"></i> All (<%= allApplications.length %>)
+      <i class="bi bi-grid-3x3-gap"></i> All (<%= totalCount %>)
     </a>
     <a href="/admin/applications?status=Pending" class="filter-chip <%= filterStatus === 'Pending' ? 'active' : '' %>">
-      <i class="bi bi-hourglass-split"></i> Pending (<%= pendingApps.length %>)
+      <i class="bi bi-hourglass-split"></i> Pending (<%= pendingCount %>)
     </a>
     <a href="/admin/applications?status=Accepted" class="filter-chip <%= filterStatus === 'Accepted' ? 'active' : '' %>">
-      <i class="bi bi-check-circle"></i> Accepted (<%= acceptedApps.length %>)
+      <i class="bi bi-check-circle"></i> Accepted (<%= acceptedCount %>)
     </a>
     <a href="/admin/applications?status=Rejected" class="filter-chip <%= filterStatus === 'Rejected' ? 'active' : '' %>">
-      <i class="bi bi-x-circle"></i> Rejected (<%= rejectedApps.length %>)
+      <i class="bi bi-x-circle"></i> Rejected (<%= rejectedCount %>)
     </a>
   </div>
 
@@ -177,7 +174,13 @@
                   </div>
                 <% } %>
               </td>
-              <td style="font-size:13px;"><%= app.phone || '<span style="color:#94a3b8;">—</span>' %></td>
+              <td style="font-size:13px;">
+                <% if (app.phone) { %>
+                  <%= app.phone %>
+                <% } else { %>
+                  —
+                <% } %>
+              </td>
               <td>
                 <span class="status-pill sp-<%= app.status.toLowerCase() %>"><%= app.status %></span>
               </td>

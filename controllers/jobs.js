@@ -9,13 +9,18 @@ module.exports.index = async (req, res) => {
   const JOBS_PER_PAGE = 9;
   const currentPage = Math.max(1, parseInt(page) || 1);
 
+  const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
   if (jobType) filter.jobType = jobType;
-  if (search) filter.$or = [
-    { title: { $regex: search, $options: "i" } },
-    { company: { $regex: search, $options: "i" } },
-    { description: { $regex: search, $options: "i" } },
-  ];
-  if (location) filter.location = { $regex: location, $options: "i" };
+  if (search) {
+    const safeSearch = escapeRegex(search);
+    filter.$or = [
+      { title: { $regex: safeSearch, $options: "i" } },
+      { company: { $regex: safeSearch, $options: "i" } },
+      { description: { $regex: safeSearch, $options: "i" } },
+    ];
+  }
+  if (location) filter.location = { $regex: escapeRegex(location), $options: "i" };
 
   const totalJobs = await Job.countDocuments(filter);
   const totalPages = Math.ceil(totalJobs / JOBS_PER_PAGE);

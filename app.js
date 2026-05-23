@@ -56,12 +56,12 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc:  ["'self'"],
-        scriptSrc:   ["'self'", "cdn.jsdelivr.net", "'unsafe-inline'"],
+        scriptSrc:   ["'self'", "cdn.jsdelivr.net", "'unsafe-inline'", "https://www.google.com", "https://www.gstatic.com"],
         styleSrc:    ["'self'", "cdn.jsdelivr.net", "fonts.googleapis.com", "cdnjs.cloudflare.com", "'unsafe-inline'"],
         fontSrc:     ["'self'", "fonts.gstatic.com", "cdn.jsdelivr.net", "cdnjs.cloudflare.com"],
-        imgSrc:      ["'self'", "res.cloudinary.com", "data:", "blob:"],
+        imgSrc:      ["'self'", "res.cloudinary.com", "data:", "blob:", "https://www.google.com", "https://www.gstatic.com"],
         connectSrc:  ["'self'"],
-        frameSrc:    ["'none'"],
+        frameSrc:    ["https://www.google.com"],  // reCAPTCHA renders in an iframe
         objectSrc:   ["'none'"],
         // upgrade-insecure-requests omitted so HTTP works in development
       },
@@ -115,6 +115,7 @@ app.use((req, res, next) => {
   res.locals.success = req.flash("success") || [];
   res.locals.error = req.flash("error") || [];
   res.locals.currUser = req.user;
+  res.locals.recaptchaSiteKey = process.env.RECAPTCHA_SITE_KEY;
   next();
 });
 

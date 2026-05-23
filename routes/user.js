@@ -1,19 +1,19 @@
-const express = require("express");
-const router = express.Router();
+const express  = require("express");
+const router   = express.Router();
 const rateLimit = require("express-rate-limit");
 const wrapAsync = require("../utils/wrapAsync");
-const User = require("../models/user.js");
-const passport = require("passport");
+const User      = require("../models/user.js");
+const passport  = require("passport");
 const {
   saveRedirectUrl,
   validateSignup,
   validateLogin,
-} = require("./middleware.js"); // added validation middleware
+} = require("./middleware.js");
 
 const userController = require("../controllers/users.js");
 
 const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000,
   max: 5,
   standardHeaders: true,
   legacyHeaders: false,
@@ -27,13 +27,12 @@ const loginLimiter = rateLimit({
 // Signup Routes
 // =======================
 
-// Render signup form
 router.get("/signup", userController.renderSignupForm);
 
-// Handle signup form submission with Joi validation
 router.post(
   "/signup",
-  validateSignup, // validate input before signup
+  wrapAsync(userController.checkRecaptcha), // verify reCAPTCHA before registering
+  validateSignup,
   wrapAsync(userController.signup),
 );
 
@@ -41,15 +40,14 @@ router.post(
 // Login Routes
 // =======================
 
-// Render login form
 router.get("/login", userController.renderLoginForm);
 
-// Handle login with validation and Passport authentication
 router.post(
   "/login",
-  loginLimiter,  // max 5 attempts per 15 min per IP
-  saveRedirectUrl, // optional: saves redirect URL after login
-  validateLogin, // validate input before login
+  loginLimiter,
+  wrapAsync(userController.checkRecaptcha), // verify reCAPTCHA before authenticating
+  saveRedirectUrl,
+  validateLogin,
   passport.authenticate("local", {
     failureRedirect: "/login",
     failureFlash: true,
@@ -60,6 +58,7 @@ router.post(
 // =======================
 // Logout Route
 // =======================
+
 router.get("/logout", userController.logout);
 
 module.exports = router;
