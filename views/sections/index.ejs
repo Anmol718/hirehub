@@ -148,6 +148,47 @@
   .pg-btn:hover { border-color: var(--hh-brand); color: var(--hh-brand); background: var(--hh-border-light); }
   .pg-btn.active { background: var(--hh-brand); color: #fff; border-color: var(--hh-brand); box-shadow: 0 2px 8px rgba(26,26,46,0.2); }
   .pg-btn.active:hover { background: var(--hh-brand-mid); }
+
+  /* ── Mobile responsive ── */
+  @media (max-width: 767.98px) {
+    .jobs-hero { padding: 36px 0 24px; }
+    .jobs-hero h1 { font-size: 22px; }
+    .jobs-hero p  { font-size: 13px; }
+
+    /* Search bar: hide location on mobile */
+    .search-bar { flex-wrap: wrap; padding: 8px; gap: 6px; border-radius: 10px; margin-top: 16px; }
+    .search-bar .sb-sep { display: none; }
+    .search-bar i.bi-geo-alt { display: none; }
+    .search-bar input[name="location"] { display: none; }
+    .search-bar input { flex: 1; min-width: 0; }
+    .search-bar button { flex: 1 1 100%; justify-content: center; }
+
+    /* Filter chips: horizontal scroll instead of wrap */
+    .filter-row {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 12px 0 8px;
+      gap: 6px;
+    }
+    .filter-row::-webkit-scrollbar { display: none; }
+    .filter-chip { white-space: nowrap; flex-shrink: 0; }
+    .results-badge { flex-shrink: 0; }
+    .filter-label { flex-shrink: 0; }
+
+    /* Job cards */
+    .job-card-body { padding: 16px; }
+    .jc-title { font-size: 14.5px; }
+    .jc-btn { padding: 7px 13px; font-size: 12.5px; }
+
+    /* Pagination */
+    .pagination-row { gap: 4px; }
+    .pg-btn { padding: 7px 12px; font-size: 12px; }
+
+    /* Empty state */
+    .empty-state { padding: 56px 16px; }
+  }
 </style>
 
 <!-- Hero -->

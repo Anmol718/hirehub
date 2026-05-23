@@ -42,12 +42,22 @@ module.exports.renderChat = async (req, res) => {
 };
 
 module.exports.sendMessage = async (req, res) => {
-  try {
-    const { message } = req.body;
-    if (!message || !message.trim()) {
-      return res.status(400).json({ error: "Message cannot be empty." });
-    }
+  const { message } = req.body;
 
+  // Validate before setting SSE headers so we can still return JSON errors
+  if (!message || !message.trim()) {
+    return res.status(400).json({ error: "Message cannot be empty." });
+  }
+
+  // Switch to SSE mode
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  res.flushHeaders();
+
+  let fullText = "";
+
+  try {
     let chat = await Chat.findOne({ user: req.user._id });
     if (!chat) {
       chat = new Chat({ user: req.user._id, messages: [] });
@@ -65,7 +75,7 @@ module.exports.sendMessage = async (req, res) => {
       content: m.content,
     }));
 
-    const response = await client.messages.create({
+    const stream = client.messages.stream({
       model: "claude-opus-4-7",
       max_tokens: 1024,
       system: [
@@ -78,14 +88,27 @@ module.exports.sendMessage = async (req, res) => {
       messages: historyForAPI,
     });
 
-    const assistantText = response.content[0].text;
-    chat.messages.push({ role: "assistant", content: assistantText });
+    // Stream each text chunk to the client as it arrives
+    stream.on("text", (text) => {
+      fullText += text;
+      res.write(`data: ${JSON.stringify(text)}\n\n`);
+    });
+
+    // Wait for the stream to fully complete
+    await stream.finalMessage();
+
+    // Persist complete assistant reply to MongoDB
+    chat.messages.push({ role: "assistant", content: fullText });
     await chat.save();
 
-    res.json({ message: assistantText });
+    res.write("data: [DONE]\n\n");
+    res.end();
   } catch (err) {
-    console.error("Chatbot error:", err);
-    res.status(500).json({ error: "Something went wrong. Please try again." });
+    console.error("Chatbot stream error:", err);
+    if (!res.writableEnded) {
+      res.write("data: [ERROR]\n\n");
+      res.end();
+    }
   }
 };
 

@@ -159,6 +159,48 @@
   .btn-send:active  { transform: scale(0.95); }
   .btn-send:disabled { background: #ccc; cursor: not-allowed; }
   .input-hint { font-size: 11px; color: #aaa; text-align: center; margin-top: 6px; }
+
+  /* ── Mobile ── */
+  @media (max-width: 767.98px) {
+    .chat-page {
+      height: calc(100dvh - 56px); /* dvh accounts for browser chrome on mobile */
+      margin: 0;                   /* remove the negative desktop margin */
+    }
+    .chat-header { padding: 10px 14px; }
+    .chat-header h5 { font-size: 13.5px; }
+    .chat-header p  { font-size: 11px; }
+    .bot-avatar     { width: 30px; height: 30px; font-size: 14px; border-radius: 8px; }
+    .btn-clear      { padding: 5px 10px; font-size: 12px; }
+
+    .messages-area { padding: 14px; gap: 12px; }
+    .msg-bubble     { max-width: 88%; font-size: 13.5px; padding: 10px 13px; }
+    .msg-avatar     { width: 28px; height: 28px; font-size: 11px; border-radius: 7px; }
+
+    .input-area { padding: 8px 14px 12px; }
+    .input-row  { gap: 8px; }
+    .input-row textarea { font-size: 14px; padding: 9px 12px; }
+    .btn-send   { width: 40px; height: 40px; font-size: 16px; border-radius: 10px; }
+    .input-hint { font-size: 10.5px; }
+
+    .welcome-state { padding: 20px 14px; }
+    .welcome-icon  { width: 60px; height: 60px; font-size: 26px; border-radius: 16px; }
+    .welcome-state h4 { font-size: 17px; }
+    .welcome-state p  { font-size: 13px; }
+    .suggestion-chip  { font-size: 12px; padding: 7px 12px; }
+  }
+
+  /* Blinking cursor while streaming */
+  .message-row.bot.streaming .msg-bubble::after {
+    content: "▌";
+    display: inline;
+    color: #7c3aed;
+    animation: blink-cursor 0.7s step-end infinite;
+    margin-left: 1px;
+  }
+  @keyframes blink-cursor {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
 </style>
 
 <div class="chat-page">
@@ -262,11 +304,11 @@
 <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
 
 <script>
-  const messagesArea = document.getElementById("messagesArea");
-  const chatInput    = document.getElementById("chatInput");
-  const sendBtn      = document.getElementById("sendBtn");
+  const messagesArea   = document.getElementById("messagesArea");
+  const chatInput      = document.getElementById("chatInput");
+  const sendBtn        = document.getElementById("sendBtn");
   const typingIndicator = document.getElementById("typingIndicator");
-  const welcomeState = document.getElementById("welcomeState");
+  const welcomeState   = document.getElementById("welcomeState");
   const currentUsername = "<%= currUser.username[0].toUpperCase() %>";
 
   // Configure marked for safe rendering
@@ -306,8 +348,8 @@
     messagesArea.scrollTop = messagesArea.scrollHeight;
   }
 
+  // Append a fully-formed message bubble (used for user messages and error messages)
   function appendMessage(role, content) {
-    // Hide welcome state once a message is added
     if (welcomeState) welcomeState.style.display = "none";
 
     const row = document.createElement("div");
@@ -324,16 +366,35 @@
     if (role === "assistant") {
       bubble.innerHTML = marked.parse(content);
     } else {
-      // Plain text for user messages (escape HTML)
       bubble.textContent = content;
     }
 
     row.appendChild(avatar);
     row.appendChild(bubble);
-
-    // Insert before the typing indicator
     messagesArea.insertBefore(row, typingIndicator);
     scrollToBottom();
+  }
+
+  // Create an empty streaming bubble (appears word-by-word)
+  function createStreamingBubble() {
+    if (welcomeState) welcomeState.style.display = "none";
+
+    const row = document.createElement("div");
+    row.className = "message-row bot streaming";
+
+    const avatar = document.createElement("div");
+    avatar.className = "msg-avatar bot";
+    avatar.innerHTML = '<i class="bi bi-robot"></i>';
+
+    const bubble = document.createElement("div");
+    bubble.className = "msg-bubble";
+
+    row.appendChild(avatar);
+    row.appendChild(bubble);
+    messagesArea.insertBefore(row, typingIndicator);
+    scrollToBottom();
+
+    return { row, bubble };
   }
 
   async function sendMessage() {
@@ -346,9 +407,14 @@
     chatInput.style.height = "auto";
     sendBtn.disabled = true;
 
-    // Show typing indicator
+    // Show typing indicator until first chunk arrives
     typingIndicator.classList.add("show");
     scrollToBottom();
+
+    let streamRow  = null;
+    let botBubble  = null;
+    let fullText   = "";
+    let finished   = false;
 
     try {
       const res = await fetch("/chatbot/message", {
@@ -357,21 +423,99 @@
         body: JSON.stringify({ message: text }),
       });
 
-      const data = await res.json();
-
-      typingIndicator.classList.remove("show");
-
-      if (res.ok) {
-        appendMessage("assistant", data.message);
-      } else {
+      // Non-SSE error response (e.g. validation failure before headers were set)
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        typingIndicator.classList.remove("show");
         appendMessage("assistant", `⚠️ ${data.error || "Something went wrong. Please try again."}`);
+        return;
       }
+
+      const reader  = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+
+        // SSE events are separated by double newlines
+        const events = buffer.split("\n\n");
+        buffer = events.pop() ?? ""; // last element may be incomplete
+
+        for (const event of events) {
+          const line = event.trim();
+          if (!line.startsWith("data: ")) continue;
+          const payload = line.slice(6); // strip "data: "
+
+          if (payload === "[DONE]") {
+            finished = true;
+            // Render full accumulated text as markdown
+            if (botBubble) {
+              botBubble.innerHTML = marked.parse(fullText);
+              streamRow.classList.remove("streaming"); // remove blinking cursor
+            }
+            scrollToBottom();
+            break;
+          }
+
+          if (payload === "[ERROR]") {
+            finished = true;
+            typingIndicator.classList.remove("show");
+            if (!botBubble) {
+              appendMessage("assistant", "⚠️ Something went wrong. Please try again.");
+            } else {
+              // Render whatever we got, then stop
+              botBubble.innerHTML = marked.parse(fullText || "⚠️ The response was cut short.");
+              streamRow.classList.remove("streaming");
+            }
+            break;
+          }
+
+          // Regular chunk
+          try {
+            const chunk = JSON.parse(payload);
+            fullText += chunk;
+
+            // First chunk: swap typing indicator for the streaming bubble
+            if (!botBubble) {
+              typingIndicator.classList.remove("show");
+              const created = createStreamingBubble();
+              streamRow = created.row;
+              botBubble = created.bubble;
+            }
+
+            // Show plain text while streaming (markdown rendered at [DONE])
+            botBubble.textContent = fullText;
+            scrollToBottom();
+          } catch (_) {
+            // ignore malformed chunk
+          }
+        }
+
+        if (finished) break;
+      }
+
+      // Safety fallback: render markdown if stream closed without [DONE]
+      if (!finished && botBubble) {
+        botBubble.innerHTML = marked.parse(fullText);
+        streamRow.classList.remove("streaming");
+      }
+
     } catch (err) {
       typingIndicator.classList.remove("show");
-      appendMessage("assistant", "⚠️ Network error. Please check your connection and try again.");
+      if (!botBubble) {
+        appendMessage("assistant", "⚠️ Network error. Please check your connection and try again.");
+      } else {
+        botBubble.innerHTML = marked.parse(fullText || "⚠️ Connection lost.");
+        streamRow && streamRow.classList.remove("streaming");
+      }
     } finally {
       sendBtn.disabled = false;
       chatInput.focus();
+      scrollToBottom();
     }
   }
 </script>

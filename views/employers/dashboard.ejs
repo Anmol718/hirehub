@@ -119,6 +119,35 @@
     box-shadow: 0 4px 16px rgba(0,0,0,0.2);
   }
   .cta-banner a:hover { background: #f1f5f9; color: #4f46e5; transform: translateY(-2px); box-shadow: 0 6px 22px rgba(0,0,0,0.25); }
+
+  /* ── Mobile ── */
+  @media (max-width: 767.98px) {
+    .emp-hero { padding: 36px 0 28px; }
+    .emp-hero h1 { font-size: 22px; }
+    .emp-hero p  { font-size: 14px; margin-bottom: 20px; }
+    .hero-btns { flex-direction: column; gap: 10px; }
+    .btn-hero-primary, .btn-hero-outline { width: 100%; justify-content: center; padding: 12px 20px; }
+
+    /* Stats: 2×2 grid */
+    .dash-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0 28px; }
+    .dash-stat  { min-width: 0; flex: none; padding: 14px 16px; gap: 10px; }
+    .dash-stat-icon { width: 38px; height: 38px; font-size: 17px; }
+    .dash-stat-num  { font-size: 22px; }
+
+    /* Section */
+    .emp-section { padding: 32px 0; }
+    .emp-section-title { font-size: 17px; }
+
+    /* CTA banner */
+    .cta-banner { padding: 22px 18px; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .cta-banner-icon { width: 48px; height: 48px; font-size: 22px; border-radius: 14px; }
+    .cta-banner h4 { font-size: 16px; }
+    .cta-banner a  { margin-left: 0; width: 100%; justify-content: center; }
+
+    /* Feature cards */
+    .feat-icon { width: 44px; height: 44px; font-size: 19px; }
+    .feat-card { padding: 22px 20px; }
+  }
 </style>
 
 <!-- Hero -->

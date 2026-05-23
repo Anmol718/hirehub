@@ -14,6 +14,8 @@ router.get(
 
 // Manage all jobs
 router.get("/jobs", isLoggedIn, isAdmin, wrapAsync(adminController.manageJobs));
+router.post("/jobs/:id/approve", isLoggedIn, isAdmin, wrapAsync(adminController.approveJob));
+router.post("/jobs/:id/reject",  isLoggedIn, isAdmin, wrapAsync(adminController.rejectJob));
 router.delete(
   "/jobs/:id",
   isLoggedIn,

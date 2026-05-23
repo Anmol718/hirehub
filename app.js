@@ -4,6 +4,7 @@ if (process.env.NODE_ENV != "production") {
 
 const express = require("express");
 const app = express();
+const helmet = require("helmet");
 const mongoose = require("mongoose");
 const Job = require("./models/jobs.js");
 const path = require("path");
@@ -40,12 +41,34 @@ main()
 
 async function main() {
   await mongoose.connect(dbUrl);
+  // One-time migration: mark all pre-moderation jobs as approved so they keep showing
+  await Job.updateMany({ status: { $exists: false } }, { $set: { status: "approved" } });
 }
 
 // Set EJS as the templating engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views")); // views folder
 app.engine("ejs", ejsMate); // enable layout support
+
+// Security headers
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc:  ["'self'"],
+        scriptSrc:   ["'self'", "cdn.jsdelivr.net", "'unsafe-inline'"],
+        styleSrc:    ["'self'", "cdn.jsdelivr.net", "fonts.googleapis.com", "cdnjs.cloudflare.com", "'unsafe-inline'"],
+        fontSrc:     ["'self'", "fonts.gstatic.com", "cdn.jsdelivr.net", "cdnjs.cloudflare.com"],
+        imgSrc:      ["'self'", "res.cloudinary.com", "data:", "blob:"],
+        connectSrc:  ["'self'"],
+        frameSrc:    ["'none'"],
+        objectSrc:   ["'none'"],
+        // upgrade-insecure-requests omitted so HTTP works in development
+      },
+    },
+    crossOriginEmbedderPolicy: false,
+  })
+);
 
 // Middleware
 app.set("trust proxy", 1);
@@ -109,7 +132,7 @@ app.get("/", (req, res) => res.redirect("/home"));
 
 // Home route - display featured jobs on landing page
 app.get("/home", async (req, res) => {
-  const featuredJobs = await Job.find({}).limit(3); // get 3 jobs
+  const featuredJobs = await Job.find({ status: "approved" }).limit(3);
   res.render("sections/home.ejs", { featuredJobs });
 });
 

@@ -2,13 +2,30 @@
 
 <style>
   .page-card { background: #fff; border-radius: 14px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04); }
+
   .page-card-header {
     padding: 16px 24px; border-bottom: 1px solid #f1f5f9;
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
     background: linear-gradient(135deg, #0f172a, #1a1a2e);
   }
   .page-card-header h6 { margin: 0; font-weight: 700; font-size: 15px; color: #fff; display: flex; align-items: center; gap: 8px; }
   .page-card-header span { font-size: 13px; color: rgba(255,255,255,0.5); }
+
+  /* Filter bar */
+  .filter-bar { padding: 14px 20px; border-bottom: 1px solid #f1f5f9; display: flex; gap: 8px; flex-wrap: wrap; background: #f8fafc; align-items: center; }
+  .filter-chip {
+    padding: 5px 14px; border-radius: 9999px; font-size: 13px; font-weight: 600;
+    border: 1.5px solid #e2e8f0; background: #fff; color: #64748b;
+    cursor: pointer; transition: all 0.18s; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .filter-chip:hover { border-color: #7c3aed; color: #7c3aed; background: #faf5ff; }
+  .filter-chip.active { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff; border-color: #4f46e5; box-shadow: 0 2px 8px rgba(124,58,237,0.3); }
+  .filter-chip.active:hover { color: #fff; }
+  .pending-badge {
+    background: #fbbf24; color: #0f172a; border-radius: 9999px;
+    padding: 1px 7px; font-size: 11px; font-weight: 800; margin-left: 2px;
+  }
 
   .admin-table { width: 100%; border-collapse: collapse; }
   .admin-table thead tr { background: #f8fafc; }
@@ -18,7 +35,7 @@
     white-space: nowrap;
   }
   .admin-table td {
-    padding: 14px 16px; font-size: 14px; color: #475569;
+    padding: 13px 16px; font-size: 14px; color: #475569;
     border-bottom: 1px solid #f8fafc; vertical-align: middle;
   }
   .admin-table tbody tr:hover { background: #fafbfd; }
@@ -34,29 +51,112 @@
   .badge-internship { background: #d1fae5; color: #059669; border: 1px solid #6ee7b7; }
   .badge-mode { padding: 3px 10px; border-radius: 9999px; font-size: 11.5px; font-weight: 600; background: #f1f5f9; color: #64748b; }
 
+  /* Status badges */
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 9999px; font-size: 11.5px; font-weight: 700;
+  }
+  .status-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .sp-approved { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+  .sp-approved::before { background: #22c55e; }
+  .sp-pending  { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+  .sp-pending::before  { background: #f97316; }
+  .sp-rejected { background: #fff1f2; color: #9f1239; border: 1px solid #fecdd3; }
+  .sp-rejected::before { background: #f43f5e; }
+
+  /* Action buttons */
+  .action-group { display: flex; gap: 6px; align-items: center; flex-wrap: nowrap; }
+  .btn-approve {
+    background: linear-gradient(135deg, #059669, #10b981); color: #fff; border: none;
+    border-radius: 7px; padding: 5px 12px; font-size: 12.5px; font-weight: 700;
+    cursor: pointer; transition: opacity 0.18s;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .btn-approve:hover { opacity: 0.88; }
+  .btn-reject-job {
+    background: linear-gradient(135deg, #dc2626, #ef4444); color: #fff; border: none;
+    border-radius: 7px; padding: 5px 12px; font-size: 12.5px; font-weight: 700;
+    cursor: pointer; transition: opacity 0.18s;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .btn-reject-job:hover { opacity: 0.88; }
+  .btn-delete {
+    background: none; border: 1.5px solid #e2e8f0; color: #94a3b8;
+    border-radius: 7px; padding: 5px 10px; font-size: 12.5px; font-weight: 600;
+    cursor: pointer; transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .btn-delete:hover { border-color: #fca5a5; background: #fff1f2; color: #dc2626; }
+
   .empty-state { text-align: center; padding: 60px 20px; }
   .empty-icon { width: 64px; height: 64px; border-radius: 18px; background: #eef2ff; color: #4f46e5; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px; }
   .empty-state p { font-size: 14px; color: #94a3b8; margin: 0; }
 
-  .btn-delete {
-    background: none; border: 1.5px solid #e2e8f0; color: #94a3b8;
-    border-radius: 8px; padding: 5px 12px; font-size: 12.5px; font-weight: 600;
-    cursor: pointer; transition: all 0.18s;
-    display: inline-flex; align-items: center; gap: 5px;
+  /* ── Mobile ── */
+  @media (max-width: 767.98px) {
+    .page-card-header { padding: 12px 14px; flex-direction: column; align-items: flex-start; gap: 8px; }
+    .page-card-header h6 { font-size: 13px; }
+
+    /* Filter chips: horizontal scroll */
+    .filter-bar {
+      overflow-x: auto; flex-wrap: nowrap;
+      gap: 6px; padding: 10px 14px;
+      scrollbar-width: none;
+    }
+    .filter-bar::-webkit-scrollbar { display: none; }
+    .filter-chip { white-space: nowrap; flex-shrink: 0; font-size: 12px; padding: 4px 12px; }
+
+    /* Hide non-essential columns: Location, Mode, Posted By, Posted At */
+    .admin-table th:nth-child(2),
+    .admin-table td:nth-child(2),
+    .admin-table th:nth-child(4),
+    .admin-table td:nth-child(4),
+    .admin-table th:nth-child(6),
+    .admin-table td:nth-child(6),
+    .admin-table th:nth-child(7),
+    .admin-table td:nth-child(7) { display: none; }
+
+    .admin-table th, .admin-table td { padding: 10px 12px; font-size: 13px; }
+    .job-title { font-size: 13px; }
+    .job-company { font-size: 11px; }
+
+    /* Action group: stack vertically */
+    .action-group { flex-direction: column; gap: 5px; min-width: 80px; }
+    .btn-approve, .btn-reject-job, .btn-delete { width: 100%; justify-content: center; font-size: 12px; padding: 5px 8px; }
   }
-  .btn-delete:hover { border-color: #fca5a5; background: #fff1f2; color: #dc2626; }
 </style>
 
 <div class="page-card">
+
+  <!-- Header -->
   <div class="page-card-header">
     <h6><i class="bi bi-briefcase-fill"></i>All Jobs</h6>
-    <span><%= jobs.length %> job<%= jobs.length !== 1 ? 's' : '' %> total</span>
+    <div style="display:flex;gap:14px;font-size:13px;">
+      <span style="color:rgba(255,255,255,0.6);"><%= allJobsCount %> total</span>
+      <% if (pendingJobsCount > 0) { %>
+        <span style="color:#fbbf24;font-weight:700;display:flex;align-items:center;gap:5px;">
+          <i class="bi bi-hourglass-split"></i><%= pendingJobsCount %> pending review
+        </span>
+      <% } %>
+    </div>
   </div>
 
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <a href="/admin/jobs?filter=all"      class="filter-chip <%= currentFilter === 'all'      ? 'active' : '' %>"><i class="bi bi-grid-3x3-gap"></i> All (<%= allJobsCount %>)</a>
+    <a href="/admin/jobs?filter=pending"  class="filter-chip <%= currentFilter === 'pending'  ? 'active' : '' %>">
+      <i class="bi bi-hourglass-split"></i> Pending
+      <% if (pendingJobsCount > 0) { %><span class="pending-badge"><%= pendingJobsCount %></span><% } %>
+    </a>
+    <a href="/admin/jobs?filter=approved" class="filter-chip <%= currentFilter === 'approved' ? 'active' : '' %>"><i class="bi bi-check-circle"></i> Approved</a>
+    <a href="/admin/jobs?filter=rejected" class="filter-chip <%= currentFilter === 'rejected' ? 'active' : '' %>"><i class="bi bi-x-circle"></i> Rejected</a>
+  </div>
+
+  <!-- Table -->
   <% if (jobs.length === 0) { %>
     <div class="empty-state">
       <div class="empty-icon"><i class="bi bi-briefcase"></i></div>
-      <p>No jobs found.</p>
+      <p>No <%= currentFilter !== 'all' ? currentFilter : '' %> jobs found.</p>
     </div>
   <% } else { %>
     <div class="table-responsive">
@@ -67,9 +167,10 @@
             <th>Location</th>
             <th>Type</th>
             <th>Mode</th>
+            <th>Status</th>
             <th>Posted By</th>
             <th>Posted At</th>
-            <th>Action</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -79,37 +180,58 @@
                 <div class="job-title"><%= job.title %></div>
                 <div class="job-company"><i class="bi bi-building"></i><%= job.company %></div>
               </td>
-              <td>
-                <span style="display:flex;align-items:center;gap:4px;font-size:13px;">
-                  <i class="bi bi-geo-alt" style="color:#94a3b8;"></i><%= job.location %>
-                </span>
-              </td>
+              <td><span style="display:flex;align-items:center;gap:4px;font-size:13px;"><i class="bi bi-geo-alt" style="color:#94a3b8;"></i><%= job.location %></span></td>
               <td>
                 <% if (job.jobType) { %>
                   <span class="badge-type badge-<%= job.jobType.toLowerCase().replace('-','') %>"><%= job.jobType %></span>
-                <% } else { %>
-                  <span style="color:#94a3b8;">—</span>
-                <% } %>
+                <% } else { %><span style="color:#94a3b8;">—</span><% } %>
               </td>
               <td>
                 <% if (job.workMode) { %>
                   <span class="badge-mode"><%= job.workMode %></span>
-                <% } else { %>
-                  <span style="color:#94a3b8;">—</span>
-                <% } %>
+                <% } else { %><span style="color:#94a3b8;">—</span><% } %>
               </td>
               <td>
-                <span style="font-weight:500;color:#0f172a;"><%= job.owner ? job.owner.username : 'Deleted User' %></span>
+                <span class="status-pill sp-<%= job.status || 'pending' %>">
+                  <%= (job.status || 'pending').charAt(0).toUpperCase() + (job.status || 'pending').slice(1) %>
+                </span>
               </td>
+              <td><span style="font-weight:500;color:#0f172a;"><%= job.owner ? job.owner.username : 'Deleted User' %></span></td>
               <td style="font-size:13px;color:#94a3b8;">
                 <%= job.postedAt ? new Date(job.postedAt).toLocaleDateString('en-CA', { day:'numeric', month:'short', year:'numeric' }) : '—' %>
               </td>
               <td>
-                <form action="/admin/jobs/<%= job._id %>?_method=DELETE" method="POST">
-                  <button class="btn-delete" onclick="return confirm('Delete this job?')">
-                    <i class="bi bi-trash"></i> Delete
-                  </button>
-                </form>
+                <div class="action-group">
+                  <% if (job.status === 'pending' || !job.status) { %>
+                    <form action="/admin/jobs/<%= job._id %>/approve" method="POST">
+                      <button class="btn-approve" onclick="return confirm('Approve this job and make it live?')">
+                        <i class="bi bi-check-lg"></i> Approve
+                      </button>
+                    </form>
+                    <form action="/admin/jobs/<%= job._id %>/reject" method="POST">
+                      <button class="btn-reject-job" onclick="return confirm('Reject this job?')">
+                        <i class="bi bi-x-lg"></i> Reject
+                      </button>
+                    </form>
+                  <% } else if (job.status === 'rejected') { %>
+                    <form action="/admin/jobs/<%= job._id %>/approve" method="POST">
+                      <button class="btn-approve" onclick="return confirm('Approve this job and make it live?')">
+                        <i class="bi bi-check-lg"></i> Approve
+                      </button>
+                    </form>
+                  <% } else { %>
+                    <form action="/admin/jobs/<%= job._id %>/reject" method="POST">
+                      <button class="btn-reject-job" onclick="return confirm('Reject and unpublish this job?')">
+                        <i class="bi bi-x-lg"></i> Reject
+                      </button>
+                    </form>
+                  <% } %>
+                  <form action="/admin/jobs/<%= job._id %>?_method=DELETE" method="POST">
+                    <button class="btn-delete" onclick="return confirm('Permanently delete this job?')">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </form>
+                </div>
               </td>
             </tr>
           <% } %>
@@ -117,4 +239,5 @@
       </table>
     </div>
   <% } %>
+
 </div>

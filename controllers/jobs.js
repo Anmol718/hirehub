@@ -5,7 +5,7 @@ const Application = require("../models/application.js");
 // Show all jobs
 module.exports.index = async (req, res) => {
   const { jobType, search, location, page } = req.query;
-  const filter = {};
+  const filter = { status: "approved" }; // only show approved jobs to candidates
   const JOBS_PER_PAGE = 9;
   const currentPage = Math.max(1, parseInt(page) || 1);
 
@@ -80,8 +80,8 @@ module.exports.createJob = async (req, res) => {
   newJob.owner = req.user._id;
   await newJob.save();
 
-  req.flash("success", "New Job Post Created!");
-  res.redirect("/jobs");
+  req.flash("success", "Your job has been submitted and is pending admin approval.");
+  res.redirect("/employers/dashboard");
 };
 
 // Render edit form
