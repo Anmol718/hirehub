@@ -1,97 +1,168 @@
 <% layout("layouts/boilerplate") %>
 
 <style>
+  /* ── Page hero ── */
   .jobs-hero {
-    background: linear-gradient(135deg, #1a1a2e, #2d2d5e);
-    color: #fff;
-    padding: 48px 0 36px;
+    background: linear-gradient(140deg, #0f172a 0%, #1a1a2e 50%, #2d2d5e 100%);
+    color: #fff; padding: 52px 0 40px;
+    position: relative; overflow: hidden;
   }
-  .jobs-hero h1 { font-weight: 800; font-size: 32px; margin-bottom: 6px; }
-  .jobs-hero p  { color: rgba(255,255,255,0.65); font-size: 15px; margin: 0; }
+  .jobs-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 24px 24px; pointer-events: none;
+  }
+  .jobs-hero .inner { position: relative; z-index: 1; }
+  .jobs-hero h1 { font-size: 32px; font-weight: 900; margin-bottom: 4px; letter-spacing: -0.04em; }
+  .jobs-hero p  { color: rgba(255,255,255,0.55); font-size: 14.5px; margin: 0; }
+
   .search-bar {
-    background: #fff;
-    border-radius: 12px;
-    padding: 14px 18px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    background: #fff; border-radius: 12px;
+    padding: 10px 10px 10px 18px;
+    display: flex; gap: 8px; align-items: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
     margin-top: 24px;
   }
   .search-bar input {
-    border: none;
-    outline: none;
-    font-size: 14px;
-    flex: 1;
-    color: #333;
+    border: none; outline: none; font-size: 14px;
+    flex: 1; color: #0f172a; font-family: 'Inter', sans-serif;
+    background: transparent;
   }
-  .search-bar .divider { width: 1px; height: 24px; background: #e0e0e0; }
-  .search-bar button { background: #1a1a2e; color: #fff; border: none; border-radius: 8px; padding: 8px 20px; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; }
-  .filter-bar {
-    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
-    padding: 16px 0 8px;
+  .search-bar input::placeholder { color: #94a3b8; }
+  .search-bar .sb-sep { width: 1px; height: 22px; background: #e2e8f0; flex-shrink: 0; }
+  .search-bar button {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #fff; border: none; border-radius: 8px;
+    padding: 10px 22px; font-size: 14px; font-weight: 700;
+    cursor: pointer; white-space: nowrap; font-family: 'Inter', sans-serif;
+    transition: opacity 0.2s, transform 0.2s;
+    display: flex; align-items: center; gap: 6px;
   }
-  .filter-chip {
-    padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 500;
-    border: 1px solid #e0e0e0; background: #fff; color: #555;
-    text-decoration: none; transition: all 0.2s; cursor: pointer;
-  }
-  .filter-chip:hover, .filter-chip.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
-  .results-count { font-size: 13px; color: #888; margin-left: auto; }
+  .search-bar button:hover { opacity: 0.9; transform: translateY(-1px); }
 
+  /* ── Filter bar ── */
+  .filter-row {
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+    padding: 18px 0 10px;
+  }
+  .filter-label { font-size: 13px; font-weight: 600; color: var(--hh-text-2); }
+  .filter-chip {
+    padding: 6px 14px; border-radius: 9999px; font-size: 13px; font-weight: 500;
+    border: 1.5px solid var(--hh-border); background: var(--hh-surface);
+    color: var(--hh-text-2); text-decoration: none;
+    transition: all 0.18s var(--ease); cursor: pointer;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .filter-chip:hover { border-color: var(--hh-brand); color: var(--hh-brand); background: var(--hh-border-light); }
+  .filter-chip.active {
+    background: var(--hh-brand); color: #fff;
+    border-color: var(--hh-brand);
+    box-shadow: 0 2px 8px rgba(26,26,46,0.25);
+  }
+  .results-badge {
+    margin-left: auto; font-size: 13px; font-weight: 600;
+    color: var(--hh-text-muted); background: var(--hh-border-light);
+    border-radius: 9999px; padding: 4px 12px; border: 1px solid var(--hh-border);
+  }
+
+  /* ── Job Card ── */
   .job-card {
-    background: #fff;
+    background: var(--hh-surface);
     border-radius: 14px;
-    padding: 22px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    padding: 0;
+    box-shadow: var(--shadow-sm);
     height: 100%;
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease), border-color 0.22s;
     text-decoration: none;
     color: inherit;
-    border: 1px solid transparent;
+    border: 1px solid var(--hh-border-light);
+    overflow: hidden;
+    position: relative;
   }
-  .job-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); border-color: #e8ecf5; }
-  .company-logo {
-    width: 44px; height: 44px; border-radius: 10px;
-    background: #f0f2f5; display: flex; align-items: center; justify-content: center;
-    font-size: 18px; font-weight: 800; color: #1a1a2e; flex-shrink: 0;
+  .job-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+    border-color: rgba(79,70,229,0.18);
+    color: inherit;
   }
-  .job-title { font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0 0 2px; }
-  .job-company { font-size: 13px; color: #888; margin: 0; }
-  .job-meta { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
-  .job-meta span { font-size: 12px; color: #666; display: flex; align-items: center; gap: 4px; }
-  .tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-  .tag-blue   { background: #e8f0fe; color: #3b6fd4; }
-  .tag-green  { background: #e6f4ea; color: #2e7d32; }
-  .tag-orange { background: #fff3e0; color: #e65100; }
-  .tag-purple { background: #f3e8fd; color: #7b2da0; }
-  .job-desc { font-size: 13px; color: #777; line-height: 1.6; flex: 1; margin: 8px 0 16px; }
-  .job-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
-  .salary-tag { font-size: 13px; font-weight: 700; color: #2e7d32; }
-  .view-btn {
-    background: #1a1a2e; color: #fff; border: none; border-radius: 8px;
-    padding: 7px 16px; font-size: 13px; font-weight: 600; text-decoration: none;
-    transition: background 0.2s;
+  .job-card-accent {
+    height: 4px; width: 100%;
+    background: var(--hh-border-light);
   }
-  .view-btn:hover { background: #2d2d5e; color: #fff; }
-  .empty-state { text-align: center; padding: 80px 20px; color: #aaa; }
-  .empty-state i { font-size: 56px; display: block; margin-bottom: 16px; color: #ddd; }
+  .job-card-body { padding: 22px; flex: 1; display: flex; flex-direction: column; }
+
+  /* Accent colors per job type */
+  .jt-full-time  .job-card-accent { background: linear-gradient(90deg, #2563eb, #4f46e5); }
+  .jt-part-time  .job-card-accent { background: linear-gradient(90deg, #7c3aed, #a855f7); }
+  .jt-contract   .job-card-accent { background: linear-gradient(90deg, #d97706, #f59e0b); }
+  .jt-internship .job-card-accent { background: linear-gradient(90deg, #059669, #10b981); }
+
+  .co-badge {
+    width: 46px; height: 46px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800; color: #fff; flex-shrink: 0;
+    transition: transform 0.22s var(--ease-bounce);
+  }
+  .job-card:hover .co-badge { transform: scale(1.08) rotate(-3deg); }
+
+  .jc-title   { font-size: 15.5px; font-weight: 700; color: var(--hh-text); margin: 0 0 2px; line-height: 1.3; }
+  .jc-company { font-size: 13px; color: var(--hh-text-muted); margin: 0; }
+  .jc-meta    { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
+  .jc-meta span { font-size: 12.5px; color: var(--hh-text-2); display: flex; align-items: center; gap: 4px; }
+  .jc-desc { font-size: 13px; color: var(--hh-text-2); line-height: 1.65; flex: 1; margin-bottom: 18px; }
+  .jc-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 14px; border-top: 1px solid var(--hh-border-light); }
+  .jc-salary { font-size: 13px; font-weight: 700; color: var(--hh-green); display: flex; align-items: center; gap: 4px; }
+  .jc-btn {
+    background: var(--hh-brand); color: #fff; border: none; border-radius: 8px;
+    padding: 8px 16px; font-size: 13px; font-weight: 700; text-decoration: none;
+    transition: background 0.18s, transform 0.18s;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .jc-btn:hover { background: var(--hh-brand-mid); color: #fff; transform: translateX(2px); }
+
+  /* ── Empty state ── */
+  .empty-state {
+    text-align: center; padding: 90px 20px;
+    background: var(--hh-surface); border-radius: 16px;
+    border: 1px solid var(--hh-border-light);
+  }
+  .empty-state-icon {
+    width: 80px; height: 80px; border-radius: 24px;
+    background: var(--hh-accent-bg); color: var(--hh-accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px; margin: 0 auto 20px;
+  }
+  .empty-state h5 { font-size: 18px; font-weight: 700; color: var(--hh-text); margin-bottom: 8px; }
+  .empty-state p  { font-size: 14px; color: var(--hh-text-muted); margin: 0; }
+
+  /* ── Pagination ── */
+  .pagination-row { display: flex; justify-content: center; align-items: center; gap: 6px; margin: 40px 0 24px; flex-wrap: wrap; }
+  .pg-btn {
+    padding: 8px 16px; border-radius: 8px; border: 1.5px solid var(--hh-border);
+    background: var(--hh-surface); color: var(--hh-text-2);
+    font-size: 13px; font-weight: 600; text-decoration: none;
+    transition: all 0.18s; display: flex; align-items: center; gap: 5px;
+  }
+  .pg-btn:hover { border-color: var(--hh-brand); color: var(--hh-brand); background: var(--hh-border-light); }
+  .pg-btn.active { background: var(--hh-brand); color: #fff; border-color: var(--hh-brand); box-shadow: 0 2px 8px rgba(26,26,46,0.2); }
+  .pg-btn.active:hover { background: var(--hh-brand-mid); }
 </style>
 
 <!-- Hero -->
 <div class="jobs-hero">
-  <div class="container">
-    <h1>Find Your Next Opportunity</h1>
-    <p><%= totalJobs %> job<%= totalJobs !== 1 ? 's' : '' %> available right now</p>
+  <div class="container inner">
+    <h1><i class="bi bi-briefcase me-2"></i>Find Your Next Opportunity</h1>
+    <p><%= totalJobs %> job<%= totalJobs !== 1 ? 's' : '' %> available right now — updated daily</p>
+
     <form class="search-bar" method="GET" action="/jobs">
-      <i class="bi bi-search text-muted"></i>
-      <input type="text" name="search" value="<%= typeof search !== 'undefined' ? search : '' %>" placeholder="Job title, keyword..." />
-      <div class="divider"></div>
-      <i class="bi bi-geo-alt text-muted"></i>
-      <input type="text" name="location" value="<%= typeof location !== 'undefined' ? location : '' %>" placeholder="Location" />
-      <button type="submit">Search</button>
+      <i class="bi bi-search" style="color:#94a3b8;flex-shrink:0;"></i>
+      <input type="text" name="search" value="<%= typeof search !== 'undefined' ? search : '' %>" placeholder="Job title, skill, or keyword…" autocomplete="off" />
+      <div class="sb-sep"></div>
+      <i class="bi bi-geo-alt" style="color:#94a3b8;flex-shrink:0;"></i>
+      <input type="text" name="location" value="<%= typeof location !== 'undefined' ? location : '' %>" placeholder="City or remote…" style="max-width:160px;" autocomplete="off" />
+      <button type="submit"><i class="bi bi-search"></i>Search</button>
     </form>
   </div>
 </div>
@@ -99,68 +170,95 @@
 <div class="container py-4">
 
   <!-- Filter Bar -->
-  <div class="filter-bar">
-    <span style="font-size:13px;font-weight:600;color:#555;">Type:</span>
-    <a href="/jobs" class="filter-chip <%= typeof jobType === 'undefined' || !jobType ? 'active' : '' %>">All</a>
-    <a href="/jobs?jobType=Full-Time" class="filter-chip <%= typeof jobType !== 'undefined' && jobType === 'Full-Time' ? 'active' : '' %>">Full-Time</a>
-    <a href="/jobs?jobType=Part-Time" class="filter-chip <%= typeof jobType !== 'undefined' && jobType === 'Part-Time' ? 'active' : '' %>">Part-Time</a>
-    <a href="/jobs?jobType=Contract" class="filter-chip <%= typeof jobType !== 'undefined' && jobType === 'Contract' ? 'active' : '' %>">Contract</a>
-    <a href="/jobs?jobType=Internship" class="filter-chip <%= typeof jobType !== 'undefined' && jobType === 'Internship' ? 'active' : '' %>">Internship</a>
-    <span class="results-count"><%= totalJobs %> result<%= totalJobs !== 1 ? 's' : '' %></span>
+  <div class="filter-row">
+    <span class="filter-label">Type:</span>
+    <a href="/jobs" class="filter-chip <%= typeof jobType === 'undefined' || !jobType ? 'active' : '' %>">
+      <i class="bi bi-grid-3x3-gap"></i> All
+    </a>
+    <a href="/jobs?jobType=Full-Time" class="filter-chip <%= typeof jobType !== 'undefined' && jobType === 'Full-Time' ? 'active' : '' %>">
+      <i class="bi bi-briefcase"></i> Full-Time
+    </a>
+    <a href="/jobs?jobType=Part-Time" class="filter-chip <%= typeof jobType !== 'undefined' && jobType === 'Part-Time' ? 'active' : '' %>">
+      <i class="bi bi-clock-history"></i> Part-Time
+    </a>
+    <a href="/jobs?jobType=Contract" class="filter-chip <%= typeof jobType !== 'undefined' && jobType === 'Contract' ? 'active' : '' %>">
+      <i class="bi bi-file-earmark-text"></i> Contract
+    </a>
+    <a href="/jobs?jobType=Internship" class="filter-chip <%= typeof jobType !== 'undefined' && jobType === 'Internship' ? 'active' : '' %>">
+      <i class="bi bi-mortarboard"></i> Internship
+    </a>
+    <span class="results-badge"><i class="bi bi-funnel me-1"></i><%= totalJobs %> result<%= totalJobs !== 1 ? 's' : '' %></span>
   </div>
 
+  <!-- Job Grid -->
   <% if (allJobs.length === 0) { %>
-    <div class="empty-state">
-      <i class="bi bi-briefcase"></i>
-      <p style="font-size:16px;font-weight:600;color:#555;">No jobs found</p>
-      <p style="font-size:14px;">Try adjusting your search or filters.</p>
+    <div class="empty-state reveal">
+      <div class="empty-state-icon"><i class="bi bi-briefcase"></i></div>
+      <h5>No jobs found</h5>
+      <p>Try adjusting your search query or filters to see more results.</p>
+      <a href="/jobs" class="btn-hh-primary mt-4 d-inline-flex">Clear Filters</a>
     </div>
   <% } else { %>
-    <div class="row g-3">
-      <% for (let job of allJobs) { %>
-        <div class="col-md-6 col-lg-4">
-          <div class="job-card">
+    <div class="row g-3 mt-1">
+      <% for (let job of allJobs) {
+        const typeClass =
+          job.jobType === 'Full-Time'  ? 'jt-full-time'  :
+          job.jobType === 'Part-Time'  ? 'jt-part-time'  :
+          job.jobType === 'Contract'   ? 'jt-contract'   :
+          job.jobType === 'Internship' ? 'jt-internship'  : '';
+        const coGrad =
+          job.jobType === 'Full-Time'  ? 'linear-gradient(135deg,#2563eb,#4f46e5)' :
+          job.jobType === 'Part-Time'  ? 'linear-gradient(135deg,#7c3aed,#a855f7)' :
+          job.jobType === 'Contract'   ? 'linear-gradient(135deg,#d97706,#f59e0b)' :
+          job.jobType === 'Internship' ? 'linear-gradient(135deg,#059669,#10b981)' :
+          'linear-gradient(135deg,#1a1a2e,#4a5490)';
+      %>
+        <div class="col-md-6 col-lg-4 reveal">
+          <div class="job-card <%= typeClass %>">
+            <div class="job-card-accent"></div>
+            <div class="job-card-body">
 
-            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-              <div class="company-logo"><%= job.company[0].toUpperCase() %></div>
-              <div>
-                <p class="job-title"><%= job.title %></p>
-                <p class="job-company"><%= job.company %></p>
+              <div style="display:flex;align-items:flex-start;gap:13px;margin-bottom:13px;">
+                <div class="co-badge" style="background:<%= coGrad %>;"><%= job.company[0].toUpperCase() %></div>
+                <div style="flex:1;min-width:0;">
+                  <p class="jc-title"><%= job.title %></p>
+                  <p class="jc-company"><%= job.company %></p>
+                </div>
               </div>
+
+              <div class="jc-meta">
+                <span><i class="bi bi-geo-alt"></i><%= job.location %></span>
+                <% if (job.postedAt) { %>
+                  <span><i class="bi bi-clock"></i><%= new Date(job.postedAt).toLocaleDateString('en-CA', {day:'numeric',month:'short'}) %></span>
+                <% } %>
+              </div>
+
+              <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;">
+                <% if (job.jobType) { %>
+                  <span class="tag <%= job.jobType === 'Full-Time' ? 'tag-blue' : job.jobType === 'Part-Time' ? 'tag-purple' : job.jobType === 'Contract' ? 'tag-orange' : 'tag-green' %>"><%= job.jobType %></span>
+                <% } %>
+                <% if (job.workMode) { %>
+                  <span class="tag <%= job.workMode === 'Remote' ? 'tag-sky' : job.workMode === 'Hybrid' ? 'tag-purple' : 'tag-green' %>"><%= job.workMode %></span>
+                <% } %>
+                <% if (job.experienceLevel) { %>
+                  <span class="tag tag-accent"><%= job.experienceLevel %></span>
+                <% } %>
+              </div>
+
+              <p class="jc-desc">
+                <%= job.description.length > 95 ? job.description.substring(0, 92) + "…" : job.description %>
+              </p>
+
+              <div class="jc-footer">
+                <% if (job.salary) { %>
+                  <span class="jc-salary"><i class="bi bi-cash"></i>$<%= job.salary.toLocaleString() %> CAD</span>
+                <% } else { %>
+                  <span class="jc-salary" style="color:var(--hh-text-muted);font-weight:400;"><i class="bi bi-chat-dots me-1"></i>Salary negotiable</span>
+                <% } %>
+                <a href="/jobs/<%= job._id %>" class="jc-btn">Details <i class="bi bi-arrow-right"></i></a>
+              </div>
+
             </div>
-
-            <div class="job-meta">
-              <span><i class="bi bi-geo-alt"></i> <%= job.location %></span>
-              <% if (job.postedAt) { %>
-                <span><i class="bi bi-clock"></i> <%= new Date(job.postedAt).toLocaleDateString('en-IN', {day:'numeric',month:'short'}) %></span>
-              <% } %>
-            </div>
-
-            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
-              <% if (job.jobType) { %>
-                <span class="tag tag-blue"><%= job.jobType %></span>
-              <% } %>
-              <% if (job.workMode) { %>
-                <span class="tag tag-green"><%= job.workMode %></span>
-              <% } %>
-              <% if (job.experienceLevel) { %>
-                <span class="tag tag-orange"><%= job.experienceLevel %></span>
-              <% } %>
-            </div>
-
-            <p class="job-desc">
-              <%= job.description.length > 90 ? job.description.substring(0, 87) + "..." : job.description %>
-            </p>
-
-            <div class="job-footer">
-              <% if (job.salary) { %>
-                <span class="salary-tag"><i class="bi bi-cash me-1"></i>$<%= job.salary.toLocaleString() %> CAD</span>
-              <% } else { %>
-                <span></span>
-              <% } %>
-              <a href="/jobs/<%= job._id %>" class="view-btn">View Details</a>
-            </div>
-
           </div>
         </div>
       <% } %>
@@ -169,27 +267,23 @@
 
   <!-- Pagination -->
   <% if (totalPages > 1) { %>
-    <nav class="d-flex justify-content-center align-items-center gap-2 mt-4 pb-4 flex-wrap">
+    <nav class="pagination-row">
       <% if (currentPage > 1) { %>
-        <a href="/jobs?page=<%= currentPage - 1 %><%= jobType ? '&jobType=' + jobType : '' %><%= search ? '&search=' + search : '' %><%= location ? '&location=' + location : '' %>"
-           style="padding:7px 16px;border-radius:8px;border:1px solid #ddd;background:#fff;color:#1a1a2e;font-size:13px;font-weight:600;text-decoration:none;">
+        <a class="pg-btn" href="/jobs?page=<%= currentPage - 1 %><%= jobType ? '&jobType=' + jobType : '' %><%= search ? '&search=' + search : '' %><%= location ? '&location=' + location : '' %>">
           <i class="bi bi-chevron-left"></i> Prev
         </a>
       <% } %>
-
       <% for (let i = 1; i <= totalPages; i++) { %>
-        <a href="/jobs?page=<%= i %><%= jobType ? '&jobType=' + jobType : '' %><%= search ? '&search=' + search : '' %><%= location ? '&location=' + location : '' %>"
-           style="padding:7px 14px;border-radius:8px;border:1px solid <%= i === currentPage ? '#1a1a2e' : '#ddd' %>;background:<%= i === currentPage ? '#1a1a2e' : '#fff' %>;color:<%= i === currentPage ? '#fff' : '#555' %>;font-size:13px;font-weight:600;text-decoration:none;">
+        <a class="pg-btn <%= i === currentPage ? 'active' : '' %>" href="/jobs?page=<%= i %><%= jobType ? '&jobType=' + jobType : '' %><%= search ? '&search=' + search : '' %><%= location ? '&location=' + location : '' %>">
           <%= i %>
         </a>
       <% } %>
-
       <% if (currentPage < totalPages) { %>
-        <a href="/jobs?page=<%= currentPage + 1 %><%= jobType ? '&jobType=' + jobType : '' %><%= search ? '&search=' + search : '' %><%= location ? '&location=' + location : '' %>"
-           style="padding:7px 16px;border-radius:8px;border:1px solid #ddd;background:#fff;color:#1a1a2e;font-size:13px;font-weight:600;text-decoration:none;">
+        <a class="pg-btn" href="/jobs?page=<%= currentPage + 1 %><%= jobType ? '&jobType=' + jobType : '' %><%= search ? '&search=' + search : '' %><%= location ? '&location=' + location : '' %>">
           Next <i class="bi bi-chevron-right"></i>
         </a>
       <% } %>
     </nav>
   <% } %>
+
 </div>

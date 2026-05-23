@@ -35,6 +35,13 @@ const applicationSchema = new mongoose.Schema(
       default: "Pending",
     },
     appliedAt: { type: Date, default: Date.now },
+    aiScreening: {
+      score: Number,
+      matchingSkills: [String],
+      missingSkills: [String],
+      recommendation: String,
+      screenedAt: Date,
+    },
   },
   { timestamps: true },
 );

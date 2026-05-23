@@ -22,21 +22,24 @@
     padding: 32px 36px 28px;
     text-align: center;
   }
-  .auth-header .brand { font-size: 22px; font-weight: 900; color: #fff; letter-spacing: -0.5px; }
-  .auth-header .brand span { color: #6c8ebf; }
-  .auth-header h2 { font-size: 18px; font-weight: 700; color: #fff; margin: 12px 0 4px; }
-  .auth-header p  { font-size: 13px; color: rgba(255,255,255,0.55); margin: 0; }
+  .auth-header { background: linear-gradient(140deg, #0f172a 0%, #1a1a2e 50%, #2d2d5e 100%); position: relative; overflow: hidden; }
+  .auth-header::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px); background-size: 20px 20px; }
+  .auth-header .inner-h { position: relative; z-index: 1; }
+  .auth-header .brand { font-size: 22px; font-weight: 900; color: #fff; letter-spacing: -0.05em; font-family: 'Inter', sans-serif; }
+  .auth-header .brand span { color: #a78bfa; }
+  .auth-header h2 { font-size: 19px; font-weight: 800; color: #fff; margin: 12px 0 4px; letter-spacing: -0.03em; }
+  .auth-header p  { font-size: 13px; color: rgba(255,255,255,0.5); margin: 0; }
   .auth-body { padding: 32px 36px; }
-  .form-label { font-size: 13px; font-weight: 600; color: #444; margin-bottom: 5px; }
+  .form-label { font-size: 13px; font-weight: 600; color: #444; margin-bottom: 5px; font-family: 'Inter', sans-serif; }
   .input-wrap { position: relative; }
   .input-wrap i.icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #bbb; font-size: 15px; }
   .input-wrap .form-control { padding-left: 36px; }
   .form-control {
-    border: 1px solid #e5e7eb; border-radius: 9px;
-    padding: 11px 12px; font-size: 14px;
+    border: 1.5px solid #e2e8f0; border-radius: 9px;
+    padding: 11px 13px; font-size: 14px; font-family: 'Inter', sans-serif;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
-  .form-control:focus { border-color: #1a1a2e; box-shadow: 0 0 0 3px rgba(26,26,46,0.08); outline: none; }
+  .form-control:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79,70,229,0.12); outline: none; }
 
   /* Role selector */
   .role-selector { display: flex; gap: 12px; margin-top: 2px; }
@@ -44,37 +47,42 @@
   .role-option input[type="radio"] { display: none; }
   .role-option label {
     display: flex; flex-direction: column; align-items: center; gap: 6px;
-    border: 2px solid #e5e7eb; border-radius: 10px;
+    border: 2px solid #e2e8f0; border-radius: 10px;
     padding: 14px 10px; cursor: pointer;
     transition: all 0.2s; text-align: center; width: 100%;
-    font-size: 13px; font-weight: 600; color: #666;
+    font-size: 13px; font-weight: 600; color: #94a3b8;
+    font-family: 'Inter', sans-serif;
   }
-  .role-option label i { font-size: 22px; color: #bbb; transition: color 0.2s; }
+  .role-option label i { font-size: 22px; color: #cbd5e1; transition: color 0.2s; }
   .role-option input[type="radio"]:checked + label {
-    border-color: #1a1a2e; background: #f5f7ff; color: #1a1a2e;
+    border-color: #4f46e5; background: #eef2ff; color: #4f46e5;
   }
-  .role-option input[type="radio"]:checked + label i { color: #1a1a2e; }
-  .role-option label:hover { border-color: #c0c8e0; }
+  .role-option input[type="radio"]:checked + label i { color: #4f46e5; }
+  .role-option label:hover { border-color: #a5b4fc; color: #6366f1; }
 
   .btn-auth {
-    width: 100%; background: #1a1a2e; color: #fff;
-    border: none; border-radius: 9px; padding: 12px;
+    width: 100%; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff;
+    border: none; border-radius: 10px; padding: 13px;
     font-size: 15px; font-weight: 700; cursor: pointer;
-    transition: background 0.2s; margin-top: 4px;
+    transition: opacity 0.2s, transform 0.2s; margin-top: 4px;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 4px 16px rgba(124,58,237,0.35);
   }
-  .btn-auth:hover { background: #2d2d5e; }
-  .auth-footer-text { text-align: center; font-size: 13px; color: #888; margin-top: 20px; }
-  .auth-footer-text a { color: #1a1a2e; font-weight: 600; text-decoration: none; }
+  .btn-auth:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 6px 22px rgba(124,58,237,0.45); }
+  .auth-footer-text { text-align: center; font-size: 13px; color: #94a3b8; margin-top: 20px; font-family: 'Inter', sans-serif; }
+  .auth-footer-text a { color: #4f46e5; font-weight: 700; text-decoration: none; }
   .auth-footer-text a:hover { text-decoration: underline; }
 </style>
 
 <div class="auth-page">
   <div class="auth-card">
 
-    <div class="auth-header">
-      <div class="brand">Hire<span>Hub</span></div>
-      <h2>Create your account</h2>
-      <p>Join thousands finding jobs on HireHub</p>
+    <div class="auth-header" style="padding:32px 36px 28px;text-align:center;">
+      <div class="inner-h">
+        <div class="brand">Hire<span>Hub</span></div>
+        <h2>Create your account</h2>
+        <p>Join thousands finding jobs on HireHub</p>
+      </div>
     </div>
 
     <div class="auth-body">

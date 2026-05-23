@@ -1,52 +1,86 @@
 <% layout("layouts/boilerplate") %>
 
 <style>
-  .form-wrapper { max-width: 740px; margin: 40px auto; padding: 0 16px 60px; }
-  .form-header { text-align: center; margin-bottom: 32px; }
-  .form-header h1 { font-size: 26px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; }
-  .form-header p  { color: #888; font-size: 14px; margin: 0; }
+  /* ── Page Hero ── */
+  .form-hero {
+    background: linear-gradient(140deg, #0f172a 0%, #1a1a2e 50%, #2d2d5e 100%);
+    color: #fff; padding: 44px 0 36px;
+    position: relative; overflow: hidden;
+  }
+  .form-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 24px 24px; pointer-events: none;
+  }
+  .form-hero .inner { position: relative; z-index: 1; }
+  .form-hero h1 { font-size: 26px; font-weight: 900; margin: 0 0 4px; letter-spacing: -0.03em; }
+  .form-hero p  { color: rgba(255,255,255,0.55); font-size: 14px; margin: 0; }
+  .back-link {
+    font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.65);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    margin-bottom: 16px; transition: color 0.18s;
+  }
+  .back-link:hover { color: #fff; }
+
+  /* ── Form ── */
+  .form-wrapper { max-width: 740px; margin: 0 auto; padding: 36px 16px 60px; }
+
   .form-section {
     background: #fff; border-radius: 14px;
-    padding: 24px 28px; box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    padding: 24px 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
     margin-bottom: 20px;
+    border: 1px solid #f1f5f9;
   }
   .form-section h6 {
-    font-size: 13px; font-weight: 700; color: #1a1a2e;
+    font-size: 12px; font-weight: 700; color: #4f46e5;
     text-transform: uppercase; letter-spacing: 0.8px;
-    margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 18px; padding-bottom: 10px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex; align-items: center; gap: 7px;
   }
-  .form-label { font-size: 13px; font-weight: 600; color: #444; margin-bottom: 5px; }
+  .form-label { font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 5px; }
   .form-control, .form-select {
-    border: 1px solid #e5e7eb; border-radius: 8px;
+    border: 1.5px solid #e2e8f0; border-radius: 8px;
     padding: 10px 12px; font-size: 14px;
+    font-family: 'Inter', sans-serif;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
   .form-control:focus, .form-select:focus {
-    border-color: #1a1a2e; box-shadow: 0 0 0 3px rgba(26,26,46,0.08);
+    border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.1); outline: none;
   }
   .input-icon { position: relative; }
-  .input-icon i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 14px; }
+  .input-icon i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; }
   .input-icon .form-control { padding-left: 34px; }
   .btn-submit {
-    width: 100%; background: #1a1a2e; color: #fff; border: none;
+    width: 100%; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff; border: none;
     border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700;
-    cursor: pointer; transition: background 0.2s;
+    cursor: pointer; transition: opacity 0.2s, transform 0.2s;
     display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 4px 14px rgba(124,58,237,0.35);
   }
-  .btn-submit:hover { background: #2d2d5e; }
+  .btn-submit:hover { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,58,237,0.45); }
 </style>
 
-<div class="form-wrapper">
-  <div class="form-header">
-    <h1><i class="bi bi-pencil-square me-2" style="color:#1a1a2e;"></i>Edit Job Post</h1>
-    <p>Update the details for <strong><%= job.title %></strong></p>
+<!-- Hero -->
+<div class="form-hero">
+  <div class="container inner">
+    <a href="/employers/jobs" class="back-link">
+      <i class="bi bi-arrow-left"></i> My Job Listings
+    </a>
+    <h1><i class="bi bi-pencil-square me-2" style="color:#a78bfa;"></i>Edit Job Post</h1>
+    <p>Update the details for <strong style="color:rgba(255,255,255,0.85);"><%= job.title %></strong></p>
   </div>
+</div>
+
+<div class="form-wrapper">
 
   <form method="POST" action="/jobs/<%= job._id %>?_method=PUT" novalidate class="needs-validation">
 
     <!-- Basic Info -->
     <div class="form-section">
-      <h6><i class="bi bi-info-circle me-2"></i>Basic Information</h6>
+      <h6><i class="bi bi-info-circle-fill"></i>Basic Information</h6>
       <div class="mb-3">
         <label for="title" class="form-label">Job Title <span class="text-danger">*</span></label>
         <div class="input-icon">
@@ -77,7 +111,7 @@
 
     <!-- Job Details -->
     <div class="form-section">
-      <h6><i class="bi bi-sliders me-2"></i>Job Details</h6>
+      <h6><i class="bi bi-sliders"></i>Job Details</h6>
       <div class="row g-3 mb-3">
         <div class="col-md-4">
           <label for="jobType" class="form-label">Job Type <span class="text-danger">*</span></label>
@@ -119,7 +153,7 @@
 
     <!-- Description & Skills -->
     <div class="form-section">
-      <h6><i class="bi bi-file-text me-2"></i>Description & Skills</h6>
+      <h6><i class="bi bi-file-text"></i>Description & Skills</h6>
       <div class="mb-3">
         <label for="description" class="form-label">Job Description <span class="text-danger">*</span></label>
         <textarea id="description" name="job[description]" rows="6" class="form-control" required><%= job.description %></textarea>

@@ -1,369 +1,635 @@
 <% layout("layouts/boilerplate") %>
 
 <style>
-  /* Hero */
+  /* ── Hero ── */
   .hero {
-    background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 60%, #3b4d8a 100%);
+    background: linear-gradient(140deg, #0f172a 0%, #1a1a2e 45%, #2d2d5e 100%);
     color: #fff;
-    padding: 80px 0 60px;
+    padding: 88px 0 72px;
     position: relative;
     overflow: hidden;
   }
-  .hero::before {
-    content: '';
+  .hero-grid {
     position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 70% 50%, rgba(108,142,191,0.15) 0%, transparent 60%);
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
   }
-  .hero-content { position: relative; z-index: 1; }
+  .hero-blob {
+    position: absolute; border-radius: 50%; filter: blur(72px); pointer-events: none;
+  }
+  .hero-blob-1 {
+    width: 480px; height: 480px;
+    background: rgba(79,70,229,0.18);
+    top: -120px; right: -80px;
+    animation: blobDrift1 14s ease-in-out infinite;
+  }
+  .hero-blob-2 {
+    width: 320px; height: 320px;
+    background: rgba(124,58,237,0.14);
+    bottom: -60px; left: 80px;
+    animation: blobDrift2 18s ease-in-out infinite;
+  }
+  .hero-blob-3 {
+    width: 200px; height: 200px;
+    background: rgba(37,99,235,0.12);
+    top: 40%; left: 40%;
+    animation: blobDrift1 22s ease-in-out infinite reverse;
+  }
+
+  .hero-content { position: relative; z-index: 2; }
+
   .hero-eyebrow {
     display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 20px; padding: 5px 14px;
-    font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85);
-    margin-bottom: 20px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 9999px; padding: 5px 14px;
+    font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.8);
+    margin-bottom: 24px; letter-spacing: 0.3px;
+    animation: fadeIn 0.6s ease;
   }
-  .hero-eyebrow span { width: 6px; height: 6px; background: #4ade80; border-radius: 50%; display: inline-block; }
-  .hero h1 { font-size: 52px; font-weight: 900; line-height: 1.1; margin-bottom: 16px; letter-spacing: -1px; }
-  .hero h1 .accent { color: #6c8ebf; }
-  .hero p { font-size: 18px; color: rgba(255,255,255,0.7); margin-bottom: 36px; max-width: 540px; }
+  .hero-eyebrow .pulse-dot {
+    width: 6px; height: 6px; background: #4ade80; border-radius: 50%;
+    animation: pulseDot 2s ease-in-out infinite;
+  }
+
+  .hero h1 {
+    font-size: clamp(38px, 5vw, 58px);
+    font-weight: 900; line-height: 1.08;
+    margin-bottom: 20px; letter-spacing: -0.04em;
+    animation: fadeUp 0.7s ease 0.1s both;
+  }
+  .hero h1 .grad {
+    background: linear-gradient(135deg, #818cf8 0%, #a78bfa 50%, #c4b5fd 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 17px; color: rgba(255,255,255,0.62);
+    margin-bottom: 36px; max-width: 500px; line-height: 1.7;
+    animation: fadeUp 0.7s ease 0.2s both;
+  }
+
   .hero-search {
-    background: #fff;
-    border-radius: 14px;
-    padding: 8px 8px 8px 16px;
-    display: flex; gap: 8px; align-items: center;
-    max-width: 620px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-  }
-  .hero-search input {
-    border: none; outline: none; font-size: 15px;
-    flex: 1; color: #333; background: transparent;
-  }
-  .hero-search button {
-    background: #1a1a2e; color: #fff; border: none;
-    border-radius: 10px; padding: 12px 24px;
-    font-size: 14px; font-weight: 700; cursor: pointer;
-    white-space: nowrap; transition: background 0.2s;
-  }
-  .hero-search button:hover { background: #2d2d5e; }
-  .hero-tags { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
-  .hero-tag {
-    background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.75);
-    border: 1px solid rgba(255,255,255,0.15); border-radius: 20px;
-    padding: 4px 12px; font-size: 12px; text-decoration: none;
-    transition: all 0.2s;
-  }
-  .hero-tag:hover { background: rgba(255,255,255,0.2); color: #fff; }
-
-  /* Stats */
-  .stats-section {
-    background: #fff;
-    border-bottom: 1px solid #f0f0f0;
-    padding: 28px 0;
-  }
-  .stat-item { text-align: center; }
-  .stat-item .num { font-size: 32px; font-weight: 900; color: #1a1a2e; line-height: 1; }
-  .stat-item .lbl { font-size: 13px; color: #888; margin-top: 4px; }
-  .stat-divider { width: 1px; background: #f0f0f0; align-self: stretch; }
-
-  /* Featured Jobs */
-  .section { padding: 60px 0; }
-  .section-label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #6c8ebf; margin-bottom: 8px; }
-  .section-title { font-size: 28px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; }
-  .section-sub   { font-size: 15px; color: #888; margin-bottom: 36px; }
-
-  .job-card {
     background: #fff; border-radius: 14px;
-    padding: 22px; border: 1px solid #f0f0f0;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    padding: 6px 6px 6px 18px;
+    display: flex; gap: 6px; align-items: center;
+    max-width: 580px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25), 0 2px 8px rgba(0,0,0,0.1);
+    animation: fadeUp 0.7s ease 0.3s both;
+  }
+  .hero-search .hs-icon { color: #94a3b8; flex-shrink: 0; }
+  .hero-search input {
+    border: none; outline: none; font-size: 14.5px;
+    flex: 1; color: #0f172a; background: transparent;
+    font-family: 'Inter', sans-serif; padding: 6px 0;
+  }
+  .hero-search input::placeholder { color: #94a3b8; }
+  .hero-search .hs-divider { width: 1px; height: 22px; background: #e2e8f0; flex-shrink: 0; }
+  .hero-search button {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff; border: none;
+    border-radius: 10px; padding: 12px 22px;
+    font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap;
+    transition: opacity 0.2s, transform 0.2s; display: flex; align-items: center; gap: 6px;
+    font-family: 'Inter', sans-serif;
+  }
+  .hero-search button:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  .hero-tags {
+    margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    animation: fadeUp 0.7s ease 0.4s both;
+  }
+  .hero-tags .lbl { font-size: 12px; color: rgba(255,255,255,0.45); }
+  .hero-tag {
+    background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.72);
+    border: 1px solid rgba(255,255,255,0.14); border-radius: 9999px;
+    padding: 4px 13px; font-size: 12.5px; font-weight: 500; text-decoration: none;
+    transition: all 0.2s; font-family: 'Inter', sans-serif;
+  }
+  .hero-tag:hover { background: rgba(255,255,255,0.18); color: #fff; border-color: rgba(255,255,255,0.3); }
+
+  /* Floating cards on the right */
+  .hero-cards { position: relative; }
+  .hero-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 16px; padding: 18px 22px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .hero-card-1 {
+    animation: float 5s ease-in-out infinite;
+    animation-delay: 0s;
+  }
+  .hero-card-2 {
+    animation: float-delayed 6s ease-in-out infinite;
+    animation-delay: -2s;
+    margin-top: 16px;
+    margin-left: 24px;
+  }
+  .hc-logo {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 800; color: #fff; flex-shrink: 0;
+  }
+  .hc-title { font-weight: 700; font-size: 14px; color: #fff; }
+  .hc-sub   { font-size: 12px; color: rgba(255,255,255,0.55); }
+  .hc-badge {
+    padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .hero-social-proof {
+    margin-top: 20px;
+    display: flex; align-items: center; gap: 10px;
+    animation: fadeUp 0.7s ease 0.5s both;
+  }
+  .avatar-stack { display: flex; }
+  .avatar-stack .av {
+    width: 30px; height: 30px; border-radius: 50%;
+    border: 2px solid #1a1a2e;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #fff;
+    margin-left: -8px;
+  }
+  .avatar-stack .av:first-child { margin-left: 0; }
+  .hero-social-proof .sp-text { font-size: 13px; color: rgba(255,255,255,0.55); }
+  .hero-social-proof .sp-text strong { color: rgba(255,255,255,0.85); }
+
+  /* ── Stats ── */
+  .stats-section {
+    background: var(--hh-surface);
+    border-bottom: 1px solid var(--hh-border-light);
+    padding: 36px 0;
+  }
+  .stat-item { text-align: center; padding: 0 24px; }
+  .stat-num {
+    font-size: 36px; font-weight: 900; color: var(--hh-brand);
+    line-height: 1; letter-spacing: -0.04em;
+    font-family: 'Inter', sans-serif;
+  }
+  .stat-lbl { font-size: 13px; color: var(--hh-text-muted); margin-top: 6px; font-weight: 500; }
+  .stat-sep { width: 1px; background: var(--hh-border); align-self: stretch; }
+
+  /* ── Trusted strip ── */
+  .trust-section {
+    background: var(--hh-bg);
+    border-bottom: 1px solid var(--hh-border-light);
+    padding: 28px 0;
+    overflow: hidden;
+  }
+  .trust-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: var(--hh-text-muted); text-align: center; margin-bottom: 18px; }
+  .trust-ticker-wrap { overflow: hidden; }
+  .trust-ticker {
+    display: flex; gap: 48px; width: max-content;
+    animation: ticker 28s linear infinite;
+  }
+  .trust-ticker:hover { animation-play-state: paused; }
+  .trust-name {
+    font-size: 14px; font-weight: 700; color: var(--hh-text-muted);
+    white-space: nowrap; letter-spacing: -0.01em;
+    opacity: 0.7; transition: opacity 0.2s;
+  }
+  .trust-name:hover { opacity: 1; color: var(--hh-brand); }
+
+  /* ── Section layout ── */
+  .page-section { padding: 72px 0; }
+  .section-overline {
+    font-size: 11.5px; font-weight: 700; letter-spacing: 1.6px;
+    text-transform: uppercase; color: var(--hh-accent); margin-bottom: 10px;
+  }
+  .section-title { font-size: 30px; font-weight: 800; color: var(--hh-text); margin-bottom: 8px; letter-spacing: -0.03em; }
+  .section-sub   { font-size: 15px; color: var(--hh-text-muted); margin-bottom: 44px; }
+
+  /* ── Featured Job Cards ── */
+  .feat-job-card {
+    background: var(--hh-surface);
+    border-radius: 14px;
+    padding: 24px;
+    border: 1px solid var(--hh-border-light);
+    box-shadow: var(--shadow-sm);
     height: 100%; display: flex; flex-direction: column;
-    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.25s;
+    position: relative; overflow: hidden;
   }
-  .job-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(0,0,0,0.1); border-color: #e0e8ff; }
-  .company-logo {
+  .feat-job-card::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--hh-accent), var(--hh-purple));
+    opacity: 0; transition: opacity 0.25s;
+  }
+  .feat-job-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+    border-color: rgba(79,70,229,0.15);
+  }
+  .feat-job-card:hover::after { opacity: 1; }
+
+  .co-logo {
     width: 46px; height: 46px; border-radius: 12px;
-    background: #1a1a2e; color: #fff;
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px; font-weight: 800; flex-shrink: 0;
+    font-size: 18px; font-weight: 800; color: #fff; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--hh-brand), var(--hh-brand-light));
   }
-  .job-title   { font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0 0 2px; }
-  .job-company { font-size: 13px; color: #888; margin: 0; }
-  .tag { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
-  .tag-blue   { background: #e8f0fe; color: #3b6fd4; }
-  .tag-green  { background: #e6f4ea; color: #2e7d32; }
-  .tag-orange { background: #fff3e0; color: #e65100; }
-  .job-desc { font-size: 13px; color: #777; line-height: 1.6; flex: 1; margin: 12px 0 16px; }
-  .job-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
-  .salary { font-size: 14px; font-weight: 700; color: #2e7d32; }
-  .view-btn {
-    background: #1a1a2e; color: #fff; border-radius: 8px;
-    padding: 7px 16px; font-size: 13px; font-weight: 600;
-    text-decoration: none; transition: background 0.2s;
+  .fjc-title   { font-size: 16px; font-weight: 700; color: var(--hh-text); margin: 0 0 2px; }
+  .fjc-company { font-size: 13px; color: var(--hh-text-muted); margin: 0; }
+  .fjc-desc { font-size: 13px; color: var(--hh-text-2); line-height: 1.65; flex: 1; margin: 14px 0 18px; }
+  .fjc-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+  .fjc-salary { font-size: 14px; font-weight: 700; color: var(--hh-green); }
+  .fjc-btn {
+    background: var(--hh-brand); color: #fff; border-radius: 8px;
+    padding: 7px 16px; font-size: 13px; font-weight: 700;
+    text-decoration: none; transition: background 0.2s, transform 0.2s;
+    display: inline-flex; align-items: center; gap: 5px;
   }
-  .view-btn:hover { background: #2d2d5e; color: #fff; }
+  .fjc-btn:hover { background: var(--hh-brand-mid); color: #fff; transform: translateX(2px); }
 
-  /* Features */
-  .features-section { background: #f8f9fb; padding: 60px 0; }
-  .feature-card {
-    background: #fff; border-radius: 14px; padding: 28px 24px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06); text-align: center; height: 100%;
-    transition: transform 0.2s, box-shadow 0.2s;
+  /* ── Feature Cards ── */
+  .feat-card {
+    background: var(--hh-surface); border-radius: 16px; padding: 30px 26px;
+    box-shadow: var(--shadow-sm); text-align: center; height: 100%;
+    border: 1px solid var(--hh-border-light);
+    transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.25s;
   }
-  .feature-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.09); }
-  .feature-icon {
-    width: 60px; height: 60px; border-radius: 16px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 26px; margin: 0 auto 18px;
+  .feat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+    border-color: rgba(79,70,229,0.12);
   }
-  .feature-card h5 { font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
-  .feature-card p  { font-size: 14px; color: #888; line-height: 1.6; margin: 0; }
-
-  /* Employer CTA */
-  .employer-cta {
-    background: #fff; border-radius: 16px; padding: 40px 36px;
-    display: flex; align-items: center; gap: 32px; flex-wrap: wrap;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07); border: 1px solid #f0f0f0;
-  }
-  .employer-cta-icon {
+  .feat-icon-wrap {
     width: 64px; height: 64px; border-radius: 18px;
-    background: #1a1a2e; display: flex; align-items: center;
-    justify-content: center; font-size: 28px; color: #fff; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin: 0 auto 20px;
+    transition: transform 0.25s var(--ease-bounce);
   }
-  .employer-cta h3 { font-size: 20px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; }
-  .employer-cta p  { font-size: 14px; color: #888; margin: 0; }
-  .btn-employer {
-    background: #1a1a2e; color: #fff; border-radius: 10px;
-    padding: 12px 28px; font-size: 14px; font-weight: 700;
-    text-decoration: none; white-space: nowrap; margin-left: auto;
-    transition: background 0.2s;
-  }
-  .btn-employer:hover { background: #2d2d5e; color: #fff; }
+  .feat-card:hover .feat-icon-wrap { transform: scale(1.1) rotate(-4deg); }
+  .feat-card h5 { font-size: 16px; font-weight: 700; color: var(--hh-text); margin-bottom: 10px; }
+  .feat-card p  { font-size: 14px; color: var(--hh-text-2); line-height: 1.7; margin: 0; }
 
-  /* Final CTA */
+  /* ── Employer CTA banner ── */
+  .employer-banner {
+    background: linear-gradient(135deg, var(--hh-brand) 0%, #1e3a8a 50%, var(--hh-brand-mid) 100%);
+    border-radius: 20px; padding: 44px 48px;
+    display: flex; align-items: center; gap: 36px; flex-wrap: wrap;
+    position: relative; overflow: hidden;
+  }
+  .employer-banner::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  .employer-banner-icon {
+    width: 68px; height: 68px; border-radius: 20px;
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px; color: #fff; flex-shrink: 0; position: relative;
+  }
+  .employer-banner h3 { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 6px; position: relative; }
+  .employer-banner p  { font-size: 14px; color: rgba(255,255,255,0.62); margin: 0; position: relative; }
+  .btn-employer {
+    background: #fff; color: var(--hh-brand); border-radius: 12px;
+    padding: 13px 30px; font-size: 14px; font-weight: 800;
+    text-decoration: none; white-space: nowrap; margin-left: auto;
+    transition: all 0.2s var(--ease); position: relative;
+    display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .btn-employer:hover { background: #f1f5f9; color: var(--hh-brand); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.25); }
+
+  /* ── Final CTA ── */
   .final-cta {
-    background: linear-gradient(135deg, #1a1a2e, #2d2d5e);
-    color: #fff; padding: 72px 0; text-align: center;
+    background: linear-gradient(140deg, #0f172a 0%, var(--hh-brand) 40%, var(--hh-brand-mid) 100%);
+    color: #fff; padding: 88px 0; text-align: center;
+    position: relative; overflow: hidden;
   }
-  .final-cta h2 { font-size: 36px; font-weight: 900; margin-bottom: 12px; }
-  .final-cta p  { color: rgba(255,255,255,0.65); font-size: 16px; margin-bottom: 32px; }
-  .btn-cta {
-    background: #fff; color: #1a1a2e; border-radius: 10px;
-    padding: 14px 32px; font-size: 15px; font-weight: 700;
-    text-decoration: none; display: inline-block; transition: all 0.2s;
-    margin: 0 8px 8px;
+  .final-cta::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
-  .btn-cta:hover { background: #f0f2f5; color: #1a1a2e; }
-  .btn-cta-outline {
-    background: transparent; color: #fff;
-    border: 1px solid rgba(255,255,255,0.3);
-    border-radius: 10px; padding: 14px 32px;
-    font-size: 15px; font-weight: 600;
-    text-decoration: none; display: inline-block;
-    transition: all 0.2s; margin: 0 8px 8px;
+  .final-cta-inner { position: relative; z-index: 1; }
+  .final-cta h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; margin-bottom: 14px; letter-spacing: -0.04em; }
+  .final-cta p  { color: rgba(255,255,255,0.6); font-size: 17px; margin-bottom: 36px; max-width: 500px; margin-left: auto; margin-right: auto; }
+  .btn-cta-white {
+    background: #fff; color: var(--hh-brand); border-radius: 10px;
+    padding: 14px 32px; font-size: 15px; font-weight: 800;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: all 0.2s; margin: 0 8px 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
   }
-  .btn-cta-outline:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .btn-cta-white:hover { background: #f1f5f9; color: var(--hh-brand); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.25); }
+  .btn-cta-ghost {
+    background: rgba(255,255,255,0.1); color: #fff;
+    border: 1.5px solid rgba(255,255,255,0.25); border-radius: 10px;
+    padding: 13px 32px; font-size: 15px; font-weight: 600;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: all 0.2s; margin: 0 8px 10px;
+  }
+  .btn-cta-ghost:hover { background: rgba(255,255,255,0.2); color: #fff; transform: translateY(-2px); }
 </style>
 
-<!-- HERO -->
+<!-- ═══════════════════════════════════════ HERO -->
 <section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-blob hero-blob-1"></div>
+  <div class="hero-blob hero-blob-2"></div>
+  <div class="hero-blob hero-blob-3"></div>
+
   <div class="container hero-content">
-    <div class="row align-items-center">
-      <div class="col-lg-7">
-        <div class="hero-eyebrow"><span></span> Campus to Career Platform</div>
-        <h1>Find Your Dream<br/><span class="accent">Job Today</span></h1>
-        <p>Your gateway from campus to career — apply in minutes, and track every application — all in one place.</p>
+    <div class="row align-items-center g-5">
+
+      <!-- Left -->
+      <div class="col-lg-6">
+        <div class="hero-eyebrow">
+          <span class="pulse-dot"></span> Campus to Career Platform
+        </div>
+
+        <h1>Find Your Next<br/><span class="grad">Great Opportunity</span></h1>
+        <p class="hero-sub">Connect with top employers, apply in minutes, and track every step — all from one powerful platform built for students.</p>
 
         <form class="hero-search" action="/jobs" method="GET">
-          <i class="bi bi-search text-muted"></i>
-          <input type="text" name="search" placeholder="Job title, skill, or keyword..." />
-          <button type="submit"><i class="bi bi-arrow-right me-1"></i>Search Jobs</button>
+          <i class="bi bi-search hs-icon"></i>
+          <input type="text" name="search" placeholder="Job title, skill, or company…" autocomplete="off" />
+          <div class="hs-divider"></div>
+          <i class="bi bi-geo-alt hs-icon"></i>
+          <input type="text" name="location" placeholder="Location" style="max-width:130px;" autocomplete="off" />
+          <button type="submit"><i class="bi bi-arrow-right"></i>Search</button>
         </form>
 
         <div class="hero-tags">
-          <span style="font-size:12px;color:rgba(255,255,255,0.5);margin-right:4px;">Popular:</span>
+          <span class="lbl">Trending:</span>
           <a href="/jobs?jobType=Internship" class="hero-tag">Internships</a>
           <a href="/jobs?jobType=Full-Time" class="hero-tag">Full-Time</a>
-          <a href="/jobs?jobType=Remote" class="hero-tag">Remote</a>
+          <a href="/jobs?workMode=Remote" class="hero-tag">Remote</a>
           <a href="/jobs?jobType=Contract" class="hero-tag">Contract</a>
         </div>
+
+        <div class="hero-social-proof">
+          <div class="avatar-stack">
+            <div class="av" style="background:linear-gradient(135deg,#4f46e5,#7c3aed);">A</div>
+            <div class="av" style="background:linear-gradient(135deg,#059669,#0d9488);">S</div>
+            <div class="av" style="background:linear-gradient(135deg,#2563eb,#4f46e5);">M</div>
+            <div class="av" style="background:linear-gradient(135deg,#d97706,#dc2626);">R</div>
+          </div>
+          <p class="sp-text mb-0"><strong>500+</strong> students hired this year</p>
+        </div>
       </div>
 
-      <div class="col-lg-5 d-none d-lg-flex justify-content-end">
-        <div style="position:relative;">
-          <!-- Floating cards decoration -->
-          <div style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:18px 22px;margin-bottom:14px;backdrop-filter:blur(8px);">
-            <div style="display:flex;align-items:center;gap:12px;">
-              <div style="width:40px;height:40px;background:#2e7d32;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;">H</div>
-              <div>
-                <div style="font-weight:700;font-size:14px;">Frontend Developer</div>
-                <div style="font-size:12px;color:rgba(255,255,255,0.6);">HireHub Inc. · Remote</div>
+      <!-- Right: Floating Job Cards -->
+      <div class="col-lg-6 d-none d-lg-block">
+        <div class="hero-cards ps-3">
+
+          <div class="hero-card hero-card-1 mb-3">
+            <div class="d-flex align-items-center gap-3">
+              <div class="hc-logo" style="background:linear-gradient(135deg,#059669,#0d9488);">F</div>
+              <div style="flex:1;min-width:0;">
+                <div class="hc-title">Frontend Developer</div>
+                <div class="hc-sub">FinanceCo · Toronto, ON</div>
               </div>
-              <div style="margin-left:auto;background:#e6f4ea;color:#2e7d32;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:600;">New</div>
+              <span class="hc-badge" style="background:#d1fae5;color:#059669;">Internship</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.1);">
+              <span style="font-size:12px;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:4px;"><i class="bi bi-geo-alt"></i> Remote</span>
+              <span style="font-size:13px;font-weight:700;color:#4ade80;">$55,000 CAD</span>
             </div>
           </div>
-          <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:18px 22px;backdrop-filter:blur(8px);">
-            <div style="display:flex;align-items:center;gap:12px;">
-              <div style="width:40px;height:40px;background:#3b6fd4;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;">T</div>
-              <div>
-                <div style="font-weight:700;font-size:14px;">Data Analyst</div>
-                <div style="font-size:12px;color:rgba(255,255,255,0.6);">TechCorp · Toronto, ON</div>
+
+          <div class="hero-card hero-card-2">
+            <div class="d-flex align-items-center gap-3">
+              <div class="hc-logo" style="background:linear-gradient(135deg,#4f46e5,#7c3aed);">T</div>
+              <div style="flex:1;min-width:0;">
+                <div class="hc-title">Data Analyst</div>
+                <div class="hc-sub">TechCorp · Vancouver, BC</div>
               </div>
-              <div style="margin-left:auto;background:#e8f0fe;color:#3b6fd4;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:600;">Full-Time</div>
+              <span class="hc-badge" style="background:#dbeafe;color:#2563eb;">Full-Time</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.1);">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div style="width:6px;height:6px;background:#4ade80;border-radius:50%;animation:pulseDot 2s infinite;"></div>
+                <span style="font-size:12px;color:rgba(255,255,255,0.5);">Actively hiring</span>
+              </div>
+              <span style="font-size:13px;font-weight:700;color:#4ade80;">$72,000 CAD</span>
             </div>
           </div>
+
+          <!-- Mini stat card -->
+          <div style="display:flex;gap:10px;margin-top:12px;margin-left:48px;">
+            <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:14px 18px;flex:1;">
+              <div style="font-size:22px;font-weight:900;color:#fff;letter-spacing:-0.04em;"><%= featuredJobs.length %>+</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.45);">Active listings</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:14px 18px;flex:1;">
+              <div style="font-size:22px;font-weight:900;color:#4ade80;letter-spacing:-0.04em;">98%</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.45);">Satisfaction</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ STATS -->
+<section class="stats-section">
+  <div class="container">
+    <div class="row g-0 justify-content-center align-items-center text-center">
+      <div class="col-6 col-md-3 reveal">
+        <div class="stat-item">
+          <div class="stat-num"><span data-count="1000" data-suffix="+">1000+</span></div>
+          <div class="stat-lbl">Jobs Posted</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 reveal reveal-d1">
+        <div class="stat-item border-start border-md-start">
+          <div class="stat-num"><span data-count="500" data-suffix="+">500+</span></div>
+          <div class="stat-lbl">Candidates Hired</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 reveal reveal-d2">
+        <div class="stat-item">
+          <div class="stat-num"><span data-count="100" data-suffix="+">100+</span></div>
+          <div class="stat-lbl">Partner Companies</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 reveal reveal-d3">
+        <div class="stat-item">
+          <div class="stat-num"><span data-count="98" data-suffix="%" data-decimals="0">98%</span></div>
+          <div class="stat-lbl">Satisfaction Rate</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- STATS -->
-<section class="stats-section">
-  <div class="container">
-    <div class="row g-0 justify-content-center align-items-center">
-      <div class="col-6 col-md-3 stat-item">
-        <div class="num"><%= featuredJobs.length %>+</div>
-        <div class="lbl">Jobs Posted</div>
-      </div>
-      <div class="col-6 col-md-3 stat-item">
-        <div class="num">500+</div>
-        <div class="lbl">Candidates Hired</div>
-      </div>
-      <div class="col-6 col-md-3 stat-item">
-        <div class="num">100+</div>
-        <div class="lbl">Companies</div>
-      </div>
-      <div class="col-6 col-md-3 stat-item">
-        <div class="num">98%</div>
-        <div class="lbl">Satisfaction Rate</div>
-      </div>
+<!-- ═══════════════════════════════════════ TRUST STRIP -->
+<section class="trust-section">
+  <div class="trust-label">Trusted by candidates from top institutions</div>
+  <div class="trust-ticker-wrap">
+    <div class="trust-ticker">
+      <!-- duplicated for seamless loop -->
+      <span class="trust-name">University of Toronto</span>
+      <span class="trust-name">McGill University</span>
+      <span class="trust-name">UBC</span>
+      <span class="trust-name">University of Waterloo</span>
+      <span class="trust-name">York University</span>
+      <span class="trust-name">Ryerson / TMU</span>
+      <span class="trust-name">Queens University</span>
+      <span class="trust-name">Western University</span>
+      <span class="trust-name">University of Ottawa</span>
+      <span class="trust-name">Simon Fraser</span>
+      <span class="trust-name">Dalhousie</span>
+      <span class="trust-name">McMaster University</span>
+      <!-- duplicate set -->
+      <span class="trust-name">University of Toronto</span>
+      <span class="trust-name">McGill University</span>
+      <span class="trust-name">UBC</span>
+      <span class="trust-name">University of Waterloo</span>
+      <span class="trust-name">York University</span>
+      <span class="trust-name">Ryerson / TMU</span>
+      <span class="trust-name">Queens University</span>
+      <span class="trust-name">Western University</span>
+      <span class="trust-name">University of Ottawa</span>
+      <span class="trust-name">Simon Fraser</span>
+      <span class="trust-name">Dalhousie</span>
+      <span class="trust-name">McMaster University</span>
     </div>
   </div>
 </section>
 
-<!-- FEATURED JOBS -->
+<!-- ═══════════════════════════════════════ FEATURED JOBS -->
 <% if (featuredJobs && featuredJobs.length > 0) { %>
-<section class="section" style="background:#f8f9fb;">
+<section class="page-section" style="background:var(--hh-bg);">
   <div class="container">
-    <div class="section-label">Opportunities</div>
-    <div class="section-title">Featured Jobs</div>
-    <div class="section-sub">Hand-picked listings to kickstart your career</div>
+    <div class="reveal">
+      <div class="section-overline">Opportunities</div>
+      <div class="section-title">Featured Jobs</div>
+      <div class="section-sub">Handpicked listings to kickstart your career</div>
+    </div>
 
     <div class="row g-3">
-      <% featuredJobs.forEach(job => { %>
-        <div class="col-md-6 col-lg-4">
-          <div class="job-card">
-            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-              <div class="company-logo"><%= job.company[0].toUpperCase() %></div>
-              <div>
-                <p class="job-title"><%= job.title %></p>
-                <p class="job-company"><%= job.company %></p>
+      <% featuredJobs.forEach((job, i) => {
+        const coColors = ['linear-gradient(135deg,#1a1a2e,#4a5490)','linear-gradient(135deg,#1e40af,#4f46e5)','linear-gradient(135deg,#059669,#0d9488)'];
+        const col = coColors[i % coColors.length];
+      %>
+        <div class="col-md-6 col-lg-4 reveal reveal-d<%= i+1 %>">
+          <div class="feat-job-card">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+              <div class="co-logo" style="background:<%= col %>;"><%= job.company[0].toUpperCase() %></div>
+              <div style="flex:1;min-width:0;">
+                <p class="fjc-title"><%= job.title %></p>
+                <p class="fjc-company"><%= job.company %></p>
               </div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
+
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">
               <% if (job.jobType)  { %><span class="tag tag-blue"><%= job.jobType %></span><% } %>
               <% if (job.workMode) { %><span class="tag tag-green"><%= job.workMode %></span><% } %>
-              <% if (job.location) { %><span style="font-size:12px;color:#888;display:flex;align-items:center;gap:3px;"><i class="bi bi-geo-alt"></i><%= job.location %></span><% } %>
+              <% if (job.location) { %><span style="font-size:12px;color:var(--hh-text-muted);display:flex;align-items:center;gap:3px;"><i class="bi bi-geo-alt"></i><%= job.location %></span><% } %>
             </div>
-            <p class="job-desc"><%= job.description.length > 90 ? job.description.substring(0, 87) + '...' : job.description %></p>
-            <div class="job-footer">
+
+            <p class="fjc-desc"><%= job.description.length > 95 ? job.description.substring(0, 92) + '…' : job.description %></p>
+
+            <div class="fjc-footer">
               <% if (job.salary) { %>
-                <span class="salary">$<%= job.salary.toLocaleString() %> CAD</span>
+                <span class="fjc-salary"><i class="bi bi-cash me-1"></i>$<%= job.salary.toLocaleString() %> CAD</span>
               <% } else { %><span></span><% } %>
-              <a href="/jobs/<%= job._id %>" class="view-btn">View Job</a>
+              <a href="/jobs/<%= job._id %>" class="fjc-btn">View Job <i class="bi bi-arrow-right"></i></a>
             </div>
           </div>
         </div>
       <% }) %>
     </div>
 
-    <div style="text-align:center;margin-top:32px;">
-      <a href="/jobs" style="display:inline-flex;align-items:center;gap:6px;background:#1a1a2e;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;transition:background 0.2s;" onmouseover="this.style.background='#2d2d5e'" onmouseout="this.style.background='#1a1a2e'">
-        View All Jobs <i class="bi bi-arrow-right"></i>
+    <div class="text-center mt-5 reveal">
+      <a href="/jobs" class="btn-hh-accent" style="font-size:15px;padding:13px 32px;">
+        Browse All Jobs <i class="bi bi-arrow-right ms-1"></i>
       </a>
     </div>
   </div>
 </section>
 <% } %>
 
-<!-- FEATURES -->
-<section class="features-section">
+<!-- ═══════════════════════════════════════ FEATURES -->
+<section class="page-section" style="background:var(--hh-surface);">
   <div class="container">
-    <div class="text-center mb-5">
-      <div class="section-label">Why Us</div>
-      <div class="section-title">Why Choose HireHub?</div>
-      <div class="section-sub">Everything you need to land your next opportunity</div>
+    <div class="text-center reveal">
+      <div class="section-overline">Why HireHub</div>
+      <div class="section-title">Everything You Need to Get Hired</div>
+      <div class="section-sub">A platform built from the ground up for students entering the workforce</div>
     </div>
 
-    <div class="row g-3">
-      <div class="col-md-4">
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#e8f0fe;color:#3b6fd4;"><i class="bi bi-mortarboard-fill"></i></div>
+    <div class="row g-3 g-md-4">
+      <div class="col-md-4 reveal reveal-d1">
+        <div class="feat-card">
+          <div class="feat-icon-wrap" style="background:#eef2ff;color:#4f46e5;"><i class="bi bi-mortarboard-fill"></i></div>
           <h5>Campus-Focused</h5>
-          <p>Built for students and fresh graduates transitioning from education to employment.</p>
+          <p>Built for students and fresh graduates transitioning from campus to career. Find roles designed for early careers.</p>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#e6f4ea;color:#2e7d32;"><i class="bi bi-lightning-charge-fill"></i></div>
-          <h5>Simple & Fast</h5>
-          <p>Apply to jobs in minutes with a clean, streamlined process. No clutter, no confusion.</p>
+      <div class="col-md-4 reveal reveal-d2">
+        <div class="feat-card">
+          <div class="feat-icon-wrap" style="background:#d1fae5;color:#059669;"><i class="bi bi-lightning-charge-fill"></i></div>
+          <h5>Apply in Minutes</h5>
+          <p>A clean, streamlined application flow. Upload your resume and cover letter — done. No endless forms.</p>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#fff3e0;color:#e65100;"><i class="bi bi-envelope-check-fill"></i></div>
+      <div class="col-md-4 reveal reveal-d3">
+        <div class="feat-card">
+          <div class="feat-icon-wrap" style="background:#fef3c7;color:#d97706;"><i class="bi bi-bell-fill"></i></div>
           <h5>Instant Notifications</h5>
-          <p>Get automated email updates the moment an employer accepts or rejects your application.</p>
+          <p>Get automated email alerts the moment an employer responds to your application — accept or reject.</p>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#f3e8fd;color:#7b2da0;"><i class="bi bi-people-fill"></i></div>
+      <div class="col-md-4 reveal reveal-d1">
+        <div class="feat-card">
+          <div class="feat-icon-wrap" style="background:#ede9fe;color:#7c3aed;"><i class="bi bi-people-fill"></i></div>
           <h5>Direct Employer Connect</h5>
-          <p>Connect directly with real employers — no middlemen, no unnecessary steps.</p>
+          <p>Talk directly with real hiring managers. No recruiters, no middlemen, no unnecessary steps in between.</p>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#e0f2f1;color:#00695c;"><i class="bi bi-bar-chart-fill"></i></div>
-          <h5>Track Applications</h5>
-          <p>Monitor all your applications in one dashboard — see pending, accepted, and rejected at a glance.</p>
+      <div class="col-md-4 reveal reveal-d2">
+        <div class="feat-card">
+          <div class="feat-icon-wrap" style="background:#ccfbf1;color:#0d9488;"><i class="bi bi-bar-chart-fill"></i></div>
+          <h5>Track Everything</h5>
+          <p>Monitor all your applications in one dashboard. See pending, accepted, and rejected — all at a glance.</p>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#fce4ec;color:#c2185b;"><i class="bi bi-shield-check-fill"></i></div>
-          <h5>Trusted & Secure</h5>
-          <p>Your data and resume are stored securely. Only authorized employers can view your application.</p>
+      <div class="col-md-4 reveal reveal-d3">
+        <div class="feat-card">
+          <div class="feat-icon-wrap" style="background:#ffe4e6;color:#e11d48;"><i class="bi bi-robot"></i></div>
+          <h5>AI Resume Screening</h5>
+          <p>Employers use Claude AI to screen resumes and surface the best candidates — smarter hiring for everyone.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- EMPLOYER CTA -->
-<section class="section" style="background:#fff;">
-  <div class="container">
-    <div class="employer-cta">
-      <div class="employer-cta-icon"><i class="bi bi-building"></i></div>
-      <div>
+<!-- ═══════════════════════════════════════ EMPLOYER CTA -->
+<section class="page-section" style="background:var(--hh-bg);">
+  <div class="container reveal">
+    <div class="employer-banner">
+      <div class="employer-banner-icon"><i class="bi bi-building-fill"></i></div>
+      <div style="position:relative;">
         <h3>Hiring? Post a Job in Minutes</h3>
-        <p>Reach hundreds of qualified candidates. Post your listing, review applications, and hire — all in one place.</p>
+        <p>Reach hundreds of qualified candidates. Post your listing, review applications with AI-powered screening, and hire — all in one place.</p>
       </div>
-      <a href="/employers/dashboard" class="btn-employer"><i class="bi bi-plus-lg me-1"></i>Post a Job</a>
+      <a href="/employers/dashboard" class="btn-employer"><i class="bi bi-plus-circle-fill"></i>Post a Job</a>
     </div>
   </div>
 </section>
 
-<!-- FINAL CTA -->
+<!-- ═══════════════════════════════════════ FINAL CTA -->
 <section class="final-cta">
-  <div class="container">
+  <div class="container final-cta-inner reveal">
     <h2>Your Career Starts Here</h2>
-    <p>Join thousands of students and professionals already finding opportunities on HireHub.</p>
+    <p>Join thousands of students and professionals already discovering opportunities on HireHub.</p>
     <div>
-      <a href="/jobs" class="btn-cta"><i class="bi bi-briefcase me-2"></i>Browse Jobs</a>
+      <a href="/jobs" class="btn-cta-white"><i class="bi bi-briefcase"></i>Browse Jobs</a>
       <% if (!currUser) { %>
-        <a href="/signup" class="btn-cta-outline"><i class="bi bi-person-plus me-2"></i>Sign Up Free</a>
+        <a href="/signup" class="btn-cta-ghost"><i class="bi bi-person-plus"></i>Sign Up Free</a>
       <% } %>
     </div>
   </div>

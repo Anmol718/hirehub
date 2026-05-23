@@ -23,6 +23,7 @@ const jobsRouter = require("./routes/jobs.js");
 const employersRouter = require("./routes/employers.js");
 const userRouter = require("./routes/user.js");
 const applicationRouter = require("./routes/applications.js");
+const chatbotRouter = require("./routes/chatbot.js");
 
 // MongoDB connection URL
 
@@ -49,6 +50,7 @@ app.engine("ejs", ejsMate); // enable layout support
 // Middleware
 app.set("trust proxy", 1);
 app.use(express.urlencoded({ extended: true })); // parse form data
+app.use(express.json()); // parse JSON request bodies
 app.use(methodOverride("_method")); // override methods using query param
 app.use(express.static(path.join(__dirname, "/public"))); // serve static files from /public
 
@@ -117,6 +119,7 @@ app.use("/employers", employersRouter); // all /employers routes handled by empl
 app.use("/", userRouter);
 app.use("/applications", applicationRouter);
 app.use("/admin", adminRouter);
+app.use("/chatbot", chatbotRouter);
 
 // 404 handler - for any route not matched above
 app.use((req, res, next) => {

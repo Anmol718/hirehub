@@ -1,33 +1,80 @@
 <% layout("layouts/adminBoilerplate") %>
 
 <style>
-  .page-card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: hidden; }
+  .page-card { background: #fff; border-radius: 14px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04); }
+
+  /* Dark header */
   .page-card-header {
-    padding: 18px 24px;
-    border-bottom: 1px solid #f0f0f0;
-    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px; border-bottom: 1px solid #f1f5f9;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    background: linear-gradient(135deg, #0f172a, #1a1a2e);
   }
-  .page-card-header h6 { margin: 0; font-weight: 700; font-size: 15px; color: #1a1a2e; }
-  .page-card-header span { font-size: 13px; color: #888; }
+  .page-card-header h6 { margin: 0; font-weight: 700; font-size: 15px; color: #fff; display: flex; align-items: center; gap: 8px; }
+  .header-stats { display: flex; gap: 18px; font-size: 13px; }
+  .header-stat-pending  { color: #fbbf24; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+  .header-stat-accepted { color: #4ade80; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+  .header-stat-rejected { color: #f87171; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+
+  /* Filter Bar */
+  .filter-bar { padding: 14px 20px; border-bottom: 1px solid #f1f5f9; display: flex; gap: 8px; flex-wrap: wrap; background: #f8fafc; }
+  .filter-chip {
+    padding: 5px 14px; border-radius: 9999px; font-size: 13px; font-weight: 600;
+    border: 1.5px solid #e2e8f0; background: #fff; color: #64748b;
+    cursor: pointer; transition: all 0.18s; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .filter-chip:hover { border-color: #7c3aed; color: #7c3aed; background: #faf5ff; }
+  .filter-chip.active { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff; border-color: #4f46e5; box-shadow: 0 2px 8px rgba(124,58,237,0.3); }
+  .filter-chip.active:hover { color: #fff; }
+
+  /* Table */
   .admin-table { width: 100%; border-collapse: collapse; }
-  .admin-table thead tr { background: #f8f9fb; }
-  .admin-table th { padding: 12px 16px; font-size: 12px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
-  .admin-table td { padding: 14px 16px; font-size: 14px; color: #333; border-bottom: 1px solid #f8f8f8; vertical-align: middle; }
-  .admin-table tbody tr:hover { background: #fafbfc; }
+  .admin-table thead tr { background: #f8fafc; }
+  .admin-table th {
+    padding: 11px 16px; font-size: 11px; font-weight: 700; color: #94a3b8;
+    text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #f1f5f9;
+    white-space: nowrap;
+  }
+  .admin-table td {
+    padding: 14px 16px; font-size: 14px; color: #475569;
+    border-bottom: 1px solid #f8fafc; vertical-align: middle;
+  }
+  .admin-table tbody tr:hover { background: #fafbfd; }
   .admin-table tbody tr:last-child td { border-bottom: none; }
-  .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
-  .status-Pending  { background: #fff3e0; color: #e65100; }
-  .status-Accepted { background: #e6f4ea; color: #2e7d32; }
-  .status-Rejected { background: #fdecea; color: #c62828; }
-  .empty-state { text-align: center; padding: 60px 20px; color: #aaa; }
-  .empty-state i { font-size: 48px; display: block; margin-bottom: 12px; }
-  .btn-delete { background: none; border: 1px solid #fca5a5; color: #dc2626; border-radius: 6px; padding: 5px 12px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-  .btn-delete:hover { background: #dc2626; color: #fff; }
-  .resume-link { font-size: 13px; color: #3b6fd4; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
-  .resume-link:hover { text-decoration: underline; }
-  .filter-bar { padding: 14px 24px; border-bottom: 1px solid #f0f0f0; display: flex; gap: 8px; flex-wrap: wrap; }
-  .filter-btn { padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; border: 1px solid #e0e0e0; background: #fff; color: #555; cursor: pointer; transition: all 0.2s; text-decoration: none; }
-  .filter-btn:hover, .filter-btn.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+
+  /* Status pills */
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 11px; border-radius: 9999px;
+    font-size: 11.5px; font-weight: 700;
+  }
+  .status-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .sp-pending  { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+  .sp-pending::before  { background: #f97316; }
+  .sp-accepted { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+  .sp-accepted::before { background: #22c55e; }
+  .sp-rejected { background: #fff1f2; color: #9f1239; border: 1px solid #fecdd3; }
+  .sp-rejected::before { background: #f43f5e; }
+
+  .resume-link {
+    font-size: 12.5px; font-weight: 600; color: #2563eb; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 7px; border: 1.5px solid #bfdbfe; background: #eff6ff;
+    transition: all 0.18s;
+  }
+  .resume-link:hover { background: #dbeafe; border-color: #93c5fd; }
+
+  .empty-state { text-align: center; padding: 60px 20px; }
+  .empty-icon { width: 64px; height: 64px; border-radius: 18px; background: #eef2ff; color: #4f46e5; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px; }
+  .empty-state p { font-size: 14px; color: #94a3b8; margin: 0; }
+
+  .btn-delete {
+    background: none; border: 1.5px solid #e2e8f0; color: #94a3b8;
+    border-radius: 8px; padding: 5px 12px; font-size: 12.5px; font-weight: 600;
+    cursor: pointer; transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .btn-delete:hover { border-color: #fca5a5; background: #fff1f2; color: #dc2626; }
 </style>
 
 <%
@@ -39,26 +86,37 @@
 %>
 
 <div class="page-card">
+
+  <!-- Header -->
   <div class="page-card-header">
-    <h6><i class="bi bi-file-earmark-text me-2" style="color:#7b2da0;"></i>All Applications</h6>
-    <div style="display:flex;gap:16px;font-size:13px;">
-      <span style="color:#e65100;"><i class="bi bi-clock me-1"></i><%= pendingApps.length %> Pending</span>
-      <span style="color:#2e7d32;"><i class="bi bi-check-circle me-1"></i><%= acceptedApps.length %> Accepted</span>
-      <span style="color:#c62828;"><i class="bi bi-x-circle me-1"></i><%= rejectedApps.length %> Rejected</span>
+    <h6><i class="bi bi-file-earmark-text-fill"></i>All Applications</h6>
+    <div class="header-stats">
+      <span class="header-stat-pending"><i class="bi bi-clock-fill"></i><%= pendingApps.length %> Pending</span>
+      <span class="header-stat-accepted"><i class="bi bi-check-circle-fill"></i><%= acceptedApps.length %> Accepted</span>
+      <span class="header-stat-rejected"><i class="bi bi-x-circle-fill"></i><%= rejectedApps.length %> Rejected</span>
     </div>
   </div>
 
   <!-- Filter Bar -->
   <div class="filter-bar">
-    <a href="/admin/applications" class="filter-btn <%= filterStatus === 'All' ? 'active' : '' %>">All (<%= allApplications.length %>)</a>
-    <a href="/admin/applications?status=Pending" class="filter-btn <%= filterStatus === 'Pending' ? 'active' : '' %>">Pending (<%= pendingApps.length %>)</a>
-    <a href="/admin/applications?status=Accepted" class="filter-btn <%= filterStatus === 'Accepted' ? 'active' : '' %>">Accepted (<%= acceptedApps.length %>)</a>
-    <a href="/admin/applications?status=Rejected" class="filter-btn <%= filterStatus === 'Rejected' ? 'active' : '' %>">Rejected (<%= rejectedApps.length %>)</a>
+    <a href="/admin/applications" class="filter-chip <%= filterStatus === 'All' ? 'active' : '' %>">
+      <i class="bi bi-grid-3x3-gap"></i> All (<%= allApplications.length %>)
+    </a>
+    <a href="/admin/applications?status=Pending" class="filter-chip <%= filterStatus === 'Pending' ? 'active' : '' %>">
+      <i class="bi bi-hourglass-split"></i> Pending (<%= pendingApps.length %>)
+    </a>
+    <a href="/admin/applications?status=Accepted" class="filter-chip <%= filterStatus === 'Accepted' ? 'active' : '' %>">
+      <i class="bi bi-check-circle"></i> Accepted (<%= acceptedApps.length %>)
+    </a>
+    <a href="/admin/applications?status=Rejected" class="filter-chip <%= filterStatus === 'Rejected' ? 'active' : '' %>">
+      <i class="bi bi-x-circle"></i> Rejected (<%= rejectedApps.length %>)
+    </a>
   </div>
 
+  <!-- Table -->
   <% if (displayed.length === 0) { %>
     <div class="empty-state">
-      <i class="bi bi-file-earmark-text"></i>
+      <div class="empty-icon"><i class="bi bi-file-earmark-text"></i></div>
       <p>No applications found.</p>
     </div>
   <% } else { %>
@@ -79,29 +137,33 @@
           <% for (let app of displayed) { %>
             <tr>
               <td>
-                <div style="font-weight:600;"><%= app.fullName %></div>
-                <div style="font-size:12px;color:#888;"><%= app.email %></div>
+                <div style="font-weight:700;color:#0f172a;"><%= app.fullName %></div>
+                <div style="font-size:12px;color:#94a3b8;margin-top:2px;"><%= app.email %></div>
               </td>
               <td>
-                <div style="font-weight:500;"><%= app.job ? app.job.title : '<span style="color:#aaa;">Job Deleted</span>' %></div>
+                <div style="font-weight:600;color:#0f172a;">
+                  <%= app.job ? app.job.title : '<span style="color:#94a3b8;">Job Deleted</span>' %>
+                </div>
                 <% if (app.job && app.job.company) { %>
-                  <div style="font-size:12px;color:#888;"><%= app.job.company %></div>
+                  <div style="font-size:12px;color:#94a3b8;margin-top:2px;display:flex;align-items:center;gap:3px;">
+                    <i class="bi bi-building"></i><%= app.job.company %>
+                  </div>
                 <% } %>
               </td>
-              <td style="color:#666;font-size:13px;"><%= app.phone || '—' %></td>
+              <td style="font-size:13px;"><%= app.phone || '<span style="color:#94a3b8;">—</span>' %></td>
               <td>
-                <span class="status-badge status-<%= app.status %>"><%= app.status %></span>
+                <span class="status-pill sp-<%= app.status.toLowerCase() %>"><%= app.status %></span>
               </td>
-              <td style="color:#888;font-size:13px;">
-                <%= app.appliedAt ? new Date(app.appliedAt).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '—' %>
+              <td style="font-size:13px;color:#94a3b8;">
+                <%= app.appliedAt ? new Date(app.appliedAt).toLocaleDateString('en-CA', { day:'numeric', month:'short', year:'numeric' }) : '—' %>
               </td>
               <td>
                 <% if (app.resume && app.resume.url) { %>
                   <a href="<%= app.resume.url %>" target="_blank" class="resume-link">
-                    <i class="bi bi-file-earmark-pdf"></i> View
+                    <i class="bi bi-file-earmark-pdf-fill"></i> View
                   </a>
                 <% } else { %>
-                  <span style="color:#aaa;font-size:13px;">N/A</span>
+                  <span style="color:#94a3b8;font-size:13px;">N/A</span>
                 <% } %>
               </td>
               <td>
@@ -117,4 +179,5 @@
       </table>
     </div>
   <% } %>
+
 </div>

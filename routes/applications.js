@@ -103,6 +103,14 @@ router.get(
   wrapAsync(applicationController.viewApplicants),
 );
 
+// AI resume screening
+router.post(
+  "/:jobId/screen",
+  isLoggedIn,
+  isEmployer,
+  wrapAsync(applicationController.screenResumes),
+);
+
 // Accept an application
 router.post(
   "/:id/accept",

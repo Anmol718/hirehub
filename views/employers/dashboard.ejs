@@ -1,190 +1,218 @@
 <% layout("layouts/boilerplate") %>
 
 <style>
+  /* ── Hero ── */
   .emp-hero {
-    background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 60%, #3b4d8a 100%);
-    color: #fff;
-    padding: 52px 0 44px;
-    margin-bottom: 0;
+    background: linear-gradient(140deg, #0f172a 0%, #1a1a2e 45%, #2d2d5e 100%);
+    color: #fff; padding: 52px 0 44px;
+    position: relative; overflow: hidden;
   }
-  .emp-hero h1 { font-size: 30px; font-weight: 900; margin-bottom: 6px; }
+  .emp-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 24px 24px; pointer-events: none;
+  }
+  .emp-hero .inner { position: relative; z-index: 1; }
+  .emp-hero .eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase;
+    color: rgba(255,255,255,0.45); margin-bottom: 10px;
+  }
+  .emp-hero h1 { font-size: 30px; font-weight: 900; margin-bottom: 8px; letter-spacing: -0.03em; }
+  .emp-hero h1 span { color: #a78bfa; }
   .emp-hero p  { color: rgba(255,255,255,0.6); font-size: 15px; margin-bottom: 28px; }
   .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
   .btn-hero-primary {
-    background: #fff; color: #1a1a2e; border-radius: 9px;
-    padding: 11px 24px; font-size: 14px; font-weight: 700;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff; border-radius: 10px;
+    padding: 12px 26px; font-size: 14px; font-weight: 700;
     text-decoration: none; display: inline-flex; align-items: center; gap: 7px;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, transform 0.2s;
+    box-shadow: 0 4px 14px rgba(124,58,237,0.4);
   }
-  .btn-hero-primary:hover { opacity: 0.9; color: #1a1a2e; }
+  .btn-hero-primary:hover { opacity: 0.92; transform: translateY(-1px); color: #fff; }
   .btn-hero-outline {
-    background: transparent; color: #fff;
-    border: 1px solid rgba(255,255,255,0.35);
-    border-radius: 9px; padding: 11px 24px;
-    font-size: 14px; font-weight: 600;
+    background: rgba(255,255,255,0.08); color: #fff;
+    border: 1.5px solid rgba(255,255,255,0.25); border-radius: 10px;
+    padding: 11px 24px; font-size: 14px; font-weight: 600;
     text-decoration: none; display: inline-flex; align-items: center; gap: 7px;
     transition: background 0.2s;
   }
-  .btn-hero-outline:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .btn-hero-outline:hover { background: rgba(255,255,255,0.15); color: #fff; }
 
-  .stats-bar {
-    background: #fff;
-    border-bottom: 1px solid #f0f0f0;
-    padding: 0;
+  /* ── Stats ── */
+  .dash-stats { display: flex; gap: 12px; flex-wrap: wrap; margin: 32px 0 36px; }
+  .dash-stat {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+    padding: 16px 22px; display: flex; align-items: center; gap: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06); min-width: 120px; flex: 1;
   }
-  .stat-box {
-    padding: 24px 28px;
-    border-right: 1px solid #f0f0f0;
-    flex: 1;
-  }
-  .stat-box:last-child { border-right: none; }
-  .stat-box .num { font-size: 32px; font-weight: 900; color: #1a1a2e; line-height: 1; }
-  .stat-box .lbl { font-size: 13px; color: #888; margin-top: 4px; }
-  .stat-box .icon-wrap {
-    width: 42px; height: 42px; border-radius: 10px;
+  .dash-stat-icon {
+    width: 42px; height: 42px; border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px; margin-bottom: 10px;
+    font-size: 19px; flex-shrink: 0;
   }
+  .dash-stat-num { font-size: 26px; font-weight: 900; line-height: 1; letter-spacing: -0.04em; }
+  .dash-stat-lbl { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; margin-top: 3px; }
 
-  .section { padding: 40px 0; }
-  .section-title { font-size: 18px; font-weight: 800; color: #1a1a2e; margin-bottom: 4px; }
-  .section-sub   { font-size: 13px; color: #888; margin-bottom: 24px; }
+  /* ── Section ── */
+  .emp-section { padding: 48px 0; }
+  .emp-section-title { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 4px; letter-spacing: -0.02em; }
+  .emp-section-sub   { font-size: 13.5px; color: #94a3b8; margin-bottom: 28px; }
 
-  .feature-card {
-    background: #fff; border-radius: 14px; padding: 26px 24px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06); height: 100%;
-    border-top: 3px solid transparent;
-    transition: transform 0.2s, box-shadow 0.2s;
+  /* ── Feature Cards ── */
+  .feat-card {
+    background: #fff; border-radius: 16px; padding: 28px 26px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+    border: 1px solid #f1f5f9; height: 100%;
+    transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    position: relative; overflow: hidden;
   }
-  .feature-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.09); }
-  .feature-card.blue   { border-top-color: #3b6fd4; }
-  .feature-card.green  { border-top-color: #2e7d32; }
-  .feature-card.purple { border-top-color: #7b2da0; }
-  .feature-icon {
-    width: 48px; height: 48px; border-radius: 12px;
+  .feat-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    opacity: 0; transition: opacity 0.25s;
+  }
+  .feat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.09); border-color: rgba(79,70,229,0.12); }
+  .feat-card:hover::before { opacity: 1; }
+  .feat-card-post::before { background: linear-gradient(90deg, #4f46e5, #7c3aed); }
+  .feat-card-manage::before { background: linear-gradient(90deg, #059669, #0d9488); }
+  .feat-card-review::before { background: linear-gradient(90deg, #7c3aed, #a855f7); }
+
+  .feat-icon {
+    width: 52px; height: 52px; border-radius: 14px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 22px; margin-bottom: 16px;
+    font-size: 22px; margin-bottom: 18px;
   }
-  .feature-icon.blue   { background: #e8f0fe; color: #3b6fd4; }
-  .feature-icon.green  { background: #e6f4ea; color: #2e7d32; }
-  .feature-icon.purple { background: #f3e8fd; color: #7b2da0; }
-  .feature-card h5 { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
-  .feature-card p  { font-size: 13px; color: #888; line-height: 1.6; margin-bottom: 16px; }
-  .feature-link {
-    font-size: 13px; font-weight: 600; text-decoration: none;
+  .feat-card h5 { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+  .feat-card p  { font-size: 13.5px; color: #64748b; line-height: 1.65; margin-bottom: 18px; }
+  .feat-link {
+    font-size: 13px; font-weight: 700; text-decoration: none;
     display: inline-flex; align-items: center; gap: 5px;
+    transition: gap 0.18s;
   }
-  .feature-link.blue   { color: #3b6fd4; }
-  .feature-link.green  { color: #2e7d32; }
-  .feature-link.purple { color: #7b2da0; }
-  .feature-link:hover { text-decoration: underline; }
+  .feat-link:hover { gap: 8px; }
 
-  .tips-card {
-    background: linear-gradient(135deg, #1a1a2e, #2d2d5e);
-    border-radius: 14px; padding: 28px 32px; color: #fff;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 24px; flex-wrap: wrap;
+  /* ── CTA Banner ── */
+  .cta-banner {
+    background: linear-gradient(135deg, #0f172a 0%, #4f46e5 50%, #7c3aed 100%);
+    border-radius: 18px; padding: 36px 40px;
+    display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
+    position: relative; overflow: hidden;
   }
-  .tips-card h4 { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
-  .tips-card p  { color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; }
-  .tips-card a {
-    background: #fff; color: #1a1a2e; border-radius: 9px;
-    padding: 10px 22px; font-size: 14px; font-weight: 700;
-    text-decoration: none; white-space: nowrap; flex-shrink: 0;
-    transition: opacity 0.2s;
+  .cta-banner::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
-  .tips-card a:hover { opacity: 0.9; color: #1a1a2e; }
+  .cta-banner-icon {
+    width: 60px; height: 60px; border-radius: 18px;
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; color: #fff; flex-shrink: 0; position: relative;
+  }
+  .cta-banner h4 { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 5px; position: relative; }
+  .cta-banner p  { font-size: 13.5px; color: rgba(255,255,255,0.6); margin: 0; position: relative; }
+  .cta-banner a {
+    background: #fff; color: #4f46e5; border-radius: 10px;
+    padding: 11px 26px; font-size: 14px; font-weight: 800;
+    text-decoration: none; white-space: nowrap; margin-left: auto;
+    transition: all 0.2s; position: relative;
+    display: inline-flex; align-items: center; gap: 7px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .cta-banner a:hover { background: #f1f5f9; color: #4f46e5; transform: translateY(-2px); box-shadow: 0 6px 22px rgba(0,0,0,0.25); }
 </style>
 
 <!-- Hero -->
 <div class="emp-hero">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-lg-8">
-        <p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:8px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Employer Portal</p>
-        <h1>Welcome back, <%= currUser.username %>!</h1>
-        <p>Post jobs, review applicants, and build your team — all in one place.</p>
-        <div class="hero-btns">
-          <a href="/jobs/new" class="btn-hero-primary"><i class="bi bi-plus-lg"></i> Post a New Job</a>
-          <a href="/employers/jobs" class="btn-hero-outline"><i class="bi bi-list-ul"></i> My Job Listings</a>
-        </div>
-      </div>
+  <div class="container inner">
+    <div class="eyebrow">Employer Portal</div>
+    <h1>Welcome back, <span><%= currUser.username %></span>!</h1>
+    <p>Post jobs, review applicants, and build your team — all in one place.</p>
+    <div class="hero-btns">
+      <a href="/jobs/new" class="btn-hero-primary"><i class="bi bi-plus-lg"></i>Post a New Job</a>
+      <a href="/employers/jobs" class="btn-hero-outline"><i class="bi bi-list-ul"></i>My Job Listings</a>
     </div>
   </div>
 </div>
 
-<!-- Stats Bar -->
-<div class="stats-bar">
-  <div class="container">
-    <div class="d-flex flex-wrap">
-      <div class="stat-box">
-        <div class="icon-wrap" style="background:#e8f0fe;color:#3b6fd4;"><i class="bi bi-briefcase-fill"></i></div>
-        <div class="num"><%= jobsCount %></div>
-        <div class="lbl">Jobs Posted</div>
+<div class="container">
+
+  <!-- Stats -->
+  <div class="dash-stats">
+    <div class="dash-stat">
+      <div class="dash-stat-icon" style="background:#eef2ff;color:#4f46e5;"><i class="bi bi-briefcase-fill"></i></div>
+      <div>
+        <div class="dash-stat-num" style="color:#0f172a;"><%= jobsCount %></div>
+        <div class="dash-stat-lbl">Jobs Posted</div>
       </div>
-      <div class="stat-box">
-        <div class="icon-wrap" style="background:#f3e8fd;color:#7b2da0;"><i class="bi bi-people-fill"></i></div>
-        <div class="num"><%= totalApplications %></div>
-        <div class="lbl">Total Applications</div>
+    </div>
+    <div class="dash-stat">
+      <div class="dash-stat-icon" style="background:#ede9fe;color:#7c3aed;"><i class="bi bi-people-fill"></i></div>
+      <div>
+        <div class="dash-stat-num" style="color:#5b21b6;"><%= totalApplications %></div>
+        <div class="dash-stat-lbl">Applications</div>
       </div>
-      <div class="stat-box">
-        <div class="icon-wrap" style="background:#fff3e0;color:#e65100;"><i class="bi bi-clock-fill"></i></div>
-        <div class="num"><%= pendingApplications %></div>
-        <div class="lbl">Pending Review</div>
+    </div>
+    <div class="dash-stat">
+      <div class="dash-stat-icon" style="background:#fff7ed;color:#f97316;"><i class="bi bi-clock-fill"></i></div>
+      <div>
+        <div class="dash-stat-num" style="color:#c2410c;"><%= pendingApplications %></div>
+        <div class="dash-stat-lbl">Pending Review</div>
       </div>
-      <div class="stat-box">
-        <div class="icon-wrap" style="background:#e6f4ea;color:#2e7d32;"><i class="bi bi-check-circle-fill"></i></div>
-        <div class="num"><%= acceptedApplications %></div>
-        <div class="lbl">Accepted</div>
+    </div>
+    <div class="dash-stat">
+      <div class="dash-stat-icon" style="background:#f0fdf4;color:#22c55e;"><i class="bi bi-check-circle-fill"></i></div>
+      <div>
+        <div class="dash-stat-num" style="color:#166534;"><%= acceptedApplications %></div>
+        <div class="dash-stat-lbl">Accepted</div>
       </div>
     </div>
   </div>
+
 </div>
 
 <!-- Quick Actions -->
-<div class="section" style="background:#f8f9fb;">
-  <div class="container">
-    <div class="section-title">Quick Actions</div>
-    <div class="section-sub">Everything you need to manage your hiring</div>
+<div style="background:#f8fafc;border-top:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;">
+  <div class="container emp-section">
+    <div class="emp-section-title">Quick Actions</div>
+    <div class="emp-section-sub">Everything you need to manage your hiring</div>
 
     <div class="row g-3">
       <div class="col-md-4">
-        <div class="feature-card blue">
-          <div class="feature-icon blue"><i class="bi bi-plus-circle-fill"></i></div>
+        <div class="feat-card feat-card-post">
+          <div class="feat-icon" style="background:#eef2ff;color:#4f46e5;"><i class="bi bi-plus-circle-fill"></i></div>
           <h5>Post a New Job</h5>
-          <p>Create a new listing and start receiving applications from qualified candidates immediately.</p>
-          <a href="/jobs/new" class="feature-link blue">Post Now <i class="bi bi-arrow-right"></i></a>
+          <p>Create a listing and start receiving applications from qualified candidates immediately.</p>
+          <a href="/jobs/new" class="feat-link" style="color:#4f46e5;">Post Now <i class="bi bi-arrow-right"></i></a>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="feature-card green">
-          <div class="feature-icon green"><i class="bi bi-briefcase-fill"></i></div>
+        <div class="feat-card feat-card-manage">
+          <div class="feat-icon" style="background:#d1fae5;color:#059669;"><i class="bi bi-briefcase-fill"></i></div>
           <h5>Manage My Jobs</h5>
           <p>View, edit, or delete your active job listings. Keep your postings up to date.</p>
-          <a href="/employers/jobs" class="feature-link green">View Listings <i class="bi bi-arrow-right"></i></a>
+          <a href="/employers/jobs" class="feat-link" style="color:#059669;">View Listings <i class="bi bi-arrow-right"></i></a>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="feature-card purple">
-          <div class="feature-icon purple"><i class="bi bi-people-fill"></i></div>
+        <div class="feat-card feat-card-review">
+          <div class="feat-icon" style="background:#ede9fe;color:#7c3aed;"><i class="bi bi-people-fill"></i></div>
           <h5>Review Applications</h5>
-          <p>Go to any job listing to review applicants, read cover letters, and accept or reject candidates.</p>
-          <a href="/employers/jobs" class="feature-link purple">Review Now <i class="bi bi-arrow-right"></i></a>
+          <p>Go to any job listing to review applicants, read cover letters, and accept or reject.</p>
+          <a href="/employers/jobs" class="feat-link" style="color:#7c3aed;">Review Now <i class="bi bi-arrow-right"></i></a>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Bottom CTA -->
-<div class="section" style="background:#fff;">
-  <div class="container">
-    <div class="tips-card">
-      <div>
-        <h4>Ready to find your next hire?</h4>
-        <p>Post a job now and connect with hundreds of motivated candidates on HireHub.</p>
-      </div>
-      <a href="/jobs/new"><i class="bi bi-plus-lg me-1"></i>Post a Job</a>
+<!-- CTA Banner -->
+<div class="container" style="padding-top:48px;padding-bottom:56px;">
+  <div class="cta-banner">
+    <div class="cta-banner-icon"><i class="bi bi-building-fill"></i></div>
+    <div style="position:relative;">
+      <h4>Ready to find your next hire?</h4>
+      <p>Post a job now and connect with hundreds of motivated candidates on HireHub.</p>
     </div>
+    <a href="/jobs/new"><i class="bi bi-plus-lg"></i>Post a Job</a>
   </div>
 </div>

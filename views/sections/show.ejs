@@ -1,106 +1,178 @@
 <% layout("layouts/boilerplate") %>
 
 <style>
-  .show-wrapper { max-width: 860px; margin: 0 auto; padding: 36px 16px; }
-  .back-link { font-size: 13px; color: #888; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px; }
-  .back-link:hover { color: #333; }
+  .show-page { max-width: 880px; margin: 0 auto; padding: 36px 16px 64px; }
 
-  .job-header {
-    background: #fff;
-    border-radius: 14px;
-    padding: 28px 32px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-    margin-bottom: 20px;
+  .back-link {
+    font-size: 13px; font-weight: 600; color: var(--hh-text-muted);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    margin-bottom: 24px; transition: color 0.18s;
+    padding: 6px 12px; border-radius: 8px; border: 1px solid var(--hh-border);
+    background: var(--hh-surface);
   }
-  .company-logo {
-    width: 56px; height: 56px; border-radius: 14px;
-    background: #1a1a2e; color: #fff;
+  .back-link:hover { color: var(--hh-brand); border-color: var(--hh-brand); background: var(--hh-border-light); }
+
+  /* Header card */
+  .job-header-card {
+    background: var(--hh-surface); border-radius: 16px;
+    box-shadow: var(--shadow-md); border: 1px solid var(--hh-border-light);
+    overflow: hidden; margin-bottom: 20px;
+  }
+  .job-header-banner {
+    height: 8px;
+    background: linear-gradient(90deg, var(--hh-accent) 0%, var(--hh-purple) 100%);
+  }
+  .job-header-body { padding: 30px 32px; }
+
+  .jh-logo {
+    width: 60px; height: 60px; border-radius: 16px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 22px; font-weight: 800; flex-shrink: 0;
+    font-size: 24px; font-weight: 900; color: #fff; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--hh-brand), var(--hh-brand-light));
+    box-shadow: 0 4px 16px rgba(26,26,46,0.25);
   }
-  .job-title { font-size: 24px; font-weight: 800; color: #1a1a2e; margin: 0 0 4px; }
-  .job-company { font-size: 15px; color: #555; margin: 0; font-weight: 500; }
-  .tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
-  .tag-blue   { background: #e8f0fe; color: #3b6fd4; }
-  .tag-green  { background: #e6f4ea; color: #2e7d32; }
-  .tag-orange { background: #fff3e0; color: #e65100; }
-  .tag-purple { background: #f3e8fd; color: #7b2da0; }
-  .tag-teal   { background: #e0f2f1; color: #00695c; }
-  .meta-row { display: flex; flex-wrap: wrap; gap: 20px; margin: 16px 0; }
-  .meta-item { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #666; }
-  .meta-item i { color: #aaa; }
-  .salary-highlight { font-size: 20px; font-weight: 800; color: #2e7d32; }
+  .jh-title   { font-size: 26px; font-weight: 900; color: var(--hh-text); margin: 0 0 4px; letter-spacing: -0.03em; }
+  .jh-company { font-size: 15px; color: var(--hh-text-2); margin: 0; font-weight: 500; }
 
-  .section-card {
-    background: #fff;
-    border-radius: 14px;
-    padding: 24px 32px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-    margin-bottom: 20px;
+  .salary-pill {
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    color: var(--hh-green); font-size: 17px; font-weight: 800;
+    padding: 8px 16px; border-radius: 10px; border: 1px solid #6ee7b7;
+    white-space: nowrap;
   }
-  .section-card h5 { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
-  .description-text { font-size: 14px; color: #555; line-height: 1.8; white-space: pre-wrap; margin: 0; }
-  .skill-tag { display: inline-block; padding: 5px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; background: #f0f2f5; color: #444; margin: 4px 4px 4px 0; }
 
-  .poster-info { display: flex; align-items: center; gap: 12px; }
-  .poster-avatar {
-    width: 40px; height: 40px; border-radius: 50%;
-    background: #1a1a2e; color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 15px;
-  }
-  .poster-name { font-weight: 600; font-size: 14px; color: #1a1a2e; }
-  .poster-label { font-size: 12px; color: #aaa; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--hh-border-light); }
+  .meta-item { display: flex; align-items: center; gap: 7px; font-size: 14px; color: var(--hh-text-2); }
+  .meta-item i { color: var(--hh-text-muted); font-size: 15px; }
 
-  .apply-section {
-    background: linear-gradient(135deg, #1a1a2e, #2d2d5e);
-    border-radius: 14px;
-    padding: 28px 32px;
-    text-align: center;
-    color: #fff;
-    box-shadow: 0 4px 16px rgba(26,26,46,0.2);
+  .poster-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--hh-border-light); border-radius: 9999px;
+    padding: 5px 12px 5px 5px; font-size: 13px; font-weight: 500; color: var(--hh-text);
+    border: 1px solid var(--hh-border);
   }
-  .apply-section h5 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-  .apply-section p { color: rgba(255,255,255,0.65); font-size: 14px; margin-bottom: 20px; }
-  .btn-apply { background: #fff; color: #1a1a2e; border: none; border-radius: 10px; padding: 12px 32px; font-size: 15px; font-weight: 700; text-decoration: none; display: inline-block; transition: all 0.2s; }
-  .btn-apply:hover { background: #f0f2f5; color: #1a1a2e; }
-  .btn-back { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: #fff; border-radius: 10px; padding: 12px 24px; font-size: 14px; font-weight: 500; text-decoration: none; display: inline-block; margin-left: 12px; transition: all 0.2s; }
-  .btn-back:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .poster-av {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--hh-brand), var(--hh-accent));
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800;
+  }
+
+  /* Section cards */
+  .info-card {
+    background: var(--hh-surface); border-radius: 14px;
+    padding: 26px 30px; box-shadow: var(--shadow-sm);
+    border: 1px solid var(--hh-border-light); margin-bottom: 18px;
+  }
+  .info-card-title {
+    font-size: 14px; font-weight: 700; color: var(--hh-text);
+    margin-bottom: 16px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--hh-border-light);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .info-card-title i { color: var(--hh-accent); }
+
+  .desc-text {
+    font-size: 14.5px; color: var(--hh-text-2); line-height: 1.85;
+    white-space: pre-wrap; margin: 0;
+  }
+
+  .skill-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500;
+    background: var(--hh-accent-bg); color: var(--hh-accent);
+    border: 1px solid rgba(79,70,229,0.15);
+    margin: 4px 4px 4px 0;
+    transition: all 0.18s;
+  }
+  .skill-chip:hover { background: var(--hh-accent); color: #fff; transform: translateY(-1px); }
+
+  /* Apply CTA */
+  .apply-cta {
+    background: linear-gradient(135deg, #0f172a 0%, var(--hh-brand) 40%, var(--hh-brand-mid) 100%);
+    border-radius: 16px; padding: 36px 36px 34px;
+    text-align: center; color: #fff;
+    box-shadow: 0 8px 32px rgba(26,26,46,0.3);
+    position: relative; overflow: hidden;
+  }
+  .apply-cta::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  .apply-cta-inner { position: relative; z-index: 1; }
+  .apply-cta h5 { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+  .apply-cta p  { color: rgba(255,255,255,0.6); font-size: 14px; margin-bottom: 24px; }
+
+  .btn-apply-now {
+    background: #fff; color: var(--hh-brand); border: none;
+    border-radius: 10px; padding: 13px 32px; font-size: 15px; font-weight: 800;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: all 0.2s var(--ease-bounce);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-apply-now:hover { background: #f1f5f9; color: var(--hh-brand); transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 30px rgba(0,0,0,0.28); }
+
+  .btn-browse {
+    background: rgba(255,255,255,0.1); color: #fff;
+    border: 1.5px solid rgba(255,255,255,0.25); border-radius: 10px;
+    padding: 12px 24px; font-size: 14px; font-weight: 500;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 7px;
+    margin-left: 12px; transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-browse:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+  .applied-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(4,120,87,0.2); border: 1px solid rgba(16,185,129,0.3);
+    color: #6ee7b7; border-radius: 10px; padding: 12px 24px;
+    font-size: 15px; font-weight: 700;
+  }
 </style>
 
-<div class="show-wrapper">
+<div class="show-page">
 
   <a href="/jobs" class="back-link"><i class="bi bi-arrow-left"></i> Back to Jobs</a>
 
   <!-- Header Card -->
-  <div class="job-header">
-    <div style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;">
-      <div class="company-logo"><%= job.company[0].toUpperCase() %></div>
-      <div style="flex:1;">
-        <h1 class="job-title"><%= job.title %></h1>
-        <p class="job-company"><%= job.company %></p>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
-          <% if (job.jobType) { %><span class="tag tag-blue"><%= job.jobType %></span><% } %>
-          <% if (job.workMode) { %><span class="tag tag-green"><%= job.workMode %></span><% } %>
-          <% if (job.experienceLevel) { %><span class="tag tag-orange"><%= job.experienceLevel %></span><% } %>
+  <div class="job-header-card reveal">
+    <%
+      const bannerGrad =
+        job.jobType === 'Full-Time'  ? 'linear-gradient(90deg,#2563eb,#4f46e5)' :
+        job.jobType === 'Part-Time'  ? 'linear-gradient(90deg,#7c3aed,#a855f7)' :
+        job.jobType === 'Contract'   ? 'linear-gradient(90deg,#d97706,#f59e0b)' :
+        job.jobType === 'Internship' ? 'linear-gradient(90deg,#059669,#10b981)' :
+        'linear-gradient(90deg,#4f46e5,#7c3aed)';
+    %>
+    <div class="job-header-banner" style="background:<%= bannerGrad %>;"></div>
+    <div class="job-header-body">
+      <div style="display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap;">
+        <div class="jh-logo"><%= job.company[0].toUpperCase() %></div>
+        <div style="flex:1;min-width:0;">
+          <h1 class="jh-title"><%= job.title %></h1>
+          <p class="jh-company"><%= job.company %></p>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;">
+            <% if (job.jobType) { %><span class="tag <%= job.jobType === 'Full-Time' ? 'tag-blue' : job.jobType === 'Part-Time' ? 'tag-purple' : job.jobType === 'Contract' ? 'tag-orange' : 'tag-green' %>"><%= job.jobType %></span><% } %>
+            <% if (job.workMode) { %><span class="tag <%= job.workMode === 'Remote' ? 'tag-sky' : job.workMode === 'Hybrid' ? 'tag-purple' : 'tag-green' %>"><%= job.workMode %></span><% } %>
+            <% if (job.experienceLevel) { %><span class="tag tag-accent"><%= job.experienceLevel %> Level</span><% } %>
+          </div>
         </div>
+        <% if (job.salary) { %>
+          <div class="salary-pill">$<%= job.salary.toLocaleString() %> CAD</div>
+        <% } %>
       </div>
-      <% if (job.salary) { %>
-        <div class="salary-highlight">$<%= job.salary.toLocaleString() %> CAD</div>
-      <% } %>
-    </div>
 
-    <div class="meta-row">
-      <div class="meta-item"><i class="bi bi-geo-alt"></i> <%= job.location %></div>
-      <% if (job.postedAt) { %>
-        <div class="meta-item"><i class="bi bi-clock"></i> Posted <%= new Date(job.postedAt).toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' }) %></div>
-      <% } %>
-      <div class="meta-item">
-        <div class="poster-info">
-          <div class="poster-avatar"><%= job.owner.username[0].toUpperCase() %></div>
-          <div>
-            <div class="poster-label">Posted by</div>
-            <div class="poster-name"><%= job.owner.username %></div>
+      <div class="meta-row">
+        <div class="meta-item"><i class="bi bi-geo-alt-fill"></i> <%= job.location %></div>
+        <% if (job.postedAt) { %>
+          <div class="meta-item"><i class="bi bi-calendar3"></i> Posted <%= new Date(job.postedAt).toLocaleDateString('en-CA', { day:'numeric', month:'long', year:'numeric' }) %></div>
+        <% } %>
+        <div class="meta-item">
+          <div class="poster-chip">
+            <div class="poster-av"><%= job.owner.username[0].toUpperCase() %></div>
+            <span><%= job.owner.username %></span>
           </div>
         </div>
       </div>
@@ -108,32 +180,38 @@
   </div>
 
   <!-- Description -->
-  <div class="section-card">
-    <h5><i class="bi bi-file-text me-2"></i>Job Description</h5>
-    <p class="description-text"><%= job.description %></p>
+  <div class="info-card reveal reveal-d1">
+    <div class="info-card-title"><i class="bi bi-file-earmark-text-fill"></i>Job Description</div>
+    <p class="desc-text"><%= job.description %></p>
   </div>
 
   <!-- Skills -->
   <% if (job.skills && job.skills.length > 0) { %>
-    <div class="section-card">
-      <h5><i class="bi bi-tools me-2"></i>Required Skills</h5>
-      <% job.skills.forEach(skill => { %>
-        <span class="skill-tag"><%= skill %></span>
-      <% }) %>
+    <div class="info-card reveal reveal-d2">
+      <div class="info-card-title"><i class="bi bi-tools"></i>Required Skills</div>
+      <div>
+        <% job.skills.forEach(skill => { %>
+          <span class="skill-chip"><i class="bi bi-check2"></i><%= skill %></span>
+        <% }) %>
+      </div>
     </div>
   <% } %>
 
-  <!-- Apply Section -->
-  <div class="apply-section">
-    <h5>Interested in this role?</h5>
-    <p>Submit your application and we'll notify you about the result via email.</p>
-    <% if (!userAlreadyApplied) { %>
-      <a href="/applications/<%= job._id %>/apply" class="btn-apply">Apply Now</a>
-      <a href="/jobs" class="btn-back">Browse More</a>
-    <% } else { %>
-      <button class="btn-apply" disabled style="opacity:0.6;cursor:not-allowed;">Already Applied</button>
-      <a href="/jobs" class="btn-back">Browse More</a>
-    <% } %>
+  <!-- Apply CTA -->
+  <div class="apply-cta reveal reveal-d3">
+    <div class="apply-cta-inner">
+      <h5>Ready to Apply?</h5>
+      <p>Submit your resume and we'll notify you immediately when the employer responds.</p>
+      <% if (!userAlreadyApplied) { %>
+        <a href="/applications/<%= job._id %>/apply" class="btn-apply-now">
+          <i class="bi bi-send-fill"></i>Apply Now
+        </a>
+        <a href="/jobs" class="btn-browse"><i class="bi bi-briefcase"></i>Browse More</a>
+      <% } else { %>
+        <div class="applied-badge"><i class="bi bi-check-circle-fill"></i>Application Submitted</div>
+        <a href="/jobs" class="btn-browse" style="margin-top:12px;display:inline-flex;"><i class="bi bi-briefcase"></i>Browse More Jobs</a>
+      <% } %>
+    </div>
   </div>
 
 </div>
