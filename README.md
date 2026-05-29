@@ -1,93 +1,154 @@
-# HireHub — Campus-to-Career Job Portal
+# HireHub — AI-Powered Job Portal 🚀
 
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-![Bootstrap](https://img.shields.io/badge/Bootstrap_5-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
-![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
+![Claude AI](https://img.shields.io/badge/Claude_AI-D97757?style=for-the-badge&logo=anthropic&logoColor=white)
 
-A full-stack web application that connects university students with employers — built from scratch with Node.js, Express, and MongoDB.
+> A full-stack AI-powered job portal built from scratch and deployed to production — connecting candidates with employers through intelligent matching and real-time AI assistance.
 
-🔗 **Live Demo:** [https://hirehub-w6sp.onrender.com/home](https://hirehub-w6sp.onrender.com/home)
-
-> Hosted on Render's free tier
+🔗 **Live Demo:** [hirehub-w6sp.onrender.com](https://hirehub-w6sp.onrender.com/home)  
+💻 **GitHub:** [github.com/Anmol718/hirehub](https://github.com/Anmol718/hirehub)
 
 ---
 
 ## 📸 Screenshots
 
-> _(Add screenshots of your homepage, job listings, and admin panel here)_
-<img width="1440" height="900" alt="Screenshot 2026-04-06 at 4 05 02 PM" src="https://github.com/user-attachments/assets/39bd3b0b-96ee-4045-a959-6e7caeb9fe29" />
-<img width="1440" height="900" alt="Screenshot 2026-04-06 at 4 05 18 PM" src="https://github.com/user-attachments/assets/77b7d5cc-095c-40e9-![Uploading Screenshot 2026-04-06 at 4.05.31 PM.png…]()
-a7ef-b2877640e08f" />
-<img width="1440" height="900" alt="Screenshot 2026-04-06 at 4 05 49 PM" src="https://github.com/user-attachments/assets/d4de9e6d-0a67-44e2-8738-c7c8cd299d35" />
-<img width="1440" height="900" alt="Screenshot 2026-04-06 at 4 06 38 PM" src="https://github.com/user-attachments/assets/64a84df1-3b96-4dbc-8b9b-a61e5cef5617" />
-<img width="1440" height="900" alt="Screenshot 2026-04-06 at 4 07 04 PM" src="https://github.com/user-attachments/assets/baf18d13-c6b4-40f5-bbfa-f8aef02a5b79" />
-<img width="1440" height="900" alt="Screenshot 2026-04-06 at 4 07 17 PM" src="https://github.com/user-attachments/assets/74fcb7f9-57d9-40ff-9faf-11ffeea60578" />
-<img width="1440" height="900" alt="Screenshot 2026-04-06 at 4 08 34 PM" src="https://github.com/user-attachments/assets/c3ad313a-a633-46d6-b65f-1642e394f6c3" />
-<img width="1440" height="900" alt="Screenshot 2026-04-06 at 4 08 54 PM" src="https://github.com/user-attachments/assets/1431e5df-676d-4e2f-a84a-b239af94b2e9" />
+### 🏠 Homepage
+<img width="1439" height="857" alt="Screenshot 2026-05-29 at 2 55 25 PM" src="https://github.com/user-attachments/assets/5bb9225e-6099-40b1-acbb-8db41e6b661f" />
 
+### 🤖 AI Chatbot (Claude API — SSE Streaming)
+<img width="1439" height="857" alt="Screenshot 2026-05-29 at 2 57 12 PM" src="https://github.com/user-attachments/assets/db1c678b-3391-41d8-9747-4cc6324f9722" />
+
+### 📊 AI Resume Screening (Match Scores)
+<img width="1439" height="857" alt="Screenshot 2026-05-29 at 2 57 44 PM" src="https://github.com/user-attachments/assets/5504db90-424f-4c89-9d7f-8f8f0331ccf2" />
+
+### 📊 AI Screening with scores
+<img width="1439" height="857" alt="Screenshot 2026-05-29 at 2 57 54 PM" src="https://github.com/user-attachments/assets/25fa70a7-ba5c-4e19-aec3-7c4b7f23bba2" />
+
+### 💼 Employer Dashboard
+<img width="1439" height="857" alt="Screenshot 2026-05-29 at 2 58 24 PM" src="https://github.com/user-attachments/assets/b70743e0-5526-4f37-b663-2a2846427ab6" />
+
+### 🛡️ Admin Panel
+<img width="1439" height="857" alt="Screenshot 2026-05-29 at 2 58 55 PM" src="https://github.com/user-attachments/assets/4aecbd93-9f25-4b57-a4e2-6b40f38cd0bb" />
 
 
 ---
+## ✨ What Makes HireHub Different
 
-## ✨ Features
+Most job portals just list jobs. HireHub uses **Claude AI API** to actively help candidates and employers — screening resumes automatically, matching candidates by skill, and providing a real-time AI career assistant.
 
-### 👤 Role-Based Authentication
+---
 
-- Three user roles: **Candidate**, **Employer**, and **Admin**
-- Secure session-based authentication using **Passport.js** (local strategy)
-- Role-aware navigation and access control middleware
+## 🤖 AI Features (Powered by Claude API)
 
-### 💼 Job Listings (Employers)
+### Real-Time AI Chatbot
+- Built with **Server-Sent Events (SSE) streaming** — responses stream token by token like ChatGPT
+- Integrated with **AJAX** for seamless real-time updates
+- Career advisor & job matcher — helps candidates with cover letters, interview tips, and job search
+- Powered by **Claude Haiku API** with **prompt caching** — 90% reduction in token costs
 
-- Post, edit, and delete job listings
-- Set job title, description, salary (CAD), location, and type
-- View all applications submitted to their listings
+### AI Resume Screening
+- Automatically reads and analyzes every candidate's resume
+- Generates a **match score out of 100** for each applicant
+- Ranks candidates by skills, experience, and job fit
+- Employers can **re-screen** any time new applicants arrive
+- Results cached for performance optimization
 
-### 📄 Job Applications (Candidates)
+---
 
-- Browse and apply to job listings
-- Upload **resume** (PDF) and optional **cover letter** (text or PDF)
-- Files securely stored on **Cloudinary**
-- Track application status in real time
+## 🔒 Security Stack
 
-### 📬 Email Notifications
-
-- Automated email alerts sent to candidates when their application is **accepted** or **rejected**
-- Powered by the **Brevo (Sendinblue) HTTP API**
-
-### 🛡️ Admin Panel
-
-- Dedicated dark-themed admin dashboard
-- Manage all **users**, **job listings**, and **applications**
-- Separate admin layout (`adminBoilerplate.ejs`)
-
-### 🔔 Flash Notifications
-
-- Auto-dismissing toast notifications (4 seconds) for all user actions
-- Success, error, and info states
-
-### ❌ Error Handling
-
-- Custom error pages with status-aware messages (401, 403, 404, 500)
-- `ExpressError` utility class + `wrapAsync` for clean async error handling
+| Feature | Implementation |
+|---|---|
+| Security Headers | Helmet.js — 14 HTTP security headers |
+| Brute Force Protection | express-rate-limit |
+| Password Security | bcrypt hashing |
+| Bot Protection | Google reCAPTCHA v2 |
+| Job Moderation | Admin approval before jobs go live |
+| File Storage | Secure Cloudinary with Multer |
+| Session Security | express-session with secure config |
+| Input Validation | Schema validation with Joi |
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer          | Technology                                     |
-| -------------- | ---------------------------------------------- |
-| Runtime        | Node.js                                        |
-| Framework      | Express.js                                     |
-| Database       | MongoDB + Mongoose                             |
-| Templating     | EJS + ejs-mate (layouts)                       |
-| Authentication | Passport.js (Local Strategy)                   |
-| File Uploads   | Multer + Cloudinary                            |
-| Email          | Brevo HTTP API                                 |
-| Styling        | Bootstrap 5.3 + Bootstrap Icons + Font Awesome |
-| Hosting        | Render (free tier)                             |
+| Layer | Technology |
+|---|---|
+| Runtime | Node.js |
+| Framework | Express.js |
+| Frontend | React.js + Bootstrap 5 |
+| Database | MongoDB + Mongoose |
+| AI | Claude Haiku API (Anthropic) |
+| Authentication | Passport.js (Local Strategy) |
+| File Uploads | Multer + Cloudinary |
+| Email | Brevo HTTP API |
+| Cloud | Render + MongoDB Atlas |
+| Storage | Cloudinary |
+| Monitoring | UptimeRobot |
+| Security | Helmet.js, bcrypt, reCAPTCHA, Rate Limiting |
+
+---
+
+## ✅ Full Feature List
+
+### 👤 Role-Based Authentication
+- Three user roles: **Candidate, Employer, Admin**
+- Secure session-based auth using Passport.js
+- Role-aware navigation and access control middleware
+
+### 🤖 AI Chatbot (Claude API)
+- Real-time SSE streaming responses
+- Quick action buttons — Jobs in Toronto, Write cover letter, Match my skills, Interview tips
+- AJAX integration for seamless UX
+- Prompt caching for 90% cost reduction
+
+### 📊 AI Resume Screening
+- Automatic candidate ranking with match scores
+- Skill tag extraction and matching
+- Re-screening on demand
+- Results cached for performance
+
+### 💼 Job Listings (Employers)
+- Post, edit, and delete job listings
+- Set job type, work mode, salary, location, experience level
+- View all applications per listing
+- Jobs require admin approval before going live
+
+### 📄 Job Applications (Candidates)
+- Browse and filter job listings
+- Apply with resume (PDF) and cover letter
+- Track application status in real time
+- Files stored securely on Cloudinary
+
+### 📧 Automated Email Notifications
+- Candidates notified automatically on accept/reject
+- Powered by Brevo HTTP API
+- Professional email templates
+
+### 🛡️ Admin Panel
+- Full admin dashboard with live stats
+- Manage all users, jobs, and applications
+- Approve or reject job listings before going live
+- Separate dark-themed admin layout
+
+### 📱 Mobile Responsive
+- Fully responsive across all screen sizes
+- Mobile-first design approach
+- Bootstrap 5 grid system throughout
+
+---
+
+## 🔐 User Roles
+
+| Role | Permissions |
+|---|---|
+| Candidate | Browse jobs, apply with resume/cover letter, track status, use AI chatbot |
+| Employer | Post/edit/delete jobs, view applicants, see AI screening scores |
+| Admin | Full access — manage users, jobs, applications, approve listings |
 
 ---
 
@@ -95,34 +156,36 @@ a7ef-b2877640e08f" />
 
 ```
 hirehub/
-├── app.js                          # Entry point
+├── app.js                          # Entry point + security config
 ├── models/
 │   ├── user.js                     # User schema (candidate/employer/admin)
 │   ├── jobs.js                     # Job listing schema
-│   └── application.js              # Application schema
+│   └── application.js             # Application schema
 ├── controllers/
 │   ├── users.js                    # Auth, register, login, logout
-│   ├── jobs.js                     # Job CRUD
-│   ├── applications.js             # Apply, view, status updates
-│   ├── employers.js                # Employer dashboard
-│   └── admin.js                    # Admin panel logic
+│   ├── jobs.js                     # Job CRUD + moderation
+│   ├── applications.js            # Apply, view, status updates
+│   ├── employers.js               # Employer dashboard
+│   ├── chatbot.js                 # Claude AI SSE streaming
+│   └── admin.js                   # Admin panel logic
 ├── routes/
 │   ├── user.js
 │   ├── jobs.js
 │   ├── applications.js
 │   ├── employers.js
 │   ├── admin.js
-│   └── middleware.js               # Auth & role-check middleware
+│   ├── chatbot.js
+│   └── middleware.js              # Auth, role-check, rate limiting
 ├── views/
 │   ├── layouts/
-│   │   ├── boilerplate.ejs         # Main layout
-│   │   └── adminBoilerplate.ejs    # Admin layout
-│   └── ...                         # Page views
+│   │   ├── boilerplate.ejs        # Main layout
+│   │   └── adminBoilerplate.ejs  # Admin layout
+│   └── ...
 ├── utils/
-│   ├── mailer.js                   # Brevo email utility
-│   ├── wrapAsync.js                # Async error wrapper
-│   └── ExpressError.js             # Custom error class
-└── public/                         # Static assets
+│   ├── mailer.js                  # Brevo email utility
+│   ├── wrapAsync.js               # Async error wrapper
+│   └── ExpressError.js           # Custom error class
+└── public/                        # Static assets + React components
 ```
 
 ---
@@ -130,37 +193,34 @@ hirehub/
 ## 🚀 Getting Started
 
 ### Prerequisites
-
 - Node.js v18+
-- MongoDB running locally
+- MongoDB running locally or MongoDB Atlas URI
 - Cloudinary account
-- Brevo (Sendinblue) account for email
+- Brevo account for email
+- Anthropic API key (Claude)
+- Google reCAPTCHA keys
 
 ### Installation
 
-1. **Clone the repository**
-
 ```bash
+# Clone the repository
 git clone https://github.com/Anmol718/hirehub.git
 cd hirehub
-```
 
-2. **Install dependencies**
-
-```bash
+# Install dependencies
 npm install
 ```
 
-3. **Set up environment variables**
+### Environment Variables
 
 Create a `.env` file in the root directory:
 
 ```env
 # MongoDB
-MONGO_URI=mongodb://127.0.0.1:27017/hirehub
+MONGO_URI=your_mongodb_uri
 
 # Session
-SESSION_SECRET=your_session_secret_here
+SESSION_SECRET=your_session_secret
 
 # Cloudinary
 CLOUD_NAME=your_cloud_name
@@ -170,55 +230,45 @@ CLOUD_API_SECRET=your_api_secret
 # Email (Brevo)
 EMAIL_USER=your_email@example.com
 EMAIL_PASS=your_brevo_api_key
+
+# Anthropic Claude API
+ANTHROPIC_API_KEY=your_anthropic_api_key
+
+# Google reCAPTCHA
+RECAPTCHA_SITE_KEY=your_site_key
+RECAPTCHA_SECRET_KEY=your_secret_key
 ```
 
-4. **Start the server**
+### Run the App
 
 ```bash
 node app.js
 ```
 
-5. **Visit the app**
-
-[https://hirehub-w6sp.onrender.com/home](https://hirehub-w6sp.onrender.com/home)
+Visit: `http://localhost:3000`
 
 ---
 
-## 🔐 User Roles
+## ☁️ Deployment
 
-| Role          | Permissions                                                           |
-| ------------- | --------------------------------------------------------------------- |
-| **Candidate** | Browse jobs, apply with resume/cover letter, track application status |
-| **Employer**  | Post/edit/delete job listings, view and manage applications           |
-| **Admin**     | Full access — manage all users, jobs, and applications                |
-
----
-
-## 📧 Email Notifications
-
-HireHub uses the **Brevo HTTP API** to send transactional emails. Candidates receive automatic notifications when:
-
-- ✅ Their application is **accepted**
-- ❌ Their application is **rejected**
-
----
-
-## ☁️ File Uploads
-
-Resumes and cover letters are uploaded using **Multer** and stored on **Cloudinary**. This ensures:
-
-- Files persist independently of the server
-- Secure, CDN-delivered file access
-- Support for PDF format
+| Service | Purpose |
+|---|---|
+| Render | Node.js app hosting |
+| MongoDB Atlas | Cloud database |
+| Cloudinary | File storage (resumes, cover letters) |
+| UptimeRobot | Server monitoring & uptime |
 
 ---
 
 ## 👨‍💻 Author
 
-**Anmol Rehal**
+**Anmol Rehal**  
+Computer Science (Honours) — Algoma University, Brampton  
+Chancellor's Award Recipient
 
-- LinkedIn: [linkedin.com/in/anmolrehal](https://www.linkedin.com/in/anmolrehal)
-- GitHub: [github.com/Anmol718](https://github.com/Anmol718)
+- 🔗 LinkedIn: [linkedin.com/in/anmolrehal](https://linkedin.com/in/anmolrehal)
+- 💻 GitHub: [github.com/Anmol718](https://github.com/Anmol718)
+- 📧 Email: anmolkumarrehal@gmail.com
 
 ---
 
