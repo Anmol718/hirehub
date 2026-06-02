@@ -1,9 +1,8 @@
 # HireHub — AI-Powered Job Portal 🚀
-
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![EJS](https://img.shields.io/badge/EJS-B4CA65?style=for-the-badge&logo=ejs&logoColor=black)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
 ![Claude AI](https://img.shields.io/badge/Claude_AI-D97757?style=for-the-badge&logo=anthropic&logoColor=white)
 
@@ -39,6 +38,18 @@
 ## ✨ What Makes HireHub Different
 
 Most job portals just list jobs. HireHub uses **Claude AI API** to actively help candidates and employers — screening resumes automatically, matching candidates by skill, and providing a real-time AI career assistant.
+
+## The problem it solves
+
+Employers receive dozens of applications with no fast way to find the best candidates. Job seekers apply blindly with no feedback on fit. HireHub solves both — AI screens and ranks every applicant for employers, while an AI career assistant helps candidates write better applications.
+
+## Key technical decisions
+
+**Why SSE over WebSockets?** SSE is simpler, one-directional, and works over standard HTTP — no extra infrastructure. For token streaming where the server pushes to the client, SSE is the right fit.
+
+**Why prompt caching?** Claude's API caches repeated system prompts. Since the same career advisor prompt is sent every message, caching it cut token costs by ~90%.
+
+**Dependency note:** Cloudinary SDK v2 and multer-storage-cloudinary had a peer dependency conflict. Resolved by pinning compatible versions; `--legacy-peer-deps` was used during install while evaluating the upgrade path.
 
 ---
 
@@ -80,7 +91,7 @@ Most job portals just list jobs. HireHub uses **Claude AI API** to actively help
 |---|---|
 | Runtime | Node.js |
 | Framework | Express.js |
-| Frontend | React.js + Bootstrap 5 |
+| Frontend | EJS (server-side templating) + Bootstrap 5 |
 | Database | MongoDB + Mongoose |
 | AI | Claude Haiku API (Anthropic) |
 | Authentication | Passport.js (Local Strategy) |
@@ -263,8 +274,8 @@ Visit: `http://localhost:3000`
 ## 👨‍💻 Author
 
 **Anmol Rehal**  
-Computer Science (Honours) — Algoma University, Brampton  
-Chancellor's Award Recipient
+CS Honours graduate, Algoma University Brampton — Chancellor's Award recipient (2026). 
+Building AI-powered tools at the intersection of software and real-world problems.
 
 - 🔗 LinkedIn: [linkedin.com/in/anmolrehal](https://linkedin.com/in/anmolrehal)
 - 💻 GitHub: [github.com/Anmol718](https://github.com/Anmol718)
