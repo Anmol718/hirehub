@@ -230,8 +230,8 @@
                 <a href="/applications/<%= job._id %>/applicants" class="btn-applicants">
                   <i class="bi bi-people"></i> Applicants
                 </a>
-                <form method="POST" action="/jobs/<%= job._id %>?_method=DELETE" class="btn-delete-form">
-                  <button class="btn-delete" onclick="return confirm('Delete this job listing?')" title="Delete">
+                <form method="POST" action="/jobs/<%= job._id %>?_method=DELETE" class="btn-delete-form" data-confirm="Delete this job listing?">
+                  <button class="btn-delete" title="Delete">
                     <i class="bi bi-trash"></i>
                   </button>
                 </form>

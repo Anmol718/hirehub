@@ -234,7 +234,7 @@
         >
         <div
           class="file-upload-area"
-          onclick="document.getElementById('resume').click()"
+          id="resume-upload-area"
         >
           <i class="bi bi-cloud-arrow-up"></i>
           <label class="file-label">Click to upload your resume</label>
@@ -245,7 +245,6 @@
             name="resume"
             accept=".pdf"
             required
-            onchange="showFileName(this)"
           />
         </div>
         <div id="file-name-display"></div>
@@ -272,7 +271,6 @@
           <button
             type="button"
             id="tab-text"
-            onclick="switchCoverLetter('text')"
             style="
               padding: 7px 18px;
               font-size: 13px;
@@ -289,7 +287,6 @@
           <button
             type="button"
             id="tab-pdf"
-            onclick="switchCoverLetter('pdf')"
             style="
               padding: 7px 18px;
               font-size: 13px;
@@ -320,7 +317,7 @@
         <div id="cover-pdf-section" style="display: none">
           <div
             class="file-upload-area"
-            onclick="document.getElementById('coverLetterFile').click()"
+            id="coverletter-upload-area"
           >
             <i class="bi bi-file-earmark-pdf"></i>
             <label class="file-label">Click to upload your cover letter</label>
@@ -330,7 +327,6 @@
               id="coverLetterFile"
               name="coverLetterFile"
               accept=".pdf"
-              onchange="showCoverFileName(this)"
             />
           </div>
           <div id="cover-file-name-display"></div>
@@ -424,6 +420,21 @@
       document.getElementById("coverLetterText").value = "";
     }
   }
+  document.getElementById("resume-upload-area").addEventListener("click", () => {
+    document.getElementById("resume").click();
+  });
+  document.getElementById("coverletter-upload-area").addEventListener("click", () => {
+    document.getElementById("coverLetterFile").click();
+  });
+  document.getElementById("tab-text").addEventListener("click", () => switchCoverLetter("text"));
+  document.getElementById("tab-pdf").addEventListener("click", () => switchCoverLetter("pdf"));
+  document.getElementById("resume").addEventListener("change", function () {
+    showFileName(this);
+  });
+  document.getElementById("coverLetterFile").addEventListener("change", function () {
+    showCoverFileName(this);
+  });
+
   (function () {
     "use strict";
     const forms = document.querySelectorAll(".needs-validation");

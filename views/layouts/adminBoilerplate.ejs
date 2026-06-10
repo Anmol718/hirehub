@@ -228,6 +228,13 @@
 
     sidebarToggle.addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
     sidebarOverlay.addEventListener('click', closeSidebar);
+
+    // Confirm before submitting forms marked with data-confirm
+    document.querySelectorAll('form[data-confirm]').forEach(form => {
+      form.addEventListener('submit', (e) => {
+        if (!confirm(form.dataset.confirm)) e.preventDefault();
+      });
+    });
   </script>
 </body>
 </html>

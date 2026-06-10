@@ -471,7 +471,7 @@
   <form class="ats-search" method="GET">
     <i class="bi bi-search text-muted"></i>
     <input type="text" name="search" value="<%= search || '' %>" placeholder="Search by name or email…" />
-    <select name="status" onchange="this.form.submit()">
+    <select name="status" id="status-filter">
       <option value="All"      <%= !status || status === 'All'      ? 'selected' : '' %>>All Status</option>
       <option value="Pending"  <%= status === 'Pending'  ? 'selected' : '' %>>Pending</option>
       <option value="Accepted" <%= status === 'Accepted' ? 'selected' : '' %>>Accepted</option>
@@ -673,13 +673,13 @@
 
               <% if (app.status === 'Pending') { %>
                 <div class="action-btns">
-                  <form action="/applications/<%= app._id %>/accept" method="POST" style="flex:1;display:flex;">
-                    <button class="btn-accept" style="width:100%;" onclick="return confirm('Accept this applicant? They will be notified via email.')">
+                  <form action="/applications/<%= app._id %>/accept" method="POST" style="flex:1;display:flex;" data-confirm="Accept this applicant? They will be notified via email.">
+                    <button class="btn-accept" style="width:100%;">
                       <i class="bi bi-check-lg"></i> Accept
                     </button>
                   </form>
-                  <form action="/applications/<%= app._id %>/reject" method="POST" style="flex:1;display:flex;">
-                    <button class="btn-reject" style="width:100%;" onclick="return confirm('Reject this applicant? They will be notified via email.')">
+                  <form action="/applications/<%= app._id %>/reject" method="POST" style="flex:1;display:flex;" data-confirm="Reject this applicant? They will be notified via email.">
+                    <button class="btn-reject" style="width:100%;">
                       <i class="bi bi-x-lg"></i> Reject
                     </button>
                   </form>
@@ -702,9 +702,8 @@
                 </div>
               <% } %>
 
-              <form action="/applications/<%= app._id %>/remove?_method=DELETE" method="POST">
-                <button type="submit" class="btn-remove"
-                  onclick="return confirm('Permanently remove this application? This cannot be undone.')">
+              <form action="/applications/<%= app._id %>/remove?_method=DELETE" method="POST" data-confirm="Permanently remove this application? This cannot be undone.">
+                <button type="submit" class="btn-remove">
                   <i class="bi bi-trash"></i> Remove Application
                 </button>
               </form>
@@ -722,5 +721,8 @@
   document.getElementById('screen-form')?.addEventListener('submit', function () {
     document.getElementById('screening-overlay').classList.add('active');
     document.getElementById('screen-btn').disabled = true;
+  });
+  document.getElementById('status-filter').addEventListener('change', function () {
+    this.form.submit();
   });
 </script>

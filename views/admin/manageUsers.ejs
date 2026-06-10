@@ -103,8 +103,8 @@
               </td>
               <td>
                 <% if (user.role !== 'admin') { %>
-                  <form action="/admin/users/<%= user._id %>?_method=DELETE" method="POST">
-                    <button class="btn-delete" onclick="return confirm('Delete user <%= user.username %>?')">
+                  <form action="/admin/users/<%= user._id %>?_method=DELETE" method="POST" data-confirm="Delete user <%= user.username %>?">
+                    <button class="btn-delete">
                       <i class="bi bi-trash"></i> Delete
                     </button>
                   </form>

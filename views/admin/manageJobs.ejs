@@ -203,31 +203,31 @@
               <td>
                 <div class="action-group">
                   <% if (job.status === 'pending' || !job.status) { %>
-                    <form action="/admin/jobs/<%= job._id %>/approve" method="POST">
-                      <button class="btn-approve" onclick="return confirm('Approve this job and make it live?')">
+                    <form action="/admin/jobs/<%= job._id %>/approve" method="POST" data-confirm="Approve this job and make it live?">
+                      <button class="btn-approve">
                         <i class="bi bi-check-lg"></i> Approve
                       </button>
                     </form>
-                    <form action="/admin/jobs/<%= job._id %>/reject" method="POST">
-                      <button class="btn-reject-job" onclick="return confirm('Reject this job?')">
+                    <form action="/admin/jobs/<%= job._id %>/reject" method="POST" data-confirm="Reject this job?">
+                      <button class="btn-reject-job">
                         <i class="bi bi-x-lg"></i> Reject
                       </button>
                     </form>
                   <% } else if (job.status === 'rejected') { %>
-                    <form action="/admin/jobs/<%= job._id %>/approve" method="POST">
-                      <button class="btn-approve" onclick="return confirm('Approve this job and make it live?')">
+                    <form action="/admin/jobs/<%= job._id %>/approve" method="POST" data-confirm="Approve this job and make it live?">
+                      <button class="btn-approve">
                         <i class="bi bi-check-lg"></i> Approve
                       </button>
                     </form>
                   <% } else { %>
-                    <form action="/admin/jobs/<%= job._id %>/reject" method="POST">
-                      <button class="btn-reject-job" onclick="return confirm('Reject and unpublish this job?')">
+                    <form action="/admin/jobs/<%= job._id %>/reject" method="POST" data-confirm="Reject and unpublish this job?">
+                      <button class="btn-reject-job">
                         <i class="bi bi-x-lg"></i> Reject
                       </button>
                     </form>
                   <% } %>
-                  <form action="/admin/jobs/<%= job._id %>?_method=DELETE" method="POST">
-                    <button class="btn-delete" onclick="return confirm('Permanently delete this job?')">
+                  <form action="/admin/jobs/<%= job._id %>?_method=DELETE" method="POST" data-confirm="Permanently delete this job?">
+                    <button class="btn-delete">
                       <i class="bi bi-trash"></i>
                     </button>
                   </form>

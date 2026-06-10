@@ -197,8 +197,8 @@
                 <% } %>
               </td>
               <td>
-                <form action="/admin/applications/<%= app._id %>?_method=DELETE" method="POST">
-                  <button class="btn-delete" onclick="return confirm('Delete this application?')">
+                <form action="/admin/applications/<%= app._id %>?_method=DELETE" method="POST" data-confirm="Delete this application?">
+                  <button class="btn-delete">
                     <i class="bi bi-trash"></i> Delete
                   </button>
                 </form>

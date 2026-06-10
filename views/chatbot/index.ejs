@@ -215,9 +215,8 @@
       </div>
     </div>
     <% if (messages.length > 0) { %>
-      <form action="/chatbot/history?_method=DELETE" method="POST" style="margin:0;">
-        <button type="submit" class="btn-clear"
-          onclick="return confirm('Clear all chat history?')">
+      <form action="/chatbot/history?_method=DELETE" method="POST" style="margin:0;" data-confirm="Clear all chat history?">
+        <button type="submit" class="btn-clear">
           <i class="bi bi-trash3"></i> Clear
         </button>
       </form>
@@ -233,22 +232,22 @@
         <h4>Hi, I'm your HireHub Assistant!</h4>
         <p>Ask me about job opportunities, get help writing cover letters, or get career advice.</p>
         <div class="suggestions">
-          <div class="suggestion-chip" onclick="fillPrompt('What jobs are available in Toronto?')">
+          <div class="suggestion-chip" data-prompt="What jobs are available in Toronto?">
             <i class="bi bi-geo-alt me-1"></i>Jobs in Toronto
           </div>
-          <div class="suggestion-chip" onclick="fillPrompt('What internships are currently available?')">
+          <div class="suggestion-chip" data-prompt="What internships are currently available?">
             <i class="bi bi-mortarboard me-1"></i>Show internships
           </div>
-          <div class="suggestion-chip" onclick="fillPrompt('Help me write a cover letter for a software developer role')">
+          <div class="suggestion-chip" data-prompt="Help me write a cover letter for a software developer role">
             <i class="bi bi-file-earmark-text me-1"></i>Write a cover letter
           </div>
-          <div class="suggestion-chip" onclick="fillPrompt('What remote jobs are available?')">
+          <div class="suggestion-chip" data-prompt="What remote jobs are available?">
             <i class="bi bi-laptop me-1"></i>Remote jobs
           </div>
-          <div class="suggestion-chip" onclick="fillPrompt('I know JavaScript and React, what jobs match my skills?')">
+          <div class="suggestion-chip" data-prompt="I know JavaScript and React, what jobs match my skills?">
             <i class="bi bi-tools me-1"></i>Match my skills
           </div>
-          <div class="suggestion-chip" onclick="fillPrompt('Give me interview tips for a data analyst role')">
+          <div class="suggestion-chip" data-prompt="Give me interview tips for a data analyst role">
             <i class="bi bi-chat-dots me-1"></i>Interview tips
           </div>
         </div>
@@ -337,6 +336,10 @@
   });
 
   sendBtn.addEventListener("click", sendMessage);
+
+  document.querySelectorAll(".suggestion-chip").forEach(chip => {
+    chip.addEventListener("click", () => fillPrompt(chip.dataset.prompt));
+  });
 
   function fillPrompt(text) {
     chatInput.value = text;

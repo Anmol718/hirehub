@@ -25,6 +25,8 @@ const employersRouter = require("./routes/employers.js");
 const userRouter = require("./routes/user.js");
 const applicationRouter = require("./routes/applications.js");
 const chatbotRouter = require("./routes/chatbot.js");
+const interviewRouter = require("./routes/interview.js");
+const { ensureIndex } = require("./utils/searchService.js");
 
 // MongoDB connection URL
 
@@ -43,12 +45,25 @@ async function main() {
   await mongoose.connect(dbUrl);
   // One-time migration: mark all pre-moderation jobs as approved so they keep showing
   await Job.updateMany({ status: { $exists: false } }, { $set: { status: "approved" } });
+
+  try {
+    await ensureIndex();
+  } catch (err) {
+    console.error("Azure AI Search index setup failed:", err.message);
+  }
 }
 
 // Set EJS as the templating engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views")); // views folder
 app.engine("ejs", ejsMate); // enable layout support
+
+// Fallback template locals so views (especially error.ejs) can render even
+// if an error occurs before the session/currUser middleware below runs.
+app.locals.currUser = null;
+app.locals.success = [];
+app.locals.error = [];
+app.locals.recaptchaSiteKey = process.env.RECAPTCHA_SITE_KEY;
 
 // Security headers
 app.use(
@@ -144,6 +159,7 @@ app.use("/", userRouter);
 app.use("/applications", applicationRouter);
 app.use("/admin", adminRouter);
 app.use("/chatbot", chatbotRouter);
+app.use("/interview", interviewRouter);
 
 // 404 handler - for any route not matched above
 app.use((req, res, next) => {

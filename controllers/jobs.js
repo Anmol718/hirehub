@@ -1,6 +1,7 @@
 // controllers/jobs.js
 const Job = require("../models/jobs.js");
 const Application = require("../models/application.js");
+const { indexJob, deleteJobFromIndex, searchJobs } = require("../utils/searchService.js");
 
 // Show all jobs
 module.exports.index = async (req, res) => {
@@ -8,6 +9,28 @@ module.exports.index = async (req, res) => {
   const filter = { status: "approved" }; // only show approved jobs to candidates
   const JOBS_PER_PAGE = 9;
   const currentPage = Math.max(1, parseInt(page) || 1);
+
+  if (search && search.trim()) {
+    try {
+      const { jobs: allJobs, totalCount } = await searchJobs(search.trim(), {
+        jobType,
+        location,
+        page: currentPage,
+        pageSize: JOBS_PER_PAGE,
+      });
+      return res.render("sections/index.ejs", {
+        allJobs,
+        jobType,
+        search,
+        location,
+        currentPage,
+        totalPages: Math.ceil(totalCount / JOBS_PER_PAGE),
+        totalJobs: totalCount,
+      });
+    } catch (err) {
+      console.error("Azure AI Search failed, falling back to MongoDB search:", err.message);
+    }
+  }
 
   const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -85,6 +108,8 @@ module.exports.createJob = async (req, res) => {
   newJob.owner = req.user._id;
   await newJob.save();
 
+  indexJob(newJob).catch((err) => console.error("Azure AI Search indexing failed:", err.message));
+
   req.flash("success", "Your job has been submitted and is pending admin approval.");
   res.redirect("/employers/dashboard");
 };
@@ -114,7 +139,8 @@ module.exports.updateJob = async (req, res) => {
     updatedJobData.skills = [];
   }
 
-  await Job.findByIdAndUpdate(id, updatedJobData, { runValidators: true });
+  const updatedJob = await Job.findByIdAndUpdate(id, updatedJobData, { runValidators: true, new: true });
+  indexJob(updatedJob).catch((err) => console.error("Azure AI Search indexing failed:", err.message));
   req.flash("success", "Job Post Updated!");
   res.redirect(`/jobs/${id}`);
 };
@@ -124,6 +150,7 @@ module.exports.destroyJob = async (req, res) => {
   const { id } = req.params;
   await Application.deleteMany({ job: id });
   await Job.findByIdAndDelete(id);
+  deleteJobFromIndex(id).catch((err) => console.error("Azure AI Search deletion failed:", err.message));
   req.flash("success", "Job Post Deleted!");
   res.redirect("/jobs");
 };

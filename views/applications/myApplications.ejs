@@ -225,7 +225,7 @@
   <form class="ats-search" method="GET" action="/applications/my-applications">
     <i class="bi bi-search text-muted"></i>
     <input type="text" name="search" value="<%= search || '' %>" placeholder="Search by job title…" />
-    <select name="status" onchange="this.form.submit()">
+    <select name="status" id="status-filter">
       <option value="All"      <%= !status || status === 'All'      ? 'selected' : '' %>>All Status</option>
       <option value="Pending"  <%= status === 'Pending'  ? 'selected' : '' %>>Pending</option>
       <option value="Accepted" <%= status === 'Accepted' ? 'selected' : '' %>>Accepted</option>
@@ -297,9 +297,8 @@
               </div>
 
               <% if (app.status === 'Pending') { %>
-                <form action="/applications/<%= app._id %>/withdraw?_method=DELETE" method="POST">
-                  <button type="submit" class="btn-withdraw"
-                    onclick="return confirm('Withdraw this application? This cannot be undone.')">
+                <form action="/applications/<%= app._id %>/withdraw?_method=DELETE" method="POST" data-confirm="Withdraw this application? This cannot be undone.">
+                  <button type="submit" class="btn-withdraw">
                     <i class="bi bi-x-circle"></i> Withdraw Application
                   </button>
                 </form>
@@ -313,3 +312,9 @@
   <% } %>
 
 </div>
+
+<script>
+  document.getElementById("status-filter").addEventListener("change", function () {
+    this.form.submit();
+  });
+</script>

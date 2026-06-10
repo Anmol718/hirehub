@@ -1,0 +1,716 @@
+<% layout("layouts/boilerplate") %>
+
+<style>
+  /* ── Page shell ── */
+  .iv-page {
+    min-height: calc(100vh - 64px);
+    background: #f0f2f8;
+    padding: 40px 16px 80px;
+  }
+  .iv-container {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  /* ── Hero banner ── */
+  .iv-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%);
+    border-radius: 20px;
+    padding: 36px 32px 32px;
+    color: #fff;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .iv-hero::before {
+    content: "";
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .iv-hero::after {
+    content: "";
+    position: absolute;
+    bottom: -60px; left: -30px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+  .iv-hero-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin-bottom: 16px;
+  }
+  .iv-hero h1 {
+    font-size: 26px; font-weight: 800; margin: 0 0 6px;
+    letter-spacing: -0.3px;
+  }
+  .iv-hero p {
+    font-size: 14px; color: rgba(255,255,255,0.65); margin: 0;
+    max-width: 480px; line-height: 1.6;
+  }
+
+  /* ── Step indicator ── */
+  .iv-steps {
+    display: flex; gap: 0; margin-bottom: 28px;
+    background: #fff; border-radius: 14px;
+    padding: 14px 20px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  }
+  .iv-step {
+    flex: 1; display: flex; align-items: center; gap: 10px;
+    position: relative;
+  }
+  .iv-step:not(:last-child)::after {
+    content: "";
+    position: absolute; right: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 1px; height: 28px;
+    background: #e5e7eb;
+  }
+  .step-num {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: #e5e7eb; color: #999;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+  .iv-step.active .step-num {
+    background: #1a1a2e; color: #fff;
+  }
+  .iv-step.done .step-num {
+    background: #22c55e; color: #fff;
+  }
+  .step-label {
+    font-size: 12px; font-weight: 600; color: #aaa;
+    line-height: 1.3;
+    transition: color 0.3s;
+  }
+  .iv-step.active .step-label { color: #1a1a2e; }
+  .iv-step.done .step-label { color: #22c55e; }
+
+  /* ── Cards ── */
+  .iv-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #e8eaf0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+
+  /* ── Step 1: Setup ── */
+  .iv-label {
+    font-size: 13px; font-weight: 700;
+    color: #374151; margin-bottom: 6px;
+    display: block; letter-spacing: 0.3px;
+  }
+  .iv-input {
+    width: 100%;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 15px; font-weight: 500;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+    color: #1a1a2e;
+  }
+  .iv-input:focus {
+    border-color: #1a1a2e;
+    box-shadow: 0 0 0 3px rgba(26,26,46,0.09);
+  }
+  .iv-hint {
+    font-size: 12px; color: #9ca3af; margin-top: 6px;
+  }
+  .iv-role-analysis {
+    background: #f0f4ff;
+    border: 1px solid #c7d4f7;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px; color: #374151; line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .iv-role-analysis strong { color: #1a1a2e; }
+
+  /* ── Step 2: Questions ── */
+  .iv-question-block {
+    margin-bottom: 22px;
+  }
+  .iv-question-block:last-child { margin-bottom: 0; }
+  .iv-q-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    background: #1a1a2e; color: #fff;
+    font-size: 11px; font-weight: 800;
+    margin-right: 8px; margin-bottom: 8px;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+  .iv-question-text {
+    font-size: 14px; font-weight: 600; color: #1a1a2e;
+    line-height: 1.55; display: inline;
+  }
+  .iv-answer-area {
+    width: 100%;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13.5px; line-height: 1.65;
+    resize: vertical; min-height: 90px;
+    outline: none; font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    color: #374151;
+    margin-top: 8px;
+  }
+  .iv-answer-area:focus {
+    border-color: #1a1a2e;
+    box-shadow: 0 0 0 3px rgba(26,26,46,0.08);
+  }
+  .iv-divider {
+    height: 1px; background: #f0f2f8; margin: 20px 0;
+  }
+
+  /* ── Step 3: Results ── */
+  .iv-overall-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%);
+    border-radius: 16px;
+    padding: 24px 28px;
+    color: #fff;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 24px;
+  }
+  .iv-overall-score-ring {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    border: 3px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+  .iv-overall-score-ring .big-score {
+    font-size: 22px; font-weight: 900; line-height: 1;
+  }
+  .iv-overall-score-ring .of-ten {
+    font-size: 10px; color: rgba(255,255,255,0.55); margin-top: 1px;
+  }
+  .iv-overall-text h4 {
+    font-size: 15px; font-weight: 700; margin: 0 0 6px;
+  }
+  .iv-overall-text p {
+    font-size: 13px; color: rgba(255,255,255,0.7); margin: 0; line-height: 1.6;
+  }
+
+  .iv-result-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid #e8eaf0;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .iv-result-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #f0f2f8;
+  }
+  .iv-result-q {
+    font-size: 13.5px; font-weight: 700; color: #1a1a2e; line-height: 1.5;
+    flex: 1;
+  }
+  .iv-score-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; border-radius: 10px;
+    font-size: 15px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .score-great  { background: #dcfce7; color: #16a34a; }
+  .score-good   { background: #fef9c3; color: #ca8a04; }
+  .score-weak   { background: #fee2e2; color: #dc2626; }
+
+  .iv-result-body { padding: 14px 20px 16px; }
+  .iv-feedback-label {
+    font-size: 11px; font-weight: 700; color: #9ca3af;
+    text-transform: uppercase; letter-spacing: 0.6px;
+    margin-bottom: 4px; margin-top: 10px;
+  }
+  .iv-feedback-label:first-child { margin-top: 0; }
+  .iv-feedback-text {
+    font-size: 13px; color: #374151; line-height: 1.65;
+  }
+  .iv-tip-text {
+    font-size: 13px; color: #374151; line-height: 1.65;
+    background: #f8f9fb; border-radius: 8px;
+    padding: 8px 12px; border-left: 3px solid #4f46e5;
+  }
+
+  /* ── Buttons ── */
+  .iv-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 24px;
+    border-radius: 12px;
+    font-size: 14px; font-weight: 700;
+    border: none; cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    font-family: inherit;
+  }
+  .iv-btn-primary {
+    background: #1a1a2e; color: #fff;
+  }
+  .iv-btn-primary:hover { background: #2d2d5e; color: #fff; transform: translateY(-1px); }
+  .iv-btn-primary:disabled { background: #94a3b8; cursor: not-allowed; transform: none; }
+  .iv-btn-outline {
+    background: transparent; color: #1a1a2e;
+    border: 1.5px solid #1a1a2e;
+  }
+  .iv-btn-outline:hover { background: #1a1a2e; color: #fff; }
+  .iv-btn-sm { padding: 9px 18px; font-size: 13px; }
+
+  /* ── Spinner ── */
+  .iv-spinner {
+    width: 18px; height: 18px;
+    border: 2.5px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+  .iv-spinner.show { display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Error alert ── */
+  .iv-error {
+    background: #fee2e2; border: 1px solid #fca5a5;
+    border-radius: 10px; padding: 12px 16px;
+    font-size: 13px; color: #dc2626;
+    display: none; margin-bottom: 16px;
+  }
+  .iv-error.show { display: block; }
+
+  /* ── Progress steps tag ── */
+  .iv-progress-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 20px; padding: 5px 12px;
+    font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.8);
+    margin-bottom: 14px;
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 600px) {
+    .iv-page { padding: 20px 12px 60px; }
+    .iv-hero { padding: 24px 20px 20px; }
+    .iv-hero h1 { font-size: 20px; }
+    .iv-card { padding: 20px 18px; }
+    .iv-steps { padding: 10px 14px; }
+    .step-label { font-size: 10.5px; }
+    .iv-overall-card { flex-direction: column; gap: 14px; padding: 20px; }
+  }
+</style>
+
+<div class="iv-page">
+  <div class="iv-container">
+
+    <!-- Hero -->
+    <div class="iv-hero">
+      <div class="iv-progress-tag" id="heroTag">
+        <i class="bi bi-stars"></i> AI Interview Coach
+      </div>
+      <div class="iv-hero-icon"><i class="bi bi-person-workspace"></i></div>
+      <h1>AI Interview Coach</h1>
+      <p>Get role-specific interview questions, practice your answers, and receive instant AI-scored feedback to land your next job.</p>
+    </div>
+
+    <!-- Step indicators -->
+    <div class="iv-steps">
+      <div class="iv-step active" id="step-ind-1">
+        <div class="step-num">1</div>
+        <div class="step-label">Choose<br>Role</div>
+      </div>
+      <div class="iv-step" id="step-ind-2">
+        <div class="step-num">2</div>
+        <div class="step-label">Answer<br>Questions</div>
+      </div>
+      <div class="iv-step" id="step-ind-3">
+        <div class="step-num">3</div>
+        <div class="step-label">Get<br>Feedback</div>
+      </div>
+    </div>
+
+    <!-- ── STEP 1: Enter job title ── -->
+    <div id="stepSetup">
+      <div class="iv-card">
+        <h5 style="font-size:16px;font-weight:800;color:#1a1a2e;margin-bottom:4px;">
+          What role are you preparing for?
+        </h5>
+        <p style="font-size:13px;color:#6b7280;margin-bottom:20px;">
+          Enter any job title and our AI will analyze the role and craft 5 tailored interview questions for you.
+        </p>
+
+        <div class="iv-error" id="setupError"></div>
+
+        <label class="iv-label" for="jobTitleInput">Job Title</label>
+        <input
+          type="text"
+          id="jobTitleInput"
+          class="iv-input"
+          placeholder="e.g. Software Engineer, Product Manager, Data Analyst…"
+          maxlength="120"
+          autofocus
+        />
+        <p class="iv-hint">Be specific for better questions — e.g. "Frontend Engineer (React)" vs "Engineer"</p>
+
+        <div style="margin-top:24px;">
+          <button class="iv-btn iv-btn-primary" id="generateBtn">
+            <span id="generateSpinner" class="iv-spinner"></span>
+            <i class="bi bi-lightning-charge-fill" id="generateIcon"></i>
+            Generate My Questions
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STEP 2: Answer questions ── -->
+    <div id="stepQuestions" style="display:none;">
+      <div class="iv-card" id="roleAnalysisCard" style="display:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <i class="bi bi-cpu" style="color:#4f46e5;font-size:15px;"></i>
+          <span style="font-size:12px;font-weight:700;color:#4f46e5;text-transform:uppercase;letter-spacing:0.5px;">Role Analysis</span>
+        </div>
+        <p class="iv-role-analysis" id="roleAnalysisText" style="margin:0;"></p>
+      </div>
+
+      <div class="iv-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <h5 style="font-size:16px;font-weight:800;color:#1a1a2e;margin:0;">
+            Interview Questions
+          </h5>
+          <span style="font-size:12px;color:#9ca3af;" id="roleTagLabel"></span>
+        </div>
+        <p style="font-size:13px;color:#6b7280;margin-bottom:22px;">
+          Answer each question as you would in a real interview. Aim for 2–4 sentences minimum for the best feedback.
+        </p>
+
+        <div class="iv-error" id="answersError"></div>
+
+        <div id="questionsContainer"></div>
+
+        <div class="iv-divider"></div>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="iv-btn iv-btn-primary" id="evaluateBtn">
+            <span id="evaluateSpinner" class="iv-spinner"></span>
+            <i class="bi bi-graph-up-arrow" id="evaluateIcon"></i>
+            Get My Feedback
+          </button>
+          <button class="iv-btn iv-btn-outline iv-btn-sm" id="startOverBtn">
+            <i class="bi bi-arrow-counterclockwise"></i> Start Over
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STEP 3: Results ── -->
+    <div id="stepResults" style="display:none;">
+
+      <!-- Overall score -->
+      <div class="iv-overall-card" id="overallCard">
+        <div class="iv-overall-score-ring">
+          <span class="big-score" id="overallScoreDisplay">—</span>
+          <span class="of-ten">/ 10</span>
+        </div>
+        <div class="iv-overall-text">
+          <h4 id="overallScoreLabel">Overall Score</h4>
+          <p id="overallSummaryText"></p>
+        </div>
+      </div>
+
+      <!-- Per-question results -->
+      <div id="resultsContainer"></div>
+
+      <!-- Actions -->
+      <div class="iv-card" style="padding:20px 24px;">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+          <button class="iv-btn iv-btn-primary" id="retakeBtn">
+            <i class="bi bi-arrow-repeat"></i> Retake with Same Role
+          </button>
+          <button class="iv-btn iv-btn-outline iv-btn-sm" id="tryDifferentRoleBtn">
+            <i class="bi bi-search"></i> Try a Different Role
+          </button>
+        </div>
+        <p style="font-size:12px;color:#9ca3af;margin-top:12px;margin-bottom:0;">
+          <i class="bi bi-lightbulb me-1"></i>
+          Tip: Retake the interview to practice different answers and improve your score.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let currentJobTitle = "";
+  let currentQuestions = [];
+
+  // ── Step indicators ──
+  function setStep(n) {
+    [1, 2, 3].forEach(i => {
+      const el = document.getElementById(`step-ind-${i}`);
+      el.classList.remove("active", "done");
+      if (i < n)  el.classList.add("done");
+      if (i === n) el.classList.add("active");
+    });
+    // update hero tag
+    const labels = ["Choose Role", "Answer Questions", "Get Feedback"];
+    document.getElementById("heroTag").innerHTML =
+      `<i class="bi bi-stars"></i> Step ${n}: ${labels[n - 1]}`;
+  }
+
+  function showSetup()     { document.getElementById("stepSetup").style.display     = ""; }
+  function hideSetup()     { document.getElementById("stepSetup").style.display     = "none"; }
+  function showQuestions() { document.getElementById("stepQuestions").style.display  = ""; }
+  function hideQuestions() { document.getElementById("stepQuestions").style.display  = "none"; }
+  function showResults()   { document.getElementById("stepResults").style.display    = ""; }
+  function hideResults()   { document.getElementById("stepResults").style.display    = "none"; }
+
+  function resetToStart() {
+    currentJobTitle = "";
+    currentQuestions = [];
+    document.getElementById("jobTitleInput").value = "";
+    document.getElementById("setupError").classList.remove("show");
+    hideQuestions();
+    hideResults();
+    showSetup();
+    setStep(1);
+    document.getElementById("jobTitleInput").focus();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function retakeWithSameRole() {
+    hideResults();
+    showQuestions();
+    setStep(2);
+    // clear all answer textareas
+    document.querySelectorAll(".iv-answer-area").forEach(ta => ta.value = "");
+    document.getElementById("answersError").classList.remove("show");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // ── Score badge helper ──
+  function scoreClass(s) {
+    if (s >= 8) return "score-great";
+    if (s >= 6) return "score-good";
+    return "score-weak";
+  }
+  function scoreLabel(s) {
+    if (s >= 9) return "Exceptional";
+    if (s >= 8) return "Strong";
+    if (s >= 6) return "Good";
+    if (s >= 5) return "Adequate";
+    if (s >= 3) return "Needs Work";
+    return "Insufficient";
+  }
+
+  // ── STEP 1 → 2: Generate questions ──
+  async function generateQuestions() {
+    const title = document.getElementById("jobTitleInput").value.trim();
+    const errEl = document.getElementById("setupError");
+    errEl.classList.remove("show");
+
+    if (!title) {
+      errEl.textContent = "Please enter a job title to continue.";
+      errEl.classList.add("show");
+      return;
+    }
+
+    const btn    = document.getElementById("generateBtn");
+    const spinner = document.getElementById("generateSpinner");
+    const icon    = document.getElementById("generateIcon");
+
+    btn.disabled = true;
+    spinner.classList.add("show");
+    icon.style.display = "none";
+    btn.querySelector("span + i") && (btn.lastChild.textContent = " Analyzing role…");
+
+    try {
+      const res = await fetch("/interview/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jobTitle: title }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to generate questions.");
+
+      currentJobTitle  = title;
+      currentQuestions = data.questions;
+
+      // Render role analysis
+      if (data.roleAnalysis) {
+        document.getElementById("roleAnalysisText").textContent = data.roleAnalysis;
+        document.getElementById("roleAnalysisCard").style.display = "";
+      }
+      document.getElementById("roleTagLabel").textContent = title;
+
+      // Build question blocks
+      const container = document.getElementById("questionsContainer");
+      container.innerHTML = "";
+      data.questions.forEach((q, i) => {
+        const block = document.createElement("div");
+        block.className = "iv-question-block";
+        block.innerHTML = `
+          <div style="margin-bottom:6px;">
+            <span class="iv-q-num">${i + 1}</span>
+            <span class="iv-question-text">${escapeHtml(q)}</span>
+          </div>
+          <textarea
+            class="iv-answer-area"
+            placeholder="Type your answer here…"
+            data-index="${i}"
+            rows="3"
+          ></textarea>
+          ${i < data.questions.length - 1 ? '<div class="iv-divider"></div>' : ""}
+        `;
+        container.appendChild(block);
+      });
+
+      hideSetup();
+      showQuestions();
+      setStep(2);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+    } catch (err) {
+      errEl.textContent = err.message || "Something went wrong. Please try again.";
+      errEl.classList.add("show");
+    } finally {
+      btn.disabled = false;
+      spinner.classList.remove("show");
+      icon.style.display = "";
+    }
+  }
+
+  // ── STEP 2 → 3: Evaluate answers ──
+  async function evaluateAnswers() {
+    const errEl = document.getElementById("answersError");
+    errEl.classList.remove("show");
+
+    const textareas = document.querySelectorAll(".iv-answer-area");
+    const answers = Array.from(textareas).map((ta, i) => ({
+      question: currentQuestions[i],
+      answer:   ta.value.trim(),
+    }));
+
+    const answered = answers.filter(a => a.answer.length > 0).length;
+    if (answered === 0) {
+      errEl.textContent = "Please answer at least one question before submitting.";
+      errEl.classList.add("show");
+      return;
+    }
+
+    const btn     = document.getElementById("evaluateBtn");
+    const spinner = document.getElementById("evaluateSpinner");
+    const icon    = document.getElementById("evaluateIcon");
+
+    btn.disabled = true;
+    spinner.classList.add("show");
+    icon.style.display = "none";
+
+    try {
+      const res = await fetch("/interview/evaluate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jobTitle: currentJobTitle, answers }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to evaluate answers.");
+
+      // Render overall score
+      const overall = data.overallScore || 0;
+      document.getElementById("overallScoreDisplay").textContent = overall;
+      document.getElementById("overallScoreLabel").textContent   =
+        `Overall Score — ${scoreLabel(overall)}`;
+      document.getElementById("overallSummaryText").textContent  =
+        data.overallSummary || "";
+
+      // Render per-question results
+      const container = document.getElementById("resultsContainer");
+      container.innerHTML = "";
+      (data.results || []).forEach((r, i) => {
+        const cls = scoreClass(r.score);
+        const card = document.createElement("div");
+        card.className = "iv-result-card";
+        card.innerHTML = `
+          <div class="iv-result-header">
+            <div class="iv-result-q">
+              <span style="color:#6b7280;font-size:11px;font-weight:700;
+                text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:3px;">
+                Question ${i + 1}
+              </span>
+              ${escapeHtml(r.question || currentQuestions[i] || "")}
+            </div>
+            <div>
+              <div class="iv-score-badge ${cls}">${r.score}</div>
+              <div style="font-size:10px;text-align:center;color:#9ca3af;margin-top:3px;">
+                / 10
+              </div>
+            </div>
+          </div>
+          <div class="iv-result-body">
+            <div class="iv-feedback-label">Evaluation</div>
+            <div class="iv-feedback-text">${escapeHtml(r.feedback || "")}</div>
+            <div class="iv-feedback-label" style="margin-top:12px;">
+              <i class="bi bi-arrow-up-circle me-1" style="color:#4f46e5;"></i>
+              Improvement Tip
+            </div>
+            <div class="iv-tip-text">${escapeHtml(r.tip || "")}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      hideQuestions();
+      showResults();
+      setStep(3);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+    } catch (err) {
+      errEl.textContent = err.message || "Something went wrong. Please try again.";
+      errEl.classList.add("show");
+    } finally {
+      btn.disabled = false;
+      spinner.classList.remove("show");
+      icon.style.display = "";
+    }
+  }
+
+  // Enter key on job title input triggers generate
+  document.getElementById("jobTitleInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") generateQuestions();
+  });
+
+  // Button click handlers (CSP blocks inline onclick attributes)
+  document.getElementById("generateBtn").addEventListener("click", generateQuestions);
+  document.getElementById("evaluateBtn").addEventListener("click", evaluateAnswers);
+  document.getElementById("startOverBtn").addEventListener("click", resetToStart);
+  document.getElementById("retakeBtn").addEventListener("click", retakeWithSameRole);
+  document.getElementById("tryDifferentRoleBtn").addEventListener("click", resetToStart);
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+</script>

@@ -1,6 +1,7 @@
 const User = require("../models/user.js");
 const Job = require("../models/jobs.js");
 const Application = require("../models/application.js");
+const { indexJob, deleteJobFromIndex } = require("../utils/searchService.js");
 
 module.exports.dashboard = async (req, res) => {
   const jobCount = await Job.countDocuments();
@@ -39,18 +40,21 @@ module.exports.deleteJob = async (req, res) => {
   const { id } = req.params;
   await Application.deleteMany({ job: id });
   await Job.findByIdAndDelete(id);
+  deleteJobFromIndex(id).catch((err) => console.error("Azure AI Search deletion failed:", err.message));
   req.flash("success", "Job deleted successfully!");
   res.redirect("/admin/jobs");
 };
 
 module.exports.approveJob = async (req, res) => {
-  await Job.findByIdAndUpdate(req.params.id, { status: "approved" });
+  const job = await Job.findByIdAndUpdate(req.params.id, { status: "approved" }, { new: true });
+  indexJob(job).catch((err) => console.error("Azure AI Search indexing failed:", err.message));
   req.flash("success", "Job approved and is now live.");
   res.redirect("/admin/jobs?filter=pending");
 };
 
 module.exports.rejectJob = async (req, res) => {
-  await Job.findByIdAndUpdate(req.params.id, { status: "rejected" });
+  const job = await Job.findByIdAndUpdate(req.params.id, { status: "rejected" }, { new: true });
+  indexJob(job).catch((err) => console.error("Azure AI Search indexing failed:", err.message));
   req.flash("success", "Job rejected.");
   res.redirect("/admin/jobs?filter=pending");
 };

@@ -93,7 +93,7 @@
           <div class="flash-title">Success</div>
           <p class="flash-msg"><%= msg %></p>
         </div>
-        <button class="flash-close" onclick="dismissFlash(this)">
+        <button class="flash-close">
           <i class="bi bi-x"></i>
         </button>
         <div class="flash-progress"></div>
@@ -109,7 +109,7 @@
           <div class="flash-title">Error</div>
           <p class="flash-msg"><%= msg %></p>
         </div>
-        <button class="flash-close" onclick="dismissFlash(this)">
+        <button class="flash-close">
           <i class="bi bi-x"></i>
         </button>
         <div class="flash-progress"></div>
@@ -125,6 +125,11 @@
     toast.style.animation = 'slideOut 0.3s ease forwards';
     setTimeout(() => toast.remove(), 300);
   }
+
+  // Close button click handler
+  document.querySelectorAll('.flash-close').forEach(btn => {
+    btn.addEventListener('click', () => dismissFlash(btn));
+  });
 
   // Auto-dismiss after 4 seconds
   document.querySelectorAll('.flash-toast').forEach(toast => {

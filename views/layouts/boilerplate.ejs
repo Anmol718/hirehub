@@ -79,6 +79,13 @@
         document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
       })();
 
+      /* ── Confirm before submitting forms marked with data-confirm ── */
+      document.querySelectorAll('form[data-confirm]').forEach(form => {
+        form.addEventListener('submit', (e) => {
+          if (!confirm(form.dataset.confirm)) e.preventDefault();
+        });
+      });
+
       /* ── CountUp for [data-count] ── */
       (function () {
         const obs = new IntersectionObserver(entries => {
