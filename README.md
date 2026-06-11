@@ -65,6 +65,13 @@
 
 HireHub 2.0 was built for the **Microsoft Agents League Hackathon 2026**, adding two major AI agent features on top of the existing production platform:
 
+---
+
+## 🏗️ Architecture
+
+<img width="1440" height="900" alt="HireHub 2.0 System Architecture — Azure AI Search (Foundry IQ) + Claude API + MongoDB" src="DRAG_ARCHITECTURE_IMAGE_HERE" 
+ src="https://github.com/user-attachments/assets/649c39de-38f5-4ae8-b010-c292ee03b416" />
+
 ### 🎤 AI Interview Coach (Multi-Step Agent)
 A 4-step reasoning agent that helps candidates prepare for any role:
 1. **Analyze Role** — Claude AI analyzes the target job title and generates a role summary
