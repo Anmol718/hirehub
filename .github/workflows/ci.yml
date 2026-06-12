@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Verify app structure
+        run: |
+          node --check app.js
+          node --check cloudConfig.js
+          node --check schema.js
+          for f in routes/*.js controllers/*.js models/*.js; do
+            node --check "$f"
+          done
+          echo "App structure verified successfully"
